@@ -1,0 +1,79 @@
+$icomoon-font-family: "blix-web" !default;
+$icomoon-font-path: "../fonts/icomoon" !default;
+
+@font-face {
+  font-family: "#{$icomoon-font-family}";
+  src: url("#{$icomoon-font-path}/#{$icomoon-font-family}.eot");
+  src: url("#{$icomoon-font-path}/#{$icomoon-font-family}.eot") format("embedded-opentype"),
+    url("#{$icomoon-font-path}/#{$icomoon-font-family}.woff2") format("woff2"),
+    url("#{$icomoon-font-path}/#{$icomoon-font-family}.woff") format("woff"),
+    url("#{$icomoon-font-path}/#{$icomoon-font-family}.ttf") format("truetype"),
+    url("#{$icomoon-font-path}/#{$icomoon-font-family}.svg##{$icomoon-font-family}") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+i {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "#{$icomoon-font-family}" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tree:before {
+  content: "\e800";
+}
+.icon-ok:before {
+  content: "\e801";
+}
+.icon-phone:before {
+  content: "\e802";
+}
+.icon-profile:before {
+  content: "\e803";
+}
+.icon-calendar-star:before {
+  content: "\e804";
+}
+.icon-edit-pen:before {
+  content: "\e805";
+}
+.icon-arrow-bottom:before {
+  content: "\e80e";
+}
+.icon-info:before {
+  content: "\e80f";
+}
+.icon-to_top_arrow:before {
+  content: "\e900";
+}
+.icon-search:before {
+  content: "\e901";
+}
+.icon-menu:before {
+  content: "\e902";
+}
+.icon-eye:before {
+  content: "\e903";
+}
+.icon-close:before {
+  content: "\e904";
+}
+.icon-enlarge:before {
+  content: "\e905";
+}
+.icon-menu_mobile_right:before {
+  content: "\e906";
+}
+.icon-home:before {
+  content: "\e907";
+}

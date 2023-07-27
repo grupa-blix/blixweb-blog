@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.87.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "sass": "^1.63.4",
+    "sass-loader": "^13.3.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
