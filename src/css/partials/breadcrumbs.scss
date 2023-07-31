@@ -16,6 +16,7 @@
   &__steps {
     list-style-type: none;
     display: flex;
+    flex-wrap: wrap;
     padding: 5px 0;
     @media (min-width: 992px) {
       padding: 0;
@@ -28,7 +29,7 @@
       max-width: 200px;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: normal;
       @media (max-width: 450px) {
         max-width: 100px;
       }

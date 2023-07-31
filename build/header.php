@@ -10,11 +10,11 @@
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-ui.css" ?>">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-navbar.css" ?>">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-footer.css" ?>">
+	<?php if(in_category("przepisy")) : ?><link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-recipe.css" ?>"><?php endif; ?>
 	<?php wp_head(); ?>
 </head>
 
 <?php include 'partials/navbar.php'; ?>
 
 <body>
-
 	<?php include 'partials/breadcrumbs.php'; ?>

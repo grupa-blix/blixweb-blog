@@ -16,6 +16,7 @@ const devConfig = {
     "app-ui": "./src/js/app-ui.js",
     "app-navbar": "./src/js/app-navbar.js",
     "app-footer": "./src/js/app-footer.js",
+    "app-recipe": "./src/js/app-recipe.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
