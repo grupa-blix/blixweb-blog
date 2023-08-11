@@ -18,10 +18,10 @@ if (term_exists(yoast_get_primary_term())) {
 
         <div class="top-wrapper__pills pills">
             <div class="pills__track">
-                <div class="pill pill--main"><?php echo $main_category->name; ?></div>
+                <a href="<?php echo get_category_link($main_category); ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
                 <?php foreach ($post_categories as $category) :
                     if ($category->term_id != $main_category->term_id) : ?>
-                        <div class="pill"><?php echo $category->name; ?></div>
+                        <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
                 <?php endif; endforeach; ?>
             </div>
         </div>

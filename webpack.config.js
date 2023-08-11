@@ -17,6 +17,8 @@ const devConfig = {
     "app-navbar": "./src/js/app-navbar.js",
     "app-footer": "./src/js/app-footer.js",
     "app-recipe": "./src/js/app-recipe.js",
+    "app-article": "./src/js/app-article.js",
+    "likes": "./src/js/likes/likes.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
@@ -66,6 +68,9 @@ const prodConfig = {
     "app-ui": "./src/js/app-ui.js",
     "app-navbar": "./src/js/app-navbar.js",
     "app-footer": "./src/js/app-footer.js",
+    "app-recipe": "./src/js/app-recipe.js",
+    "app-article": "./src/js/app-article.js",
+    "likes": "./src/js/likes/likes.js",
   },
   output: {
     path: path.resolve(__dirname, "build"),

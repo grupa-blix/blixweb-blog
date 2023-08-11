@@ -10,7 +10,11 @@
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-ui.css" ?>">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-navbar.css" ?>">
 	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-footer.css" ?>">
-	<?php if(in_category("przepisy")) : ?><link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-recipe.css" ?>"><?php endif; ?>
+	<?php if(in_category("przepisy")) : ?>
+		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-recipe.css" ?>">
+	<?php elseif(in_category("aktualnosci")) : ?>
+		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() . "/assets/css/app-article.css" ?>">
+	<?php endif; ?>
 	<?php wp_head(); ?>
 </head>
 

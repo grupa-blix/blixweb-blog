@@ -108,3 +108,22 @@ function disallow_insert_term($term, $taxonomy)
 }
 
 add_filter('pre_insert_term', 'disallow_insert_term', 10, 2);
+
+add_action("wp_ajax_article_like", "article_like");
+add_action("wp_ajax_nopriv_article_like", "article_like");
+
+function article_like() {
+    update_field('likes', 28, 15611);
+    die();
+}
+
+add_action( 'init', 'my_script_enqueuer' );
+
+function my_script_enqueuer() {
+   wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js', array('jquery') );
+   wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+
+   wp_enqueue_script( 'jquery' );
+//    wp_enqueue_script( 'likes_script' );
+
+}

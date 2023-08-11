@@ -14,7 +14,15 @@
                     <div class="article__info">
                         <span class="article__category"><?php echo get_the_category($element)[0]->name ?></span>
                         <span class="article__name"><?php echo $element->post_title ?></span>
-                        <span class="article__details"><?php echo get_the_date('d.m.Y', $element) ?></span>
+                        <div class="article__details details">
+                            <div class="details__date"><?php echo get_the_date('d.m.Y', $element); ?></div>
+                            <?php if(get_field('likes', $element->ID)) : ?>
+                                <div class="details__likes">
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
+                                    <span><?php echo the_field('likes', $element->ID); ?></span>
+                                </div>
+                            <?php endif ?>
+                        </div>
                     </div>
                 </a>
             </article>

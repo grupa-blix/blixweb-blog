@@ -79,9 +79,15 @@ $footerLowerMainItems = array_filter($footerLowerItems, function ($k) {
                 <span class="footer__sub-text">Wszystkie prawa zastrzeżone 2023</span>
             </div>
         </div>
+        <div class="turl" data-turl="<?php echo get_stylesheet_directory_uri();?>"></div>
     </section>
     <script src="<?php echo get_stylesheet_directory_uri() . "/assets/js/app-navbar.js" ?>"></script>
     <script src="<?php echo get_stylesheet_directory_uri() . "/assets/js/app-base.js" ?>"></script>
+    <?php if(in_category("przepisy")) : ?>
+        <script src="<?php echo get_stylesheet_directory_uri() . "/assets/js/app-recipe.js" ?>"></script>
+	<?php elseif(in_category("aktualnosci")) : ?>
+        <script src="<?php echo get_stylesheet_directory_uri() . "/assets/js/app-article.js" ?>"></script>
+	<?php endif; ?>
 </footer>
 </body>
 
