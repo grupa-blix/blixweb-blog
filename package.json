@@ -6,6 +6,7 @@
   "dependencies": {
     "css-loader": "^6.8.1",
     "style-loader": "^3.3.3",
+    "swiper": "^10.2.0",
     "webpack": "^5.87.0"
   },
   "devDependencies": {

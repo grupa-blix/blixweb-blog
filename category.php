@@ -22,8 +22,10 @@ $vars = (object) [
 ]
 ?>
 <?php if (count($vars->elements) != 0) : ?>
-    <?php include 'partials/sections/leaflets.php'; ?>
-    <?php include 'partials/sections/posts.php'; ?>
+    <?php
+    $leaflets = "newest";
+    include 'partials/sections/leaflets.php';
+    include 'partials/sections/posts.php'; ?>
 <?php endif ?>
 
 <?php
@@ -32,8 +34,9 @@ $vars = (object) [
 ]
 ?>
 <?php if (count($vars->elements) != 0) : ?>
-    <?php include 'partials/sections/leaflets.php'; ?>
-    <?php include 'partials/sections/posts.php'; ?>
+    <?php
+    include 'partials/sections/products.php';
+    include 'partials/sections/posts.php'; ?>
 <?php endif ?>
 
 <?php wpbeginner_numeric_posts_nav(); ?>

@@ -1,5 +1,8 @@
 import { DESKTOP_BREAKPOINT, LARGE_DESKTOP_BREAKPOINT, TABLET_BREAKPOINT } from "./constants";
 
+const fancyUrl = "https://fancy.blix.app/";
+const blixUrl = "https://blix.pl/";
+
 const isProd = () => window.location.host === "blix.pl";
 
 const isMobile = () => window.innerWidth < TABLET_BREAKPOINT;
@@ -24,4 +27,28 @@ const getHeaderHeight = () => {
   return navbar && isMobile() ? navbar.offsetHeight : 0;
 };
 
-export { isProd, isMobile, isTablet, isDesktop, isDesktopLarge, isGrid, getTopbarHeight, getHeaderHeight };
+const getLeafletUrl = (brandSlug, leafletId) => {
+  return `${fancyUrl}sklep/${brandSlug}/gazetka/${leafletId}`;
+};
+
+const getBrandUrl = (brandSlug) => {
+  return `${fancyUrl}sklep/${brandSlug}`;
+};
+
+const getProductUrl = (productSlug, productHash) => {
+  return `${fancyUrl}produkt/${productSlug},${productHash}`;
+};
+
+export {
+  isProd,
+  isMobile,
+  isTablet,
+  isDesktop,
+  isDesktopLarge,
+  isGrid,
+  getTopbarHeight,
+  getHeaderHeight,
+  getLeafletUrl,
+  getBrandUrl,
+  getProductUrl,
+};

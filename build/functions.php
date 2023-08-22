@@ -1,10 +1,38 @@
 <?php
 
-function wps_deregister_styles()
+function deregister_styles()
 {
     wp_dequeue_style('global-styles');
 }
-add_action('wp_enqueue_scripts', 'wps_deregister_styles', 100);
+add_action('wp_enqueue_scripts', 'deregister_styles', 100);
+
+function register_styles()
+{
+	wp_enqueue_style('shared', get_stylesheet_directory_uri() . "/assets/css/shared.css");
+
+    if(in_category("aktualnosci")){
+        wp_enqueue_style('article', get_stylesheet_directory_uri() . "/assets/css/article.css");
+    }
+
+    if(in_category("przepisy")){
+        wp_enqueue_style('recipe', get_stylesheet_directory_uri() . "/assets/css/recipe.css");
+    }
+}
+add_action('wp_enqueue_scripts', 'register_styles', 100);
+
+function register_scripts()
+{
+	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'','',true);
+
+    if(in_category("aktualnosci")){
+        wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'','',true);
+    }
+
+    if(in_category("przepisy")){
+        wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'','',true);
+    }
+}
+add_action('wp_enqueue_scripts', 'register_scripts', 100);
 
 function register_menus()
 {
@@ -123,7 +151,7 @@ function my_script_enqueuer() {
    wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js', array('jquery') );
    wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
-   wp_enqueue_script( 'jquery' );
+//    wp_enqueue_script( 'jquery' );
 //    wp_enqueue_script( 'likes_script' );
 
 }

@@ -12,13 +12,9 @@ const devConfig = {
     }),
   ],
   entry: {
-    "app-base": "./src/js/app-base.js",
-    "app-ui": "./src/js/app-ui.js",
-    "app-navbar": "./src/js/app-navbar.js",
-    "app-footer": "./src/js/app-footer.js",
-    "app-recipe": "./src/js/app-recipe.js",
-    "app-article": "./src/js/app-article.js",
-    "likes": "./src/js/likes/likes.js",
+    article: "./src/js/pages/article.js",
+    recipe: "./src/js/pages/recipe.js",
+    shared: "./src/js/shared.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
@@ -64,13 +60,9 @@ const prodConfig = {
     }),
   ],
   entry: {
-    "app-base": "./src/js/app-base.js",
-    "app-ui": "./src/js/app-ui.js",
-    "app-navbar": "./src/js/app-navbar.js",
-    "app-footer": "./src/js/app-footer.js",
-    "app-recipe": "./src/js/app-recipe.js",
-    "app-article": "./src/js/app-article.js",
-    "likes": "./src/js/likes/likes.js",
+    article: "./src/js/pages/article.js",
+    recipe: "./src/js/pages/recipe.js",
+    shared: "./src/js/shared.js",
   },
   output: {
     path: path.resolve(__dirname, "build"),

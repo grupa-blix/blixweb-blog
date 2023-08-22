@@ -1,1 +1,0 @@
-jQuery(document).ready((function(){jQuery.ajax({type:"post",dataType:"json",url:myAjax.ajaxurl,data:{action:"article_like"},success:function(o){console.log(o),"success"==o.type?console.log(o):console.log("No")}})}));
