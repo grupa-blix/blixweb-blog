@@ -1,5 +1,13 @@
 .recipe-info {
   .top-wrapper {
+    &__sidebar {
+      width: 100%;
+
+      .sidebar-posts {
+        display: none;
+      }
+    }
+
     &__pills {
       margin-bottom: 16px;
 
@@ -38,11 +46,6 @@
     &__content {
       font-weight: 700;
     }
-
-    &__sidebar {
-      display: none;
-      width: 100%;
-    }
   }
 
   .bottom-wrapper {
@@ -75,6 +78,18 @@
       }
     }
 
+    &__embed {
+      margin-bottom: 32px;
+
+      .embed {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        background-color: pink;
+      }
+    }
+
     &__preparation {
       ol {
         margin: 0;
@@ -100,29 +115,82 @@
         }
       }
     }
+
+    &__tips {
+      padding: 16px;
+      border-radius: 10px;
+      background-color: #ddf0f3;
+    }
+
+    &__author {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 48px max-content auto;
+      column-gap: 12px;
+      margin-top: 24px;
+      border-top: 1px solid #d9d9d9;
+      padding-top: 24px;
+
+      .avatar {
+        grid-row: span 2;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+      }
+
+      .socials {
+        grid-row: 1/3;
+        grid-column: 3/4;
+        padding-left: 12px;
+      }
+    }
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: 1200px) {
     .top-wrapper {
       display: grid;
-      grid-template-columns: 1fr 282px;
-      column-gap: 48px;
+      grid-template-columns: repeat(4, 282px);
+      column-gap: 8px;
 
-      &__title,
+      &__title {
+        grid-column: span 4;
+      }
+
       &__pills {
+        grid-column: span 2;
+        margin: 12px 0 24px;
+      }
+
+      &__data {
+        grid-row: 2/3;
+        grid-column: 3/4;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 12px 0 24px;
+      }
+
+      &__featured-img,
+      &__details {
+        grid-column: span 3;
+      }
+
+      &__contents {
+        grid-column: 1/2;
+        grid-row: 5/6;
+      }
+
+      &__content {
         grid-column: span 2;
       }
 
-      &__pills {
-        margin-bottom: 24px;
-      }
-
       &__sidebar {
-        display: block;
         grid-row: 3/7;
-        grid-column: 2/3;
+        grid-column: 4/5;
+        padding-left: 40px;
 
         .sidebar-posts {
+          display: block;
           margin: 24px 0 0;
 
           &__header {
@@ -170,6 +238,17 @@
       grid-gap: 24px;
       width: calc(100% - 330px);
       border-top: 1px solid #d9d9d9;
+
+      &__preparation {
+        grid-row: 1/2;
+        grid-column: 2/3;
+      }
+
+      &__embed,
+      &__tips,
+      &__author {
+        grid-column: 2/3;
+      }
     }
   }
 }

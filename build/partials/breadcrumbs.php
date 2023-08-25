@@ -54,6 +54,19 @@
                     <li class="breadcrumbs__step">
                         <a href="<?php echo $_SERVER['REQUEST_URI'] ?>">Wyniki wyszukiwania</a>
                     </li>
+                <?php elseif (is_page('autorzy')) : ?>
+                    <li class="breadcrumbs__step">
+                        <a href="/autorzy">Autorzy</a>
+                    </li>
+                <?php elseif (is_author()) : ?>
+                    <li class="breadcrumbs__step">
+                        <a href="/autorzy">Autorzy</a>
+                    </li>
+                    <li class="breadcrumbs__step">
+                        <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
+                            <?php echo get_the_author_meta('display_name') ?>
+                        </a>
+                    </li>
                 <?php endif ?>
             </ul>
         </div>

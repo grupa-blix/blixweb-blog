@@ -74,12 +74,15 @@ const setProduct = (products, currentProductsData) => {
   const productsImg = products.querySelector(".product__img");
   const productsName = products.querySelector(".product__name");
   const productsPrice = products.querySelector(".product__price");
-  const { thumbnail, name, slug, hash } = currentProductsData;
+  const { thumbnail, name, slug, hash, price } = currentProductsData;
 
   productsLink.href = getProductUrl(slug, hash);
   productsImg.src = thumbnail;
   productsImg.alt = name;
   productsName.innerText = name;
+  productsPrice.innerText = `${parseFloat(price / 100)
+    .toFixed(2)
+    .replace(".", ",")} zł`;
 
   setTimeout(() => products.classList.remove("loading"), 200);
 };

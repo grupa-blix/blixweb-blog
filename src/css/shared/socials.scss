@@ -1,0 +1,19 @@
+.socials {
+  display: flex;
+  gap: 16px;
+
+  a {
+    height: 32px;
+  }
+
+  &--small {
+    a {
+      height: 20px;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

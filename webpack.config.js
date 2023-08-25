@@ -12,6 +12,7 @@ const devConfig = {
     }),
   ],
   entry: {
+    authors: "./src/js/pages/authors.js",
     article: "./src/js/pages/article.js",
     recipe: "./src/js/pages/recipe.js",
     shared: "./src/js/shared.js",
@@ -60,6 +61,7 @@ const prodConfig = {
     }),
   ],
   entry: {
+    authors: "./src/js/pages/authors.js",
     article: "./src/js/pages/article.js",
     recipe: "./src/js/pages/recipe.js",
     shared: "./src/js/shared.js",

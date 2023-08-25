@@ -14,34 +14,6 @@ if (term_exists(yoast_get_primary_term())) {
 
 <section class="section recipe-info">
     <div class="top-wrapper">
-        <h1 class="top-wrapper__title"><?php echo $post->post_title; ?></h1>
-
-        <div class="top-wrapper__pills pills">
-            <div class="pills__track">
-                <a href="<?php echo get_category_link($main_category); ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
-                <?php foreach ($post_categories as $category) :
-                    if ($category->term_id != $main_category->term_id) : ?>
-                        <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
-                <?php endif; endforeach; ?>
-            </div>
-        </div>
-
-        <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="top-wrapper__featured-img">
-
-        <div class="top-wrapper__details">
-            <?php if(get_field("servings")) : ?>
-                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/servings.svg'; ?>" /><strong><?php echo the_field("servings"); ?></strong></div>
-            <?php endif; ?>
-            <?php if(get_field("preparation_time")) : ?>
-                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/time.svg'; ?>" /><strong><?php echo the_field("preparation_time"); ?></strong></div>
-            <?php endif; ?>
-            <?php if(get_field("difficulty")) : ?>
-                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/difficulty.svg'; ?>" /><strong><?php echo the_field("difficulty"); ?></strong></div>
-            <?php endif; ?>
-        </div>
-
-        <div class="top-wrapper__data"><?php echo $post->post_date; ?></div>
-        <div class="top-wrapper__content"><?php echo the_content(); ?></div>
         <div class="top-wrapper__sidebar">
             <?php include __DIR__ . "/../search.php"; ?>
             <div class="sidebar-posts">
@@ -70,8 +42,39 @@ if (term_exists(yoast_get_primary_term())) {
                             </a>
                         </div>
                     <?php endwhile; ?>
+                    <?php wp_reset_query() ?>
             </div>
         </div>
+
+        <h1 class="top-wrapper__title"><?php echo $post->post_title; ?></h1>
+
+        <div class="top-wrapper__pills pills">
+            <div class="pills__track">
+                <a href="<?php echo get_category_link($main_category); ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
+                <?php foreach ($post_categories as $category) :
+                    if ($category->term_id != $main_category->term_id) : ?>
+                        <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
+                <?php endif; endforeach; ?>
+            </div>
+        </div>
+
+        <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="top-wrapper__featured-img">
+
+        <div class="top-wrapper__details">
+            <?php if(get_field("servings")) : ?>
+                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/servings.svg'; ?>" /><strong><?php echo the_field("servings"); ?></strong></div>
+            <?php endif; ?>
+            <?php if(get_field("preparation_time")) : ?>
+                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/time.svg'; ?>" /><strong><?php echo the_field("preparation_time"); ?></strong></div>
+            <?php endif; ?>
+            <?php if(get_field("difficulty")) : ?>
+                <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/difficulty.svg'; ?>" /><strong><?php echo the_field("difficulty"); ?></strong></div>
+            <?php endif; ?>
+        </div>
+
+        <div class="top-wrapper__data"><?php echo $post->post_date; ?></div>
+        <div class="top-wrapper__content"><?php echo the_content(); ?></div>
+        <div class="top-wrapper__contents"><p>[spis treści]</p></div>
     </div>
 
     <div class="bottom-wrapper">
@@ -79,9 +82,30 @@ if (term_exists(yoast_get_primary_term())) {
             <h2>Składniki</h2>
             <?php echo the_field("ingredients"); ?>
         </div>
+        <div class="bottom-wrapper__embed">
+            <h2>Promocje na składniki</h2>
+            <div class="embed">[embed]</div>
+        </div>
         <div class="bottom-wrapper__preparation">
             <h2>Jak zrobić <?php echo $post->post_title; ?></h2>
             <?php echo the_field("preparation"); ?>
+        </div>
+        <div class="bottom-wrapper__tips">
+            <h2>Wskazówki</h2>
+            <?php echo the_field("tips"); ?>
+        </div>
+        <div class="bottom-wrapper__author">
+            <?php echo get_avatar(get_the_author_meta('ID'), 96); ?>
+            <span>Autor: </span>
+            <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
+                <?php echo get_the_author_meta('display_name') ?>
+            </a>
+            <?php
+            $vars = (object) [
+                'class' => 'socials--small',
+                'author_id' => get_the_author_meta('ID')
+            ];
+            include __DIR__ . '/../socials.php' ?>
         </div>
     </div>
 </section>

@@ -23,7 +23,8 @@
   }
 
   @media (min-width: 992px) {
-    width: 282px;
+    width: 100%;
+    max-width: 282px;
     margin-bottom: 0;
     order: 2;
   }

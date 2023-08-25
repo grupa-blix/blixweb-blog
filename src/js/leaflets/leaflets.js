@@ -14,7 +14,7 @@ const getNewestLeaflets = async () => {
 const getPromotedLeaflets = async () => {
   const res = await fetch("https://fancy.blix.app/api/blog/leaflets/promoted");
   const data = await res.json();
-  return data.leaflets;
+  return data.PromotedPart2;
 };
 
 const leafletSizeData = {
