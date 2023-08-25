@@ -3,17 +3,17 @@
 <?php get_header(); ?>
 
 <?php
-$authors = get_users([
-    'fields'  => ['ID', 'display_name'],
-    'role'    => 'author',
-    'orderby' => 'display_name',
-]);
+    $authors = get_users([
+        'fields'  => ['ID', 'display_name'],
+        'role'    => 'author',
+        'orderby' => 'display_name',
+    ]);
 ?>
 
 <?php
-$vars = (object) [
-    'header' => 'Autorzy'
-]
+    $vars = (object) [
+        'header' => 'Autorzy'
+    ]
 ?>
 <?php include "partials/pills-navigation.php"; ?>
 
@@ -25,10 +25,11 @@ $vars = (object) [
                 <h4><?php echo $author->display_name; ?></h4>
             </a>
             <?php
-            $vars = (object) [
-                'author_id' => $author->ID,
-            ];
-            include 'partials/socials.php' ?>
+                $vars = (object) [
+                    'author_id' => $author->ID,
+                ];
+                include 'partials/socials.php'
+            ?>
         </div>
     <?php endforeach; ?>
 </section>
