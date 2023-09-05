@@ -23,6 +23,7 @@ $vars = (object) [
 ?>
 <?php if (count($vars->elements) != 0) : ?>
     <?php
+    $header = "Najnowsze gazetki Blix";
     $leaflets = "newest";
     include 'partials/sections/leaflets.php';
     include 'partials/sections/posts.php'; ?>

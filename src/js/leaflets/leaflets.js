@@ -1,9 +1,12 @@
 import Swiper from "swiper";
 import { Scrollbar, Navigation, Mousewheel, FreeMode, Manipulation } from "swiper/modules";
-import { isDesktop, getLeafletUrl, getBrandUrl } from "../utils";
+import { isDesktop, getLeafletUrl } from "../utils";
 
 let carousels = [];
-let newestLeaflets, promotedLeaflets;
+let newestLeaflets = [];
+let promotedLeaflets = [];
+let brandLeaflets = [];
+let categoryLeaflets = [];
 
 const getNewestLeaflets = async () => {
   const res = await fetch("https://fancy.blix.app/api/blog/leaflets/new");
@@ -15,6 +18,18 @@ const getPromotedLeaflets = async () => {
   const res = await fetch("https://fancy.blix.app/api/blog/leaflets/promoted");
   const data = await res.json();
   return data.PromotedPart2;
+};
+
+const getBrandLeaflets = async (slug) => {
+  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/brand/" + slug);
+  const data = await res.json();
+  return data.leaflets;
+};
+
+const getCategoryLeaflets = async (category) => {
+  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/category/" + category);
+  const data = await res.json();
+  return data.leaflets;
 };
 
 const leafletSizeData = {
@@ -77,38 +92,28 @@ const setCarouselSlides = (currentCarousel, leafletsData) => {
 };
 
 const setLeaflet = (leaflet, currentLeafletData) => {
-  const leafletCoverLink = leaflet.querySelector(".leaflet__cover-link");
+  const leafletLink = leaflet.querySelector(".leaflet__link");
   const leafletCoverImg = leaflet.querySelector(".leaflet__cover img");
   const leafletAvailability = leaflet.querySelector(".leaflet__availability");
   const leafletAvailabilityLabel = leaflet.querySelector(".availability__label");
-  const leafletBrandLogoLink = leaflet.querySelector(".leaflet__brand-logo-link");
   const leafletBrandLogoImg = leaflet.querySelector(".leaflet__brand-logo");
-  const leafletBrandNameLink = leaflet.querySelector(".leaflet__brand-name-link");
   const leafletBrandName = leaflet.querySelector(".leaflet__brand-name");
-  const leafletNameLink = leaflet.querySelector(".leaflet__leaflet-name-link");
   const leafletName = leaflet.querySelector(".leaflet__leaflet-name");
   const { id, brand, name, availability, thumbnail } = currentLeafletData;
   const { slug, name: brandName, thumbnail: brandThumbnail } = brand;
   const { class: availabilityClass, message } = availability;
   const leafletUrl = getLeafletUrl(slug, id);
-  const brandUrl = getBrandUrl(slug);
 
-  leafletCoverLink.href = leafletUrl;
-  leafletCoverLink.title = name;
+  leafletLink.href = leafletUrl;
+  leafletLink.title = name;
   leafletCoverImg.src = thumbnail;
   leafletCoverImg.alt = name;
   leafletCoverImg.title = name;
   leafletAvailability.classList.add(availabilityClass);
   leafletAvailabilityLabel.innerText = message;
-  leafletBrandLogoLink.href = brandUrl;
-  leafletBrandLogoLink.title = brandName;
   leafletBrandLogoImg.src = brandThumbnail;
   leafletBrandLogoImg.alt = brandName;
-  leafletBrandNameLink.href = brandUrl;
-  leafletBrandNameLink.title = brandName;
   leafletBrandName.innerText = brandName;
-  leafletNameLink.href = leafletUrl;
-  leafletNameLink.title = name;
   leafletName.innerText = name;
 
   setTimeout(() => leaflet.classList.remove("loading"), 200);
@@ -116,8 +121,13 @@ const setLeaflet = (leaflet, currentLeafletData) => {
 
 window.addEventListener("DOMContentLoaded", async () => {
   const leafletsCarousels = document.querySelectorAll(".section__swiper--leaflets");
+  const isNewestCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=newest]");
+  const isBrandCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=brand]");
+  const isCategoryCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=category]");
+  let brandSlug;
+  let category;
 
-  leafletsCarousels.forEach((carousel) => {
+  leafletsCarousels.forEach(async (carousel) => {
     const swiper = new Swiper(carousel, options);
 
     swiper.on("resize", () => {
@@ -125,15 +135,49 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
     swiper.init();
+
+    if (carousel.dataset.brand) brandSlug = carousel.dataset.brand;
+    if (carousel.dataset.category) category = carousel.dataset.category;
+
     carousels.push(swiper);
   });
 
-  newestLeaflets = await getNewestLeaflets();
   promotedLeaflets = await getPromotedLeaflets();
+
+  if (isNewestCarousel) {
+    newestLeaflets = await getNewestLeaflets();
+  }
+
+  if (isBrandCarousel) {
+    brandLeaflets = await getBrandLeaflets(brandSlug);
+  }
+
+  if (isCategoryCarousel) {
+    categoryLeaflets = await getCategoryLeaflets(category);
+  }
 
   leafletsCarousels.forEach((carousel, i) => {
     const currentCarousel = carousels[i];
-    const leafletsData = carousel.dataset.leaflets === "newest" ? newestLeaflets : promotedLeaflets;
+    const { leaflets: carouselLeaflets } = carousel.dataset;
+    let leafletsData;
+
+    switch (carouselLeaflets) {
+      case "newest":
+        leafletsData = newestLeaflets;
+        break;
+      case "promoted":
+        leafletsData = promotedLeaflets;
+        break;
+      case "brand":
+        leafletsData = brandLeaflets;
+        break;
+      case "category":
+        leafletsData = categoryLeaflets;
+        break;
+      default:
+        break;
+    }
+
     setCarouselSlides(currentCarousel, leafletsData);
 
     const leaflets = carousel.querySelectorAll(".leaflet");

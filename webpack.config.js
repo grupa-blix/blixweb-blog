@@ -16,6 +16,11 @@ const devConfig = {
     article: "./src/js/pages/article.js",
     recipe: "./src/js/pages/recipe.js",
     shared: "./src/js/shared.js",
+    likes: "./src/js/likes/likes.js",
+    share: "./src/js/share/share.js",
+    rating: "./src/js/rating/rating.js",
+    articleContents: "./src/js/contents/articleContents.js",
+    recipeContents: "./src/js/contents/recipeContents.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
@@ -65,6 +70,11 @@ const prodConfig = {
     article: "./src/js/pages/article.js",
     recipe: "./src/js/pages/recipe.js",
     shared: "./src/js/shared.js",
+    likes: "./src/js/likes/likes.js",
+    share: "./src/js/share/share.js",
+    rating: "./src/js/rating/rating.js",
+    articleContents: "./src/js/contents/articleContents.js",
+    recipeContents: "./src/js/contents/recipeContents.js",
   },
   output: {
     path: path.resolve(__dirname, "build"),

@@ -193,6 +193,12 @@
     }
   }
 
+  .section {
+    width: calc(100% + 48px);
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+
   @media (max-width: 991px) {
     &--m-no-padding-x {
       padding-left: 0;
@@ -298,6 +304,12 @@
     &__swiper {
       overflow: hidden;
     }
+
+    .section {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 
   @media (min-width: 1248px) {
@@ -330,6 +342,11 @@
 
     .swiper-scrollbar {
       margin-top: 16px;
+    }
+
+    .section {
+      width: 100%;
+      padding: 24px;
     }
   }
 }

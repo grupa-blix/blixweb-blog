@@ -1,64 +1,82 @@
 <?php $main_category = get_the_category($post)[0]; ?>
 <section class="section article-info">
-    <div class="top-wrapper">
-        <div class="top-wrapper__sidebar">
-            <?php include __DIR__ . "/../search.php"; ?>
-            <div class="sidebar-posts">
-                <strong class="sidebar-posts__header">Zobacz również</strong>
-                <?php
-                    $args = array(
-                        'post_type' => 'post',
-                        'orderby' => 'ID',
-                        'post_status' => 'publish',
-                        'order' => 'DESC',
-                        'cat' => $main_category->term_id,
-                        'posts_per_page' => 8
-                    );
+    <div class="sidebar">
+        <?php include __DIR__ . "/../search.php"; ?>
+        <div class="sidebar-posts">
+            <strong class="sidebar-posts__header">Zobacz również</strong>
+            <?php
+                $args = array(
+                    'post_type' => 'post',
+                    'orderby' => 'ID',
+                    'post_status' => 'publish',
+                    'order' => 'DESC',
+                    'cat' => $main_category->term_id,
+                    'posts_per_page' => 8
+                );
 
-                    $result = new WP_Query($args);
+                $result = new WP_Query($args);
 
-                    while ( $result->have_posts() ) : $result->the_post() ?>
-                        <div class="single-post">
-                            <a href="<?php echo get_permalink(); ?>">
-                                <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img']) ?>
-                                <div class="single-post__data">
-                                    <span class="single-post__title"><?php echo the_title(); ?></span>
-                                    <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
-                                </div>
-                            </a>
-                        </div>
-                    <?php endwhile; ?>
+                while ( $result->have_posts() ) : $result->the_post() ?>
+                    <div class="single-post">
+                        <a href="<?php echo get_permalink(); ?>">
+                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img']) ?>
+                            <div class="single-post__data">
+                                <span class="single-post__title"><?php echo the_title(); ?></span>
+                                <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
+                            </div>
+                        </a>
+                    </div>
+                <?php endwhile;
+                wp_reset_postdata(); ?>
+        </div>
+    </div>
+    <div class="main">
+        <h1 class="main__title"><?php echo the_title(); ?></h1>
+        <div class="main__details details">
+            <div class="details__date"><?php echo get_the_date('d.m.Y'); ?></div>
+            <div class="details__likes hidden">
+                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
+                <span><?php echo the_field('likes', $post->ID); ?></span>
             </div>
         </div>
-        <h1 class="top-wrapper__title"><?php echo the_title(); ?></h1>
-        <div class="top-wrapper__details details">
-            <div class="details__date"><?php echo get_the_date('d.m.Y'); ?></div>
-            <?php if(get_field('likes', $post->ID)) : ?>
-                <div class="details__likes">
-                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
-                    <span><?php echo the_field('likes', $post->ID); ?></span>
-                </div>
-            <?php endif ?>
-        </div>
-        <div class="top-wrapper__pills pills">
+        <div class="main__pills pills">
             <div class="pills__track">
                 <a href="<?php echo get_category_link($main_category) ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
             </div>
         </div>
-        <div class="top-wrapper__short-description">
+        <div class="main__short-description">
             <?php if(get_field("short_description")) : ?>
                 <?php echo the_field("short_description");?>
             <?php endif; ?>
         </div>
         <?php if(get_field("distinguished_element") === "embed") : ?>
-            <strong class="top-wrapper__embed">[embed]</strong>
+            <strong class="main__embed">[embed]</strong>
         <?php else : ?>
-            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="top-wrapper__featured-img">
+            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img">
         <?php endif; ?>
+        <div class="main__contents contents d-none">
+            <span>Spis treści:</span>
+            <ul class="contents__list"></ul>
         </div>
-    <div class="bottom-wrapper">
-        <?php echo the_content(); ?>
-        <div class="bottom-wrapper__author">
+        <div class="main__content content">
+            <?php the_content(); ?>
+        </div>
+        <div class="main__engagement">
+            <h2>Podoba Ci się ten artykuł?</h2>
+            <div class="engagement-wrapper">
+                <div class="likes" data-post-id="<?php echo $post->ID?>">
+                    <button class="likes__btn"></button>
+                    <span class="value hidden"><?php echo the_field('likes'); ?></span>
+                </div>
+                <div class="share">
+                    <button class="share__btn">
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/share.svg'; ?>" />
+                    </button>
+                    <span>Udostępnij</span>
+                </div>
+            </div>
+        </div>
+        <div class="main__author">
             <?php echo get_avatar(get_the_author_meta('ID'), 96); ?>
             <span>Autor: </span>
             <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
@@ -73,4 +91,5 @@
         </div>
     </div>
 </section>
+<?php include __DIR__ . "/../share.php"; ?>
 <?php wp_reset_postdata(); ?>

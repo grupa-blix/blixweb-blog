@@ -11,6 +11,7 @@ import "../css/shared/products.scss";
 import "../css/shared/search.scss";
 import "../css/shared/section.scss";
 import "../css/shared/socials.scss";
+import "../css/shared/share.scss";
 
 import "./navbar/navbar.js";
 import "./search/search.js";

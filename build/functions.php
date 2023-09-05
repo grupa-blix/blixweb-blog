@@ -30,10 +30,24 @@ function register_scripts()
 
     if(in_category("aktualnosci")){
         wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'','',true);
+        wp_enqueue_script('share', get_stylesheet_directory_uri() . "/assets/js/share.js",'','',true);
+        wp_enqueue_script('articleContents', get_stylesheet_directory_uri() . "/assets/js/articleContents.js",'','',true);
+
+        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','','',true);
+        wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+
+        wp_enqueue_script( 'likes_script' );
     }
 
     if(in_category("przepisy")){
         wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'','',true);
+        wp_enqueue_script('share', get_stylesheet_directory_uri() . "/assets/js/share.js",'','',true);
+        wp_enqueue_script('recipeContents', get_stylesheet_directory_uri() . "/assets/js/recipeContents.js",'','',true);
+
+        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','','',true);
+        wp_localize_script( 'rating_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+
+        wp_enqueue_script( 'rating_script' );
     }
 }
 add_action('wp_enqueue_scripts', 'register_scripts', 100);
@@ -145,7 +159,27 @@ add_action("wp_ajax_article_like", "article_like");
 add_action("wp_ajax_nopriv_article_like", "article_like");
 
 function article_like() {
-    update_field('likes', 28, 15611);
+    header("Content-type:application/json");
+    $field = (int) get_field('likes', $_POST["postId"]);
+    $modifier = (int) $_POST["newValue"];
+    $newValue = $field + $modifier;
+    update_field('likes', $newValue, $_POST["postId"]);
+    echo the_field('likes', $_POST["postId"]);
+    die();
+}
+
+add_action("wp_ajax_recipe_rating", "recipe_rating");
+add_action("wp_ajax_nopriv_recipe_rating", "recipe_rating");
+
+function recipe_rating() {
+    header("Content-type:application/json");
+    $newSum = (int) get_field('rating_sum', $_POST["postId"]) + $_POST["rating"];
+    $newCount = (int) get_field('rating_count', $_POST["postId"]) + 1;
+    $newRating = number_format($newSum / $newCount, 1);
+    update_field('rating_sum', $newSum, $_POST["postId"]);
+    update_field('rating_count', $newCount, $_POST["postId"]);
+    update_field('rating', $newRating, $_POST["postId"]);
+    echo the_field('rating', $_POST["postId"]);
     die();
 }
 
@@ -171,16 +205,5 @@ function my_user_new_form($form_type) {
         <?php endif; ?>
     </script>
     <?php
-}
-
-add_action( 'init', 'my_script_enqueuer' );
-
-function my_script_enqueuer() {
-   wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js', array('jquery') );
-   wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
-
-//    wp_enqueue_script( 'jquery' );
-//    wp_enqueue_script( 'likes_script' );
-
 }
 

@@ -16,6 +16,7 @@
     ?>
         <footer class="footer">
             <?php
+            $header = "Gazetki dla Ciebie w Blix";
             $leaflets = "promoted";
             $no_padding_top = true;
             include 'partials/sections/leaflets.php'; ?>

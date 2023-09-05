@@ -73,7 +73,14 @@
       font-weight: 400;
       line-height: 1;
 
-      &__likes {
+      &__inner-wrapper {
+        display: flex;
+        gap: 4px;
+      }
+
+      &__likes,
+      &__comments,
+      &__rating {
         display: flex;
         justify-content: center;
         align-items: center;

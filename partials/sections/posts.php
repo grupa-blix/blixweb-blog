@@ -16,12 +16,26 @@
                         <span class="article__name"><?php echo $element->post_title ?></span>
                         <div class="article__details details">
                             <div class="details__date"><?php echo get_the_date('d.m.Y', $element); ?></div>
-                            <?php if(get_field('likes', $element->ID)) : ?>
-                                <div class="details__likes">
-                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
-                                    <span><?php echo the_field('likes', $element->ID); ?></span>
-                                </div>
-                            <?php endif ?>
+                            <div class="details__inner-wrapper">
+                                <?php if(get_field('likes', $element->ID)) : ?>
+                                    <div class="details__likes">
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
+                                        <span><?php echo the_field('likes', $element->ID); ?></span>
+                                    </div>
+                                <?php endif ?>
+                                <?php if(get_field('rating', $element->ID) && get_field('rating_count', $element->ID) != 0) : ?>
+                                    <div class="details__rating">
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" />
+                                        <span><?php echo number_format(get_field('rating', $element->ID), 1)?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if(get_comments_number($element) > 0) : ?>
+                                    <div class="details__comments">
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" />
+                                        <span><?php echo count(get_comments()); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </a>
