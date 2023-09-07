@@ -15,6 +15,10 @@ body {
   }
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 *,
 *:after,
 *:before {
@@ -118,7 +122,6 @@ html {
     line-height: 1.6;
     color: #000000;
     margin: 0;
-    overflow-x: hidden;
   }
 
   h1,
@@ -380,4 +383,8 @@ html {
       font-size: 0.75rem;
     }
   }
+}
+
+.with-overflow {
+  overflow-x: hidden;
 }

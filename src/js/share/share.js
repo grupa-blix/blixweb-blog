@@ -21,11 +21,17 @@ const handleShareClick = async () => {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  const shareBtn = document.querySelector(".share__btn");
+  const share = document.querySelector(".share");
   const shareCloseBtn = document.querySelector(".share-modal__close-btn");
   const shareBg = document.querySelector(".share-modal__bg");
+  const shareCopyUrl = document.querySelector(".share-modal__url");
+  const shareCopyBtn = document.querySelector(".share-modal__copy-btn");
 
-  shareBtn.addEventListener("click", handleShareClick);
+  share.addEventListener("click", handleShareClick);
   shareCloseBtn.addEventListener("click", toggleShareModal);
   shareBg.addEventListener("click", toggleShareModal);
+  shareCopyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(shareCopyUrl.innerText);
+    toggleShareModal();
+  });
 });

@@ -5,13 +5,16 @@ const handleNoStorageData = () => {
 
 const handleThumbDisplay = () => {
   const likes = document.querySelector(".likes");
+  const detailsLikes = document.querySelector(".details__likes");
   const { postId } = likes.dataset;
   const isAlreadyLiked = checkIfAlreadyLiked(postId);
 
   if (isAlreadyLiked) {
     likes.classList.add("liked");
+    detailsLikes.classList.add("liked");
   } else {
     likes.classList.remove("liked");
+    detailsLikes.classList.remove("liked");
   }
 };
 
@@ -67,7 +70,6 @@ const handleLikesClick = async () => {
   });
 
   const newCount = await res.json();
-  console.log(newCount);
   likes.querySelector(".value").innerText = newCount;
   detailsLikes.querySelector("span").innerText = newCount;
   updateAlreadyLikedPosts(postId, isAlreadyLiked);
@@ -76,11 +78,11 @@ const handleLikesClick = async () => {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  const likesBtn = document.querySelector(".likes__btn");
+  const likes = document.querySelector(".likes");
 
   handleNoStorageData();
   handleThumbDisplay();
   handleLikesCountDisplay();
 
-  likesBtn.addEventListener("click", handleLikesClick);
+  likes.addEventListener("click", handleLikesClick);
 });

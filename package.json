@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "css-loader": "^6.8.1",
+    "interactjs": "^1.10.18",
     "style-loader": "^3.3.3",
     "swiper": "^10.2.0",
     "webpack": "^5.87.0"

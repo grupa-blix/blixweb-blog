@@ -26,6 +26,21 @@
         &.hidden {
           display: none;
         }
+
+        &.liked {
+          .likes-icon {
+            background: url("../../img/like--liked.svg");
+          }
+        }
+
+        .likes-icon {
+          width: 20px;
+          height: 20px;
+          background: url("../../img/like.svg");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
       }
     }
 
@@ -37,6 +52,16 @@
           background-color: #ddf0f3;
           border: 0;
           color: #000;
+        }
+      }
+    }
+
+    &__short-description {
+      margin-bottom: 12px;
+
+      p {
+        &:last-child {
+          margin-bottom: 0;
         }
       }
     }
@@ -62,12 +87,25 @@
     &__contents {
       margin-bottom: 24px;
 
+      span {
+        display: inline-block;
+        margin-bottom: 6px;
+      }
+
       ul,
       ol {
         padding-left: 24px;
 
         li {
+          width: max-content;
+          margin-bottom: 6px;
+          text-decoration: underline;
           cursor: pointer;
+
+          &.with-margin {
+            margin-left: 12px;
+            list-style-type: circle;
+          }
         }
       }
     }
@@ -80,7 +118,7 @@
       .engagement-wrapper {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 24px;
       }
 
       .likes,
@@ -88,13 +126,13 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        cursor: pointer;
 
         &__btn {
           width: 20px;
           height: 20px;
           background-color: transparent;
           border: 0;
-          cursor: pointer;
           padding: 0;
         }
       }

@@ -32,7 +32,7 @@
                                 <?php if(get_comments_number($element) > 0) : ?>
                                     <div class="details__comments">
                                         <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" />
-                                        <span><?php echo count(get_comments()); ?></span>
+                                        <span><?php echo get_comments_number($element); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>

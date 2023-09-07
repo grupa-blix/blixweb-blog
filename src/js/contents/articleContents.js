@@ -15,8 +15,11 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     contents.classList.remove("d-none");
     contentHeadings.forEach((heading) => {
+      const smallerHeadings = ["H3", "H4", "H5", "H6"];
       const li = document.createElement("li");
       li.innerText = heading.innerText;
+
+      if (smallerHeadings.includes(heading.nodeName)) li.classList.add("with-margin");
 
       li.addEventListener("click", () => {
         scrollTo(heading);

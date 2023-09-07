@@ -9,25 +9,25 @@ let brandLeaflets = [];
 let categoryLeaflets = [];
 
 const getNewestLeaflets = async () => {
-  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/new");
+  const res = await fetch("https://blix.pl/api/blog/leaflets/new");
   const data = await res.json();
   return data.leaflets;
 };
 
 const getPromotedLeaflets = async () => {
-  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/promoted");
+  const res = await fetch("https://blix.pl/api/blog/leaflets/promoted");
   const data = await res.json();
-  return data.PromotedPart2;
+  return [...data.PromotedPart1, ...data.PromotedPart2];
 };
 
 const getBrandLeaflets = async (slug) => {
-  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/brand/" + slug);
+  const res = await fetch("https://blix.pl/api/blog/leaflets/brand/" + slug);
   const data = await res.json();
   return data.leaflets;
 };
 
 const getCategoryLeaflets = async (category) => {
-  const res = await fetch("https://fancy.blix.app/api/blog/leaflets/category/" + category);
+  const res = await fetch("https://blix.pl/api/blog/leaflets/category/" + category);
   const data = await res.json();
   return data.leaflets;
 };
@@ -38,7 +38,7 @@ const leafletSizeData = {
     spaceBetween: 12,
   },
   desktop: {
-    defaultWidth: 282,
+    defaultWidth: 180,
     spaceBetween: 24,
   },
 };
@@ -177,6 +177,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       default:
         break;
     }
+
+    leafletsData = leafletsData.filter((data) => {
+      return data.thumbnail != null;
+    });
 
     setCarouselSlides(currentCarousel, leafletsData);
 

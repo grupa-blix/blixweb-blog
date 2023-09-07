@@ -5,7 +5,7 @@ import { getProductUrl, isDesktop } from "../utils";
 let carousels = [];
 
 const getBestProducts = async () => {
-  const res = await fetch("https://fancy.blix.app/api/blog/offers/best");
+  const res = await fetch("https://blix.pl/api/blog/offers/best");
   const data = await res.json();
   return data.offers;
 };

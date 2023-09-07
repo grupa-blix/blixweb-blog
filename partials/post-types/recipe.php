@@ -1,5 +1,6 @@
 <?php
 $post_categories = get_the_category($post);
+$top_category = get_term(1229);
 
 usort($post_categories, function($a, $b) {
     return $a->term_id - $b->term_id;
@@ -50,9 +51,9 @@ if (term_exists(yoast_get_primary_term())) {
 
             <div class="top-wrapper__pills pills">
                 <div class="pills__track">
-                    <a href="<?php echo get_category_link($main_category); ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
+                    <a href="<?php echo get_category_link($top_category); ?>" class="pill pill--main"><?php echo $top_category->name; ?></a>
                     <?php foreach ($post_categories as $category) :
-                        if ($category->term_id != $main_category->term_id) : ?>
+                        if ($category->term_id != $top_category->term_id) : ?>
                             <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
                     <?php endif; endforeach; ?>
                 </div>
@@ -72,7 +73,20 @@ if (term_exists(yoast_get_primary_term())) {
                 <?php endif; ?>
             </div>
 
-            <div class="top-wrapper__data"><?php echo get_the_date('d.m.Y'); ?></div>
+            <div class="top-wrapper__data">
+                <?php if(get_field('rating') && get_field('rating_count') != 0) : ?>
+                    <div class="data__rating">
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" />
+                        <span><?php echo number_format(get_field('rating'), 1)?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if(get_comments_number($post) > 0) : ?>
+                    <div class="data__comments">
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" />
+                        <span><?php echo count(get_comments($post)); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php echo get_the_date('d.m.Y'); ?></div>
             <div class="top-wrapper__content"><?php echo the_content(); ?></div>
             <div class="top-wrapper__contents contents">
                 <span>Spis treści:</span>
@@ -87,8 +101,10 @@ if (term_exists(yoast_get_primary_term())) {
 
         <div class="bottom-wrapper">
             <div class="bottom-wrapper__ingredients" data-scroll="ingredients">
-                <h2>Składniki</h2>
-                <?php echo the_field("ingredients"); ?>
+                <div class="bottom-wrapper__ingredients-inner-wrapper">
+                    <h2>Składniki</h2>
+                    <?php echo the_field("ingredients"); ?>
+                </div>
             </div>
             <div class="bottom-wrapper__embed" data-scroll="promotions">
                 <h2>Promocje na składniki</h2>
@@ -168,5 +184,6 @@ if (term_exists(yoast_get_primary_term())) {
         </div>
     </div>
 </section>
+<?php include __DIR__ . "/../comments.php"; ?>
 <?php include __DIR__ . "/../share.php"; ?>
 <?php wp_reset_postdata(); ?>

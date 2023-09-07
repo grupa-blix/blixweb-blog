@@ -11,6 +11,7 @@
                     'post_status' => 'publish',
                     'order' => 'DESC',
                     'cat' => $main_category->term_id,
+                    'post__not_in' => [$post->ID],
                     'posts_per_page' => 8
                 );
 
@@ -35,7 +36,7 @@
         <div class="main__details details">
             <div class="details__date"><?php echo get_the_date('d.m.Y'); ?></div>
             <div class="details__likes hidden">
-                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" />
+                <div class="likes-icon"></div>
                 <span><?php echo the_field('likes', $post->ID); ?></span>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<section class="section section--gray">
+<section class="section section--gray with-overflow">
     <div class="section__header-wrapper">
         <h2><?php echo $header; ?></h2>
         <a href="https://blix.pl/">

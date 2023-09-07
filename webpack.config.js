@@ -21,6 +21,7 @@ const devConfig = {
     rating: "./src/js/rating/rating.js",
     articleContents: "./src/js/contents/articleContents.js",
     recipeContents: "./src/js/contents/recipeContents.js",
+    comments: "./src/js/comments/comments.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
@@ -75,6 +76,7 @@ const prodConfig = {
     rating: "./src/js/rating/rating.js",
     articleContents: "./src/js/contents/articleContents.js",
     recipeContents: "./src/js/contents/recipeContents.js",
+    comments: "./src/js/comments/comments.js",
   },
   output: {
     path: path.resolve(__dirname, "build"),

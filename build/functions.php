@@ -47,7 +47,11 @@ function register_scripts()
         wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','','',true);
         wp_localize_script( 'rating_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
+        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','','',true);
+        wp_localize_script( 'comments', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+
         wp_enqueue_script( 'rating_script' );
+        wp_enqueue_script( 'comments' );
     }
 }
 add_action('wp_enqueue_scripts', 'register_scripts', 100);
@@ -180,6 +184,36 @@ function recipe_rating() {
     update_field('rating_count', $newCount, $_POST["postId"]);
     update_field('rating', $newRating, $_POST["postId"]);
     echo the_field('rating', $_POST["postId"]);
+    die();
+}
+
+add_action("wp_ajax_recaptcha", "recaptcha");
+add_action("wp_ajax_nopriv_recaptcha", "recaptcha");
+
+function recaptcha() {
+    $response = file_get_contents(
+        "https://www.google.com/recaptcha/api/siteverify?secret=6LfyoAYoAAAAANZzhfiiyJKq0yEurvVHasvW028U&response=" . $_POST["recaptcha"]
+    );
+
+    echo json_encode(json_decode($response));
+    die();
+}
+
+add_action("wp_ajax_recipe_comment", "recipe_comment");
+add_action("wp_ajax_nopriv_recipe_comment", "recipe_comment");
+
+function recipe_comment() {
+    header("Content-type:application/json");
+    $obj = array(
+        "comment_post_ID" => $_POST["comment_post_ID"],
+        "comment_author" => $_POST["comment_author"],
+        "comment_content" => $_POST["comment_content"],
+        "comment_parent" => $_POST["comment_parent"],
+        "comment_approved" => 0
+    );
+
+    wp_insert_comment($obj);
+    echo json_encode($obj);
     die();
 }
 
