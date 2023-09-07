@@ -41,11 +41,23 @@ const leafletSizeData = {
     defaultWidth: 180,
     spaceBetween: 24,
   },
+  desktopSmall: {
+    defaultWidth: 282,
+    spaceBetween: 24,
+  },
 };
 
 const setSlidesPerView = () => {
   const containerMaxWidth = window.innerWidth > 1248 ? 1248 : window.innerWidth;
   const sizeData = isDesktop() ? leafletSizeData.desktop : leafletSizeData.mobile;
+  const { defaultWidth, spaceBetween } = sizeData;
+
+  return parseInt((containerMaxWidth - 48 + spaceBetween) / (defaultWidth + spaceBetween), 10);
+};
+
+const setSlidesPerViewSmall = () => {
+  const containerMaxWidth = window.innerWidth > 1248 ? 1248 : window.innerWidth;
+  const sizeData = isDesktop() ? leafletSizeData.desktopSmall : leafletSizeData.mobile;
   const { defaultWidth, spaceBetween } = sizeData;
 
   return parseInt((containerMaxWidth - 48 + spaceBetween) / (defaultWidth + spaceBetween), 10);
@@ -128,10 +140,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   let category;
 
   leafletsCarousels.forEach(async (carousel) => {
-    const swiper = new Swiper(carousel, options);
+    const isSmall = carousel.classList.contains("section__swiper--leaflets-small");
+    const swiper = new Swiper(carousel, isSmall ? { ...options, slidesPerView: setSlidesPerViewSmall() } : options);
 
     swiper.on("resize", () => {
-      swiper.params.slidesPerView = setSlidesPerView();
+      swiper.params.slidesPerView = isSmall ? setSlidesPerViewSmall() : setSlidesPerView();
     });
 
     swiper.init();

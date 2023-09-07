@@ -388,3 +388,10 @@ html {
 .with-overflow {
   overflow-x: hidden;
 }
+
+div {
+  &:has(.grecaptcha-badge) {
+    position: relative;
+    z-index: 3;
+  }
+}

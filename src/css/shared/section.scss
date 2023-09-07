@@ -236,6 +236,11 @@
         grid-gap: 24px;
       }
 
+      &--leaflets-small {
+        grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
+        grid-gap: 24px;
+      }
+
       &--products {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         grid-auto-rows: 1fr;
@@ -264,6 +269,12 @@
       &--leaflets {
         .swiper-slide {
           width: 180px;
+        }
+      }
+
+      &--leaflets-small {
+        .swiper-slide {
+          width: 282px;
         }
       }
 
