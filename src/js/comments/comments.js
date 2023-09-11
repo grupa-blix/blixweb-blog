@@ -173,6 +173,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const respondBtns = document.querySelectorAll(".single-comment__respond");
   const responseClearBtn = document.querySelector(".response__clear-btn");
 
+  if (!comments) return;
+
   comments.addEventListener("click", openCommentsBottomsheet);
   commentsBackBtn.addEventListener("click", wrapForm);
   commentsCloseBtn.addEventListener("click", closeCommentsBottomsheet);

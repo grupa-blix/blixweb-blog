@@ -27,6 +27,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const shareCopyUrl = document.querySelector(".share-modal__url");
   const shareCopyBtn = document.querySelector(".share-modal__copy-btn");
 
+  if (!share) return;
+
   share.addEventListener("click", handleShareClick);
   shareCloseBtn.addEventListener("click", toggleShareModal);
   shareBg.addEventListener("click", toggleShareModal);

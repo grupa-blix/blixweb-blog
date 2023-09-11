@@ -1,6 +1,7 @@
 import Swiper from "swiper";
 import { Scrollbar, Navigation, Mousewheel, FreeMode, Manipulation } from "swiper/modules";
 import { isDesktop, getLeafletUrl } from "../utils";
+import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
 
 let carousels = [];
 let newestLeaflets = [];
@@ -103,6 +104,18 @@ const setCarouselSlides = (currentCarousel, leafletsData) => {
   currentCarousel.removeSlide(indexToRemoveArray);
 };
 
+const adultContent = (brandThumbnail) => {
+  const overlay = document.createElement("div");
+  overlay.classList.add("adult-content-overlay");
+  overlay.innerHTML = `
+      <img src="${brandThumbnail}" class="adult-content-overlay__img" loading="lazy" />
+      <span class="adult-content-overlay__label">Zawartość dla osób pełnoletnich</span>
+      <button class="adult-content-overlay__button button button--green">Odblokuj</button>
+  `;
+
+  return overlay;
+};
+
 const setLeaflet = (leaflet, currentLeafletData) => {
   const leafletLink = leaflet.querySelector(".leaflet__link");
   const leafletCoverImg = leaflet.querySelector(".leaflet__cover img");
@@ -111,7 +124,7 @@ const setLeaflet = (leaflet, currentLeafletData) => {
   const leafletBrandLogoImg = leaflet.querySelector(".leaflet__brand-logo");
   const leafletBrandName = leaflet.querySelector(".leaflet__brand-name");
   const leafletName = leaflet.querySelector(".leaflet__leaflet-name");
-  const { id, brand, name, availability, thumbnail } = currentLeafletData;
+  const { id, brand, name, availability, thumbnail, hasAlcohol } = currentLeafletData;
   const { slug, name: brandName, thumbnail: brandThumbnail } = brand;
   const { class: availabilityClass, message } = availability;
   const leafletUrl = getLeafletUrl(slug, id);
@@ -127,6 +140,11 @@ const setLeaflet = (leaflet, currentLeafletData) => {
   leafletBrandLogoImg.alt = brandName;
   leafletBrandName.innerText = brandName;
   leafletName.innerText = name;
+
+  if (hasAlcohol && !isUserAdult()) {
+    leaflet.prepend(adultContent(brandThumbnail));
+    addAdultOverlayClickHandlers();
+  }
 
   setTimeout(() => leaflet.classList.remove("loading"), 200);
 };

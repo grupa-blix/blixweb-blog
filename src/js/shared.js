@@ -10,11 +10,11 @@ import "../css/shared/pills.scss";
 import "../css/shared/products.scss";
 import "../css/shared/search.scss";
 import "../css/shared/section.scss";
-import "../css/shared/socials.scss";
-import "../css/shared/share.scss";
-
+import "../css/shared/adult-content.scss";
 import "./navbar/navbar.js";
 import "./search/search.js";
 import "./brands/brands.js";
 import "./leaflets/leaflets.js";
 import "./products/products.js";
+import "./pills/pills.js";
+import "./adult-content/adult-content.js";

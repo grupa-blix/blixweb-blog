@@ -1,7 +1,7 @@
 import { isDesktop } from "../utils";
 
-//const searchForm = document.querySelector("form.search");
-// const searchURL = Routing.generate("autocomplete-post");
+// const searchForm = document.querySelector("form.search");
+// const searchURL = "https://fancy.blix.app/autocomplete/";
 const searchCloseBtn = document.querySelector(".search__button-close");
 const autocomplete = document.querySelector(".autocomplete");
 const overlay = document.querySelector(".search-overlay");
@@ -27,7 +27,7 @@ const showOverlay = () => {
 const hideOverlay = () => {
   overlay.classList.remove("visible");
   searchCloseBtn.classList.remove("search__button-close--visible");
-  //   autocomplete.classList.remove("autocomplete--visible");
+  // autocomplete.classList.remove("autocomplete--visible");
   searchInput.value = "";
 };
 
@@ -59,25 +59,25 @@ const setSearchPosition = () => {
 // const generateList = (container, data) => {
 //   const { title, items } = data;
 //   const autocompleteContainer = container;
-//   const autocompleteTitle = autocompleteContainer.querySelector('.title_bar');
-//   const autocompleteList = autocompleteContainer.querySelector('ul');
+//   const autocompleteTitle = autocompleteContainer.querySelector(".title_bar");
+//   const autocompleteList = autocompleteContainer.querySelector("ul");
 
 //   if (items.length === 0) {
-//     autocompleteContainer.style.display = 'none';
+//     autocompleteContainer.style.display = "none";
 //   } else {
-//     autocompleteContainer.style.display = 'block';
+//     autocompleteContainer.style.display = "block";
 //     autocompleteTitle.innerText = title;
 //     autocompleteList.innerHTML = items
 //       .map((item) => (item.img ? generateItemWithImg(item) : generateItem(item)))
-//       .join('');
+//       .join("");
 //   }
 // };
 
 // const addAutocompleteItemsClickHandler = () => {
-//   const autocompleteItems = autocomplete.querySelectorAll('li');
+//   const autocompleteItems = autocomplete.querySelectorAll("li");
 //   autocompleteItems.forEach((item) => {
-//     item.addEventListener('click', () => {
-//       const hasAnchor = item.querySelector('a');
+//     item.addEventListener("click", () => {
+//       const hasAnchor = item.querySelector("a");
 
 //       if (!hasAnchor) {
 //         searchInput.value = item.innerText;
@@ -89,12 +89,16 @@ const setSearchPosition = () => {
 
 // const search = async () => {
 //   const query = new URLSearchParams({ query: searchInput.value });
-//   const autocompleteProducts = autocomplete.querySelector('.products');
-//   const autocompleteBrands = autocomplete.querySelector('.brands');
+//   const autocompleteProducts = autocomplete.querySelector(".products");
+//   const autocompleteBrands = autocomplete.querySelector(".brands");
 
-//   const req = axios.post(searchURL, query, {
+//   const req = fetch(searchURL, {
+//     method: "POST",
 //     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+//     },
+//     body: {
+//       query,
 //     },
 //   });
 
@@ -105,7 +109,7 @@ const setSearchPosition = () => {
 //   generateList(autocompleteBrands, brands);
 //   addAutocompleteItemsClickHandler();
 
-//   autocomplete.classList.add('autocomplete--visible');
+//   autocomplete.classList.add("autocomplete--visible");
 // };
 
 const addSearchHandlers = () => {

@@ -40,13 +40,13 @@
                         <h4>Pobierz aplikację Blix na swój telefon!</h4>
                         <div class="footer__apps-badges">
                             <a href="https://play.google.com/store/apps/details?id=com.gazetki.gazetki">
-                                <img class="lazyload loaded" src="https://blix.pl/gotuj/blix-googleplay.png" alt="Google Play" width="169" height="50" data-src="https://blix.pl/gotuj/blix-googleplay.png" data-was-processed="true">
+                                <img src="https://blix.pl/gotuj/blix-googleplay.png" alt="Google Play" width="169" height="50" loading="lazy">
                             </a>
                             <a href="https://blix.app.link/WKcXWBDG0W">
-                                <img class="lazyload loaded" src="https://blix.pl/gotuj/blix-appstore.png" alt="Aplikacja Blix iOS - App Store" width="150" height="50" data-src="https://blix.pl/gotuj/blix-appstore.png" data-was-processed="true">
+                                <img src="https://blix.pl/gotuj/blix-appstore.png" alt="Aplikacja Blix iOS - App Store" width="150" height="50" loading="lazy">
                             </a>
                             <a href="https://appgallery.cloud.huawei.com/marketshare/app/C100525553?locale=pl_PL">
-                                <img class="lazyload loaded" src="https://blix.pl/gotuj/blix-huawei-app-gallery.png" alt="Aplikacja Blix Huawei - App Store" width="167" height="50" data-src="https://blix.pl/gotuj/blix-huawei-app-gallery.png" data-was-processed="true">
+                                <img src="https://blix.pl/gotuj/blix-huawei-app-gallery.png" alt="Aplikacja Blix Huawei - App Store" width="167" height="50" loading="lazy">
                             </a>
                         </div>
                     </div>

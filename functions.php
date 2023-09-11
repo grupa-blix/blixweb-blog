@@ -10,11 +10,11 @@ function register_styles()
 {
 	wp_enqueue_style('shared', get_stylesheet_directory_uri() . "/assets/css/shared.css");
 
-    if(in_category("aktualnosci")){
+    if(is_single() && in_category("aktualnosci")){
         wp_enqueue_style('article', get_stylesheet_directory_uri() . "/assets/css/article.css");
     }
 
-    if(in_category("przepisy")){
+    if(is_single() && in_category("przepisy")){
         wp_enqueue_style('recipe', get_stylesheet_directory_uri() . "/assets/css/recipe.css");
     }
 
@@ -28,26 +28,31 @@ function register_scripts()
 {
 	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'','',true);
 
-    if(in_category("aktualnosci")){
+    if(is_single() && in_category("aktualnosci")){
         wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'','',true);
-        wp_enqueue_script('share', get_stylesheet_directory_uri() . "/assets/js/share.js",'','',true);
-        wp_enqueue_script('articleContents', get_stylesheet_directory_uri() . "/assets/js/articleContents.js",'','',true);
 
-        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','','',true);
+        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','','', array(
+        'strategy'  => 'defer',
+        'in_footer' => true,
+        ));
         wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
         wp_enqueue_script( 'likes_script' );
     }
 
-    if(in_category("przepisy")){
+    if(is_single() && in_category("przepisy")){
         wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'','',true);
-        wp_enqueue_script('share', get_stylesheet_directory_uri() . "/assets/js/share.js",'','',true);
-        wp_enqueue_script('recipeContents', get_stylesheet_directory_uri() . "/assets/js/recipeContents.js",'','',true);
 
-        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','','',true);
+        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','','', array(
+        'strategy'  => 'defer',
+        'in_footer' => true,
+        ));
         wp_localize_script( 'rating_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
-        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','','',true);
+        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','','', array(
+        'strategy'  => 'defer',
+        'in_footer' => true,
+        ));
         wp_localize_script( 'comments', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
         wp_enqueue_script( 'rating_script' );
@@ -241,3 +246,8 @@ function my_user_new_form($form_type) {
     <?php
 }
 
+function custom_author_base() {
+    global $wp_rewrite;
+    $wp_rewrite->author_base = 'autor';
+}
+add_action( 'init', 'custom_author_base' );

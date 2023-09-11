@@ -20,7 +20,7 @@
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img']) ?>
+                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy']) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
@@ -50,9 +50,21 @@
                 <?php echo the_field("short_description");?>
             <?php endif; ?>
         </div>
-        <?php if(get_field("distinguished_element") === "embed") : ?>
-            <strong class="main__embed">[embed]</strong>
-        <?php else : ?>
+        <?php
+            if(get_field("distinguished_element") === "embed") :
+                $type = get_field( 'embed_type' )['value'];
+
+                if($type === "brand") :
+                    $brand = get_field( 'related_brand' )['value'];
+                    $leafletId = get_field( 'leaflet_ID' );
+
+                    include __DIR__ . '/../embed.php';
+                elseif ($type == "search") :
+                    $searchPhrase = get_field( 'search_phrase' );
+
+                    if($searchPhrase != '') include __DIR__ . '/../embed.php';
+                endif;
+            else : ?>
             <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img">
         <?php endif; ?>
         <div class="main__contents contents d-none">

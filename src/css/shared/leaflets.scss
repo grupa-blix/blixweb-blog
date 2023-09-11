@@ -273,6 +273,25 @@
     .adult-content-overlay {
       border-radius: 16px;
     }
+
+    &.small {
+      .leaflet__btn-cta {
+        transform: scale(0.5);
+      }
+
+      .leaflet__info {
+        grid-template-columns: 32px 1fr;
+        grid-template-rows: 16px 16px;
+      }
+
+      .leaflet__brand-name {
+        font-size: 14px;
+      }
+
+      .leaflet__leaflet-name {
+        font-size: 12px;
+      }
+    }
   }
 }
 

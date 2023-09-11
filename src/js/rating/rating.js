@@ -73,7 +73,11 @@ const handleStarClick = async (starBtn) => {
 window.addEventListener("DOMContentLoaded", () => {
   const rating = document.querySelector(".rating");
   const starBtns = document.querySelectorAll(".rating__btns-wrapper .star");
+
+  if (!rating) return;
+
   const { postId } = rating.dataset;
+
   handleNoStorageData();
 
   if (checkIfAlreadyRated(postId)) {

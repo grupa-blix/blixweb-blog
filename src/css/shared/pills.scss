@@ -2,6 +2,10 @@
   position: relative;
   min-width: 0;
 
+  &__wrapper {
+    position: relative;
+  }
+
   &__track {
     display: flex;
     grid-gap: 8px;
@@ -29,14 +33,14 @@
 
     &--left {
       left: 0;
-    }
-
-    &--right {
-      right: 0;
 
       img {
         transform: rotate(180deg);
       }
+    }
+
+    &--right {
+      right: 0;
     }
   }
 
@@ -53,7 +57,12 @@
     border: 1px solid #d9d9d9;
     border-radius: 50px;
     cursor: pointer;
+    user-drag: none;
+    -webkit-user-drag: none;
     user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 
     &.active {
       border: 1px solid #000;

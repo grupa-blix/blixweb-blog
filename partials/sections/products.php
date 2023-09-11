@@ -12,7 +12,7 @@
                   <a href class="product__link">
                       <div class="product section__item loading">
                           <div class="product__img-wrapper shimmer">
-                              <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/product-placeholder.png'; ?>" alt class="product__img" width="220" height="220">
+                              <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/product-placeholder.png'; ?>" alt class="product__img" width="220" height="220" loading="lazy">
                               <button class="product__btn-cta button">
                                   <i class="icon-eye"></i>
                                   <span>Zobacz</span>
@@ -26,10 +26,10 @@
             <?php endfor ?>
         </div>
         <div class="swiper-button swiper-button-prev">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt loading="lazy">
         </div>
         <div class="swiper-button swiper-button-next">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt loading="lazy">
         </div>
         <div class="swiper-scrollbar">
             <div class="swiper-scrollbar__bg"></div>

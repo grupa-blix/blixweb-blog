@@ -13,7 +13,7 @@
                         <a href class="leaflet__link" title>
                             <div class="leaflet__cover-wrapper shimmer">
                                 <picture class="leaflet__cover">
-                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/leaflet-cover-placeholder.png'; ?>" alt title width="360" height="510">
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/leaflet-cover-placeholder.png'; ?>" alt title width="360" height="510" loading="lazy">
                                 </picture>
                                 <button class="leaflet__btn-cta button">
                                     <i class="icon-eye"></i>
@@ -25,7 +25,7 @@
                                 <span class="availability__label">Dostępność gazetki</span>
                             </div>
                             <div class="leaflet__info shimmer">
-                                <img class="leaflet__brand-logo brand-logo lazyload loaded" src="<?php echo get_stylesheet_directory_uri() . '/assets/img/brand-logo-placeholder.png'; ?>" alt title>
+                                <img class="leaflet__brand-logo brand-logo lazyload loaded" src="<?php echo get_stylesheet_directory_uri() . '/assets/img/brand-logo-placeholder.png'; ?>" alt title loading="lazy">
                                 <h6 class="leaflet__brand-name">Nazwa brandu</h6>
                                 <span class="leaflet__leaflet-name">Nazwa gazetki</span>
                             </div>
@@ -35,10 +35,10 @@
             <?php endfor ?>
         </div>
         <div class="swiper-button swiper-button-prev">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt loading="lazy">
         </div>
         <div class="swiper-button swiper-button-next">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg'; ?>" alt loading="lazy">
         </div>
         <div class="swiper-scrollbar">
             <div class="swiper-scrollbar__bg"></div>

@@ -41,7 +41,7 @@ $menuMainItems = array_filter($menuItems, function ($k) {
 												<li class="navbar__menu-item">
 													<div class="navbar__menu-item-inner-wrapper">
 														<a class="main-category ga-menu-cat-brand" href="<?php echo $subItem->url; ?>">
-															<img src="https://static.blix.pl/blix/navbar-icons/<?php echo sanitize_title($subItem->post_title); ?>.svg" data-src="" alt="" width="32" height="32" />
+															<img src="https://static.blix.pl/blix/navbar-icons/<?php echo sanitize_title($subItem->post_title); ?>.svg" alt="<?php echo $subItem->post_title; ?>" width="32" height="32" loading="lazy" />
 															<?php echo $subItem->post_title; ?>
 															<button class="menu-item-caret"></button>
 														</a>
@@ -86,6 +86,18 @@ $menuMainItems = array_filter($menuItems, function ($k) {
 				<button type="button" class="button search__button-close"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/x-icon.svg'; ?>"></button>
 				<button class="button button--green search__button"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/search-icon.svg'; ?>"></button>
 			</form>
+			<div class="autocomplete">
+				<div class="autocomplete__bg">
+					<div class="products">
+						<span class="title_bar"></span>
+						<ul></ul>
+					</div>
+					<div class="brands">
+						<span class="title_bar"></span>
+						<ul></ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

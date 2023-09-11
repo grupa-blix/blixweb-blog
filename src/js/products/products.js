@@ -1,6 +1,7 @@
 import Swiper from "swiper";
 import { Scrollbar, Navigation, Mousewheel, FreeMode, Manipulation } from "swiper/modules";
 import { getProductUrl, isDesktop } from "../utils";
+import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
 
 let carousels = [];
 
@@ -69,22 +70,37 @@ const setCarouselSlides = (currentCarousel, productsData) => {
   currentCarousel.removeSlide(indexToRemoveArray);
 };
 
-const setProduct = (products, currentProductsData) => {
-  const productsLink = products.closest(".product__link");
-  const productsImg = products.querySelector(".product__img");
-  const productsName = products.querySelector(".product__name");
-  const productsPrice = products.querySelector(".product__price");
-  const { thumbnail, name, slug, hash, price } = currentProductsData;
+const adultContent = () => {
+  const overlay = document.createElement("div");
+  overlay.classList.add("adult-content-overlay");
+  overlay.innerHTML = `
+      <span class="adult-content-overlay__label">Zawartość dla osób pełnoletnich</span>
+      <button class="adult-content-overlay__button button button--green">Odblokuj</button>
+  `;
 
-  productsLink.href = getProductUrl(slug, hash);
-  productsImg.src = thumbnail;
-  productsImg.alt = name;
-  productsName.innerText = name;
-  productsPrice.innerText = `${parseFloat(price / 100)
+  return overlay;
+};
+
+const setProduct = (product, currentProductData) => {
+  const productLink = product.closest(".product__link");
+  const productImg = product.querySelector(".product__img");
+  const productName = product.querySelector(".product__name");
+  const productPrice = product.querySelector(".product__price");
+  const { thumbnail, name, slug, hash, price, hasAlcohol } = currentProductData;
+
+  productLink.href = getProductUrl(slug, hash);
+  productImg.src = thumbnail;
+  productImg.alt = name;
+  productName.innerText = name;
+  productPrice.innerText = `${parseFloat(price / 100)
     .toFixed(2)
     .replace(".", ",")} zł`;
 
-  setTimeout(() => products.classList.remove("loading"), 200);
+  if (hasAlcohol && !isUserAdult()) {
+    product.prepend(adultContent());
+  }
+
+  setTimeout(() => product.classList.remove("loading"), 200);
 };
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -108,9 +124,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     setCarouselSlides(currentCarousel, bestProducts);
 
     const products = carousel.querySelectorAll(".product");
-    products.forEach((products, j) => {
-      const currentProducttData = bestProducts[j];
-      setProduct(products, currentProducttData);
+    products.forEach((product, j) => {
+      const currentProductData = bestProducts[j];
+      setProduct(product, currentProductData);
     });
   });
 });

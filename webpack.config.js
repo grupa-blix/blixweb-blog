@@ -22,6 +22,7 @@ const devConfig = {
     articleContents: "./src/js/contents/articleContents.js",
     recipeContents: "./src/js/contents/recipeContents.js",
     comments: "./src/js/comments/comments.js",
+    embed: "./src/js/embed/embed.js",
   },
   output: {
     path: path.resolve(__dirname, "assets"),
@@ -77,6 +78,7 @@ const prodConfig = {
     articleContents: "./src/js/contents/articleContents.js",
     recipeContents: "./src/js/contents/recipeContents.js",
     comments: "./src/js/comments/comments.js",
+    embed: "./src/js/embed/embed.js",
   },
   output: {
     path: path.resolve(__dirname, "build"),

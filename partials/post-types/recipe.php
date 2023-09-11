@@ -34,7 +34,7 @@ if (term_exists(yoast_get_primary_term())) {
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img']) ?>
+                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy']) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
@@ -50,12 +50,24 @@ if (term_exists(yoast_get_primary_term())) {
             <h1 class="top-wrapper__title"><?php echo $post->post_title; ?></h1>
 
             <div class="top-wrapper__pills pills">
-                <div class="pills__track">
-                    <a href="<?php echo get_category_link($top_category); ?>" class="pill pill--main"><?php echo $top_category->name; ?></a>
-                    <?php foreach ($post_categories as $category) :
-                        if ($category->term_id != $top_category->term_id) : ?>
-                            <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
-                    <?php endif; endforeach; ?>
+                <div class="pills__wrapper">
+                    <div class="pills__track">
+                        <div class="pills__overlay pills__overlay--left">
+                            <button class="pills__button pills__button--left">
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                            </button>
+                        </div>
+                        <a href="<?php echo get_category_link($top_category); ?>" class="pill pill--main"><?php echo $top_category->name; ?></a>
+                        <?php foreach ($post_categories as $category) :
+                            if ($category->term_id != $top_category->term_id) : ?>
+                                <a href="<?php echo get_category_link($category); ?>" class="pill"><?php echo $category->name; ?></a>
+                        <?php endif; endforeach; ?>
+                        <div class="pills__overlay pills__overlay--right">
+                            <button class="pills__button pills__button--right">
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -108,7 +120,7 @@ if (term_exists(yoast_get_primary_term())) {
             </div>
             <div class="bottom-wrapper__embed" data-scroll="promotions">
                 <h2>Promocje na składniki</h2>
-                <div class="embed">[embed]</div>
+                <?php include __DIR__ . '/../embed.php' ?>
             </div>
             <div class="bottom-wrapper__preparation" data-scroll="preparation">
                 <h2>Jak zrobić <?php echo $post->post_title; ?></h2>

@@ -80,9 +80,16 @@ const handleLikesClick = async () => {
 window.addEventListener("DOMContentLoaded", () => {
   const likes = document.querySelector(".likes");
 
+  if (!likes) return;
+
+  const detailsLikes = document.querySelector(".main__details .details__likes");
+
   handleNoStorageData();
   handleThumbDisplay();
   handleLikesCountDisplay();
 
   likes.addEventListener("click", handleLikesClick);
+  detailsLikes.addEventListener("click", () => {
+    likes.click();
+  });
 });
