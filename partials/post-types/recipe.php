@@ -48,7 +48,6 @@ if (term_exists(yoast_get_primary_term())) {
     <div class="main">
         <div class="top-wrapper">
             <h1 class="top-wrapper__title"><?php echo $post->post_title; ?></h1>
-
             <div class="top-wrapper__pills pills">
                 <div class="pills__wrapper">
                     <div class="pills__track">
@@ -120,6 +119,23 @@ if (term_exists(yoast_get_primary_term())) {
             </div>
             <div class="bottom-wrapper__embed" data-scroll="promotions">
                 <h2>Promocje na składniki</h2>
+                <div class="bottom-wrapper__embed-pills pills">
+                    <div class="pills__wrapper">
+                        <div class="pills__track">
+                            <div class="pills__overlay pills__overlay--left">
+                                <button class="pills__button pills__button--left">
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                </button>
+                            </div>
+
+                            <div class="pills__overlay pills__overlay--right">
+                                <button class="pills__button pills__button--right">
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php include __DIR__ . '/../embed.php' ?>
             </div>
             <div class="bottom-wrapper__preparation" data-scroll="preparation">

@@ -6,7 +6,7 @@ import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adul
 let carousels = [];
 
 const getBestProducts = async () => {
-  const res = await fetch("https://blix.pl/api/blog/offers/best");
+  const res = await fetch("https://fancy.blix.app/api/blog/offers/best");
   const data = await res.json();
   return data.offers;
 };
@@ -129,4 +129,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       setProduct(product, currentProductData);
     });
   });
+
+  addAdultOverlayClickHandlers();
 });

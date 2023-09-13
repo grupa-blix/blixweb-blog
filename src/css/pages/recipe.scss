@@ -133,6 +133,25 @@
       }
     }
 
+    &__embed {
+      .pill {
+        color: #000000;
+
+        &.active {
+          color: #fff;
+          background-color: #333333;
+        }
+
+        &::first-letter {
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    &__embed-pills {
+      margin-bottom: 24px;
+    }
+
     &__tips {
       padding: 16px;
       border-radius: 10px;
@@ -331,7 +350,7 @@
 
     .top-wrapper {
       display: grid;
-      grid-template-columns: repeat(4, 282px);
+      grid-template-columns: 282px 1fr 200px;
       column-gap: 8px;
 
       &__title {

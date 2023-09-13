@@ -3,6 +3,8 @@ import { Navigation, Zoom, Mousewheel, Manipulation } from "swiper/modules";
 import { isDesktop, getLeafletUrl } from "../utils";
 import dayjs from "dayjs";
 import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
+import { initPills, getTrackScrolled } from "../pills/pills";
+import infoIcon from "../../img/info.svg";
 
 const options = {
   modules: [Navigation, Zoom, Mousewheel, Manipulation],
@@ -33,11 +35,14 @@ const getLeafletByBrand = async (brandSlug, leafletId = 0) => {
 const getLeafletBySearch = async (searchQuery) => {
   let query;
 
-  if (!searchQuery) {
-    const firstAnchor = document.querySelector(".bottom-wrapper__ingredients-inner-wrapper a");
-    query = firstAnchor.href.split("=")[1];
-  } else {
+  if (searchQuery) {
     query = searchQuery;
+  } else {
+    const firstPill = document.querySelector(".bottom-wrapper__embed-pills .pill.active");
+
+    if (firstPill) {
+      query = firstPill.dataset.phrase;
+    } else return;
   }
 
   const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/search/${query}`);
@@ -47,7 +52,8 @@ const getLeafletBySearch = async (searchQuery) => {
   const arrayWithUrls = dataToArray.map((el) => {
     return {
       ...el,
-      page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + el.page,
+      page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + (parseInt(el.page, 10) + 1),
+      hasAlcohol: data.alcohol_leaflets.includes(el.leafletId),
     };
   });
   return arrayWithUrls;
@@ -57,8 +63,8 @@ const generateDate = (value, format) => (value ? dayjs(value.date).format(format
 
 const adultContent = (brandThumbnail) => {
   return `
-    <div class="adult-content-overlay adult-content-overlay--small">
-      <img src="${brandThumbnail}" class="adult-content-overlay__img"/>
+    <div class="adult-content-overlay">
+      ${brandThumbnail ? `<img src="${brandThumbnail}" class="adult-content-overlay__img"/>` : ""}
       <span class="adult-content-overlay__label">Zawartość dla osób pełnoletnich</span>
       <button class="adult-content-overlay__button button button--green">Odblokuj</button>
     </div>
@@ -116,17 +122,21 @@ const generateAdditionalLeaflets = (lastPageData) => `
     </div>
   `;
 
-const generateSinglePage = (page, hidePage = false, additionalLeaflets = null) => {
+const generateSinglePage = (data) => {
+  const { page, hidePage, additionalLeaflets, hasAlcohol, brandThumbnail } = data;
   const slide = document.createElement("div");
   const imageUrl = page.image_url
     ? page.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800)
     : page.imageUrl.replace(".jpg", ".webp") + "?bucket=800";
+
+  const addOverlay = hasAlcohol || page.hasAlcohol;
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target${hidePage ? " hidden" : ""}">
         <div class="page-wrapper swipe-zoom-target" data-uri="${page.page_uri}">
+          ${addOverlay && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
           <img src="${imageUrl}" class="page-img" loading="lazy"/>
           ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
         </div>
@@ -136,26 +146,32 @@ const generateSinglePage = (page, hidePage = false, additionalLeaflets = null) =
   return slide;
 };
 
-const generateDoublePage = (
-  leftPage,
-  rightPage,
-  hideLeftPage = false,
-  hideRightPage = false,
-  additionalLeafletsOnLeft = null,
-  additionalLeafletsOnRight = null
-) => {
+const generateDoublePage = (data) => {
+  const {
+    leftPage,
+    rightPage,
+    hideLeftPage,
+    hideRightPage,
+    additionalLeafletsOnLeft,
+    additionalLeafletsOnRight,
+    hasAlcohol,
+    brandThumbnail,
+  } = data;
   const slide = document.createElement("div");
   const leftImageUrl = leftPage.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800);
   const rightImageUrl = rightPage.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800);
+
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target">
         <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${leftPage.page_uri}">
+          ${hasAlcohol && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
           <img src="${leftImageUrl}" class="page-img" loading="lazy" />
           ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
         </div>
         <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${rightPage.page_uri}">
+          ${hasAlcohol && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
           <img src="${rightImageUrl}" class="page-img" loading="lazy" />
           ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
         </div>
@@ -170,29 +186,89 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
   const placeholder = wrapper.querySelector(".placeholder");
   const pages = leaflet.viewer ? leaflet.viewer.pages : leaflet;
   const additionalLeaflets = leaflet.lastPageData ? leaflet.lastPageData : null;
+  const brandThumbnail = leaflet.brand ? leaflet.brand.thumbnail : null;
+  let hasAlcohol = leaflet.viewer ? leaflet.viewer.has_alcohol : false;
+
+  if (isUserAdult()) {
+    hasAlcohol = false;
+  }
 
   embed.classList.add("loading");
 
   if (isDouble && isBrandLeaflet) {
     pages.forEach((page, index) => {
       if (index === 0) {
-        wrapper.appendChild(generateDoublePage(page, page, true));
+        const data = {
+          leftPage: page,
+          rightPage: page,
+          hideLeftPage: true,
+          hideRightPage: false,
+          additionalLeafletsOnLeft: null,
+          additionalLeafletsOnRight: null,
+          hasAlcohol,
+          brandThumbnail,
+        };
+        wrapper.appendChild(generateDoublePage(data));
       } else if (index % 2 !== 0) {
         if (index + 1 === pages.length) {
-          wrapper.appendChild(generateDoublePage(pages[index - 1], pages[index - 1], true, true, additionalLeaflets));
+          const data = {
+            leftPage: pages[index - 1],
+            rightPage: pages[index - 1],
+            hideLeftPage: true,
+            hideRightPage: true,
+            additionalLeafletsOnLeft: additionalLeaflets,
+            additionalLeafletsOnRight: null,
+            hasAlcohol,
+            brandThumbnail,
+          };
+          wrapper.appendChild(generateDoublePage(data));
         } else if (pages[index + 1] && index + 2 !== pages.length) {
-          wrapper.appendChild(generateDoublePage(page, pages[index + 1]));
+          const data = {
+            leftPage: page,
+            rightPage: pages[index + 1],
+            hideLeftPage: false,
+            hideRightPage: false,
+            additionalLeafletsOnLeft: null,
+            additionalLeafletsOnRight: null,
+            hasAlcohol,
+            brandThumbnail,
+          };
+          wrapper.appendChild(generateDoublePage(data));
         } else {
-          wrapper.appendChild(generateDoublePage(page, page, false, true, null, additionalLeaflets));
+          const data = {
+            leftPage: page,
+            rightPage: page,
+            hideLeftPage: false,
+            hideRightPage: true,
+            additionalLeafletsOnLeft: null,
+            additionalLeafletsOnRight: additionalLeaflets,
+            hasAlcohol,
+            brandThumbnail,
+          };
+          wrapper.appendChild(generateDoublePage(data));
         }
       } else return;
     });
   } else {
     pages.forEach((page, index) => {
       if (index === pages.length - 1 && isBrandLeaflet) {
-        wrapper.appendChild(generateSinglePage(pages[index - 1], true, additionalLeaflets));
+        const data = {
+          page: pages[index - 1],
+          hidePage: true,
+          additionalLeaflets: additionalLeaflets,
+          hasAlcohol,
+          brandThumbnail,
+        };
+        wrapper.appendChild(generateSinglePage(data));
       } else {
-        wrapper.appendChild(generateSinglePage(page));
+        const data = {
+          page: page,
+          hidePage: false,
+          additionalLeaflets: null,
+          hasAlcohol,
+          brandThumbnail,
+        };
+        wrapper.appendChild(generateSinglePage(data));
       }
     });
   }
@@ -202,6 +278,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
   addAdultOverlayClickHandlers();
 
   setTimeout(() => {
+    if (isBrandLeaflet) handleMessageDisplay(embed, leaflet);
     embed.classList.remove("loading");
   }, 200);
 };
@@ -237,83 +314,178 @@ const udpateCoversOnZoom = (embed, swiper) => {
   });
 };
 
+const handleRecipeEmbed = async (embed, swiper) => {
+  const embedWrapper = embed.closest(".bottom-wrapper__embed");
+
+  if (!embedWrapper) {
+    return;
+  }
+
+  const pillsTrack = embedWrapper.querySelector(".pills__track");
+  const anchors = document.querySelectorAll(".bottom-wrapper__ingredients-inner-wrapper a");
+
+  if (anchors.length === 0) {
+    return;
+  }
+
+  const promises = Array.from(anchors).map(async (anchor, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = decodeURIComponent(anchor.href.split("=")[1]).replaceAll("-", " ");
+    btn.dataset.phrase = decodeURIComponent(anchor.href.split("=")[1]);
+    btn.classList.add("pill");
+
+    pillsTrack.appendChild(btn);
+
+    const leaflet = await getLeafletBySearch(decodeURIComponent(anchor.href.split("=")[1]));
+
+    if (leaflet.length === 0) {
+      pillsTrack.removeChild(btn);
+    } else {
+      if (index === 0) btn.classList.add("active");
+
+      btn.addEventListener("pointerup", async (b) => {
+        if (getTrackScrolled()) return;
+        embed.classList.add("loading");
+
+        setTimeout(() => {
+          swiper.removeAllSlides();
+          generatePages(embed, false, leaflet, false);
+          swiper.updateSlides();
+          swiper.slideTo(0);
+          loadAdjacentPages(embed);
+        }, 200);
+      });
+    }
+  });
+
+  await Promise.all(promises);
+};
+
+const removeEmbed = (embed) => {
+  if (embed.closest(".bottom-wrapper")) {
+    const parent = embed.closest(".bottom-wrapper");
+    const bottomWrapper = parent.querySelector(".bottom-wrapper__embed");
+    parent.removeChild(bottomWrapper);
+  } else {
+    embed.remove();
+  }
+};
+
+const handleMessageDisplay = (embed, leaflet) => {
+  if (embed.querySelector(".message-box")) return;
+  if (parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
+    embed.classList.add("with-message-box");
+    console.log(leaflet);
+    const messageBox = document.createElement("div");
+    messageBox.classList.add("message-box");
+    messageBox.innerHTML = `
+      <img src="${infoIcon}" />
+      <span>Gazetka niedostępna. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}.</span>
+    `;
+    embed.appendChild(messageBox);
+  }
+};
+
+const initEmbed = async (embed) => {
+  const swiperContainer = embed.querySelector(".swiper");
+  const swiper = new Swiper(swiperContainer, options);
+  const zoomInBtn = embed.querySelector(".swiper__zoom-in-btn");
+  const zoomOutBtn = embed.querySelector(".swiper__zoom-out-btn");
+  const { brandSlug, leafletId, searchPhrase } = embed.dataset;
+  const isBrandLeaflet = brandSlug;
+
+  await handleRecipeEmbed(embed, swiper);
+
+  const pillsTrackWrapper = embed.closest(".bottom-wrapper__embed");
+
+  if (pillsTrackWrapper) {
+    const pillsTrack = pillsTrackWrapper.querySelector(".pills__track");
+    initPills(pillsTrack);
+  }
+
+  const leaflet = isBrandLeaflet
+    ? await getLeafletByBrand(brandSlug, leafletId)
+    : await getLeafletBySearch(searchPhrase);
+
+  if (!(await leaflet) || (await leaflet.length) === 0) {
+    removeEmbed(embed);
+    return;
+  }
+
+  if (isBrandLeaflet) {
+    embed.dataset.mode = isDesktop() ? "double" : "single";
+    if (leaflet.badge.message === "archiwalna") embed.classList.add("archival");
+  }
+
+  let isDouble = embed.dataset.mode === "double";
+
+  generatePages(embed, isDouble, leaflet, isBrandLeaflet);
+
+  zoomInBtn.addEventListener("click", () => {
+    if (swiper.zoom.scale === 1) {
+      swiper.zoom.in(1.5);
+    } else {
+      swiper.zoom.in(2);
+    }
+  });
+
+  zoomOutBtn.addEventListener("click", () => {
+    if (swiper.zoom.scale === 2) {
+      swiper.zoom.in(1.5);
+    } else {
+      swiper.zoom.out();
+    }
+  });
+
+  swiper.on("zoomChange", () => {
+    setTimeout(() => {
+      udpateCoversOnZoom(embed, swiper);
+    }, 500);
+  });
+
+  swiper.on("slideChangeTransitionEnd", () => {
+    loadAdjacentPages(embed);
+
+    setTimeout(() => {
+      setLeafletBtn(embed);
+    }, 500);
+  });
+
+  swiper.on("afterInit", () => {
+    loadAdjacentPages(embed);
+
+    setTimeout(() => {
+      setLeafletBtn(embed);
+    }, 500);
+  });
+
+  swiper.init();
+
+  window.addEventListener("resize", () => {
+    isDouble = embed.dataset.mode === "double";
+
+    if (isDesktop() && !isDouble && isBrandLeaflet) {
+      isDouble = true;
+      embed.dataset.mode = "double";
+      swiper.removeAllSlides();
+      generatePages(embed, isDouble, leaflet, isBrandLeaflet);
+      swiper.slideTo(0);
+    } else if (!isDesktop() && isDouble && isBrandLeaflet) {
+      isDouble = false;
+      embed.dataset.mode = "single";
+      swiper.removeAllSlides();
+      generatePages(embed, isDouble, leaflet, isBrandLeaflet);
+      swiper.slideTo(0);
+    }
+  });
+};
+
 window.addEventListener("DOMContentLoaded", () => {
   const embeds = document.querySelectorAll(".embed");
 
   if (embeds.length === 0) return;
 
-  embeds.forEach(async (embed) => {
-    const swiperContainer = embed.querySelector(".swiper");
-    const swiper = new Swiper(swiperContainer, options);
-    const zoomInBtn = embed.querySelector(".swiper__zoom-in-btn");
-    const zoomOutBtn = embed.querySelector(".swiper__zoom-out-btn");
-    const { brandSlug, leafletId, searchPhrase } = embed.dataset;
-    const isBrandLeaflet = brandSlug;
-    const leaflet = isBrandLeaflet
-      ? await getLeafletByBrand(brandSlug, leafletId)
-      : await getLeafletBySearch(searchPhrase);
-
-    if (isBrandLeaflet) embed.dataset.mode = isDesktop() ? "double" : "single";
-    let isDouble = embed.dataset.mode === "double";
-
-    generatePages(embed, isDouble, leaflet, isBrandLeaflet);
-
-    zoomInBtn.addEventListener("click", () => {
-      if (swiper.zoom.scale === 1) {
-        swiper.zoom.in(1.5);
-      } else {
-        swiper.zoom.in(2);
-      }
-    });
-
-    zoomOutBtn.addEventListener("click", () => {
-      if (swiper.zoom.scale === 2) {
-        swiper.zoom.in(1.5);
-      } else {
-        swiper.zoom.out();
-      }
-    });
-
-    swiper.on("zoomChange", () => {
-      setTimeout(() => {
-        udpateCoversOnZoom(embed, swiper);
-      }, 500);
-    });
-
-    swiper.on("slideChangeTransitionEnd", () => {
-      loadAdjacentPages(embed);
-
-      setTimeout(() => {
-        setLeafletBtn(embed);
-      }, 500);
-    });
-
-    swiper.on("afterInit", () => {
-      loadAdjacentPages(embed);
-
-      setTimeout(() => {
-        setLeafletBtn(embed);
-      }, 500);
-    });
-
-    swiper.init();
-
-    window.addEventListener("resize", () => {
-      isDouble = embed.dataset.mode === "double";
-
-      if (isDesktop() && !isDouble && isBrandLeaflet) {
-        isDouble = true;
-        embed.dataset.mode = "double";
-        swiper.removeAllSlides();
-        generatePages(embed, isDouble, leaflet, isBrandLeaflet);
-        swiper.slideTo(0);
-      } else if (!isDesktop() && isDouble && isBrandLeaflet) {
-        isDouble = false;
-        embed.dataset.mode = "single";
-        swiper.removeAllSlides();
-        generatePages(embed, isDouble, leaflet, isBrandLeaflet);
-        swiper.slideTo(0);
-      }
-    });
+  embeds.forEach((embed) => {
+    initEmbed(embed);
   });
 });

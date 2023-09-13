@@ -165,6 +165,10 @@ const handleResizability = () => {
 
 window.addEventListener("DOMContentLoaded", () => {
   const comments = document.querySelector(".comments");
+
+  if (!comments) return;
+
+  const detailsComments = document.querySelector(".data__comments");
   const commentsBackBtn = document.querySelector(".comments-bottomsheet .back-btn");
   const commentsCloseBtn = document.querySelector(".comments-bottomsheet .close-btn");
   const commentsBg = document.querySelector(".comments-bottomsheet__bg");
@@ -173,9 +177,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const respondBtns = document.querySelectorAll(".single-comment__respond");
   const responseClearBtn = document.querySelector(".response__clear-btn");
 
-  if (!comments) return;
-
   comments.addEventListener("click", openCommentsBottomsheet);
+  if (detailsComments) detailsComments.addEventListener("click", openCommentsBottomsheet);
   commentsBackBtn.addEventListener("click", wrapForm);
   commentsCloseBtn.addEventListener("click", closeCommentsBottomsheet);
   commentsBg.addEventListener("click", closeCommentsBottomsheet);

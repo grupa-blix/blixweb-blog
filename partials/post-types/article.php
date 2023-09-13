@@ -42,7 +42,17 @@
         </div>
         <div class="main__pills pills">
             <div class="pills__track">
+                <div class="pills__overlay pills__overlay--left">
+                    <button class="pills__button pills__button--left">
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                    </button>
+                </div>
                 <a href="<?php echo get_category_link($main_category) ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
+                <div class="pills__overlay pills__overlay--right">
+                    <button class="pills__button pills__button--right">
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                    </button>
+                </div>
             </div>
         </div>
         <div class="main__short-description">

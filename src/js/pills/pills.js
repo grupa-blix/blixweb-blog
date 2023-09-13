@@ -1,4 +1,3 @@
-const pillsTracks = document.querySelectorAll(".pills__track");
 let currentTrack = null;
 let trackScrolled = false;
 
@@ -112,18 +111,33 @@ const handleTrackButtonClick = (e, forward) => {
   }, 200);
 };
 
+const selectPill = (pill) => {
+  const pillsWrapper = pill.closest(".pills__track");
+  const otherPills = pillsWrapper.querySelectorAll(".pill");
+
+  otherPills.forEach((otherPill) => {
+    otherPill.classList.remove("active");
+  });
+
+  pill.classList.add("active");
+};
+
 const handlePillClick = (pill) => {
   if (!getTrackScrolled()) {
-    window.location.href = pill.href;
+    if (pill.href) {
+      window.location.href = pill.href;
+    } else {
+      selectPill(pill);
+    }
   } else {
     unsetTrackScrolled();
   }
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-  const pills = document.querySelectorAll(".pill");
-  const pillsButtonsRight = document.querySelectorAll(".pills__button--right");
-  const pillsButtonsLeft = document.querySelectorAll(".pills__button--left");
+const initSinglePill = (pillsTrack) => {
+  const pills = pillsTrack.querySelectorAll(".pill");
+  const pillsButtonRight = pillsTrack.querySelector(".pills__button--right");
+  const pillsButtonLeft = pillsTrack.querySelector(".pills__button--left");
 
   pills.forEach((pill) => {
     pill.addEventListener("click", (e) => {
@@ -132,35 +146,42 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  pillsTracks.forEach((track) => {
-    if (track.scrollWidth > track.offsetWidth) {
-      track.addEventListener("pointerdown", pillsPointerDownHandler);
-      track.addEventListener("scroll", handleTrackPositionChange);
-    }
-  });
-
-  if (pillsButtonsRight) {
-    pillsButtonsRight.forEach((buttonRight) => {
-      handleButtonDisplay(buttonRight);
-      buttonRight.addEventListener("pointerdown", (e) => e.stopPropagation);
-      buttonRight.addEventListener("pointerup", (e) => handleTrackButtonClick(e, true));
-    });
+  if (pillsTrack.scrollWidth > pillsTrack.offsetWidth) {
+    pillsTrack.addEventListener("pointerdown", pillsPointerDownHandler);
+    pillsTrack.addEventListener("scroll", handleTrackPositionChange);
   }
 
-  if (pillsButtonsLeft) {
-    pillsButtonsLeft.forEach((buttonLeft) => {
-      buttonLeft.addEventListener("pointerdown", (e) => e.stopPropagation);
-      buttonLeft.addEventListener("pointerup", (e) => handleTrackButtonClick(e, false));
-    });
+  if (pillsButtonRight) {
+    handleButtonDisplay(pillsButtonRight);
+    pillsButtonRight.addEventListener("pointerdown", (e) => e.stopPropagation);
+    pillsButtonRight.addEventListener("pointerup", (e) => handleTrackButtonClick(e, true));
+  }
+
+  if (pillsButtonLeft) {
+    pillsButtonLeft.addEventListener("pointerdown", (e) => e.stopPropagation);
+    pillsButtonLeft.addEventListener("pointerup", (e) => handleTrackButtonClick(e, false));
   }
 
   window.addEventListener("resize", () => {
-    pillsButtonsLeft.forEach((buttonLeft) => {
-      handleButtonDisplay(buttonLeft);
-    });
-
-    pillsButtonsRight.forEach((buttonRight) => {
-      handleButtonDisplay(buttonRight);
-    });
+    handleButtonDisplay(pillsButtonLeft);
+    handleButtonDisplay(pillsButtonRight);
   });
+};
+
+const initPills = (track) => {
+  if (track) {
+    initSinglePill(track);
+  } else {
+    const pillsTracks = document.querySelectorAll(".pills__track");
+
+    pillsTracks.forEach((pillsTrack) => {
+      initSinglePill(pillsTrack);
+    });
+  }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  initPills();
 });
+
+export { initPills, getTrackScrolled, unsetTrackScrolled };
