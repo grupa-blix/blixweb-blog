@@ -9,10 +9,24 @@ window.addEventListener("DOMContentLoaded", () => {
   const contentItems = document.querySelectorAll(".contents li");
 
   contentItems.forEach((item) => {
+    const anchor = item.querySelector("a");
+    const { scrollElement } = item.dataset;
+    const element = document.querySelector(`[data-scroll=${scrollElement}]`);
+
+    anchor.addEventListener("click", (e) => {
+      e.preventDefault();
+      hash = anchor.href;
+      window.location = hash;
+    });
+
     item.addEventListener("click", () => {
-      const { scrollElement } = item.dataset;
-      const element = document.querySelector(`[data-scroll=${scrollElement}]`);
       scrollTo(element);
     });
+
+    if (decodeURIComponent(window.location.href).split("#")[1] === decodeURIComponent(anchor.href).split("#")[1]) {
+      setTimeout(() => {
+        scrollTo(element);
+      }, 1000);
+    }
   });
 });

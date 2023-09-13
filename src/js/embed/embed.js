@@ -375,7 +375,6 @@ const handleMessageDisplay = (embed, leaflet) => {
   if (embed.querySelector(".message-box")) return;
   if (parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
     embed.classList.add("with-message-box");
-    console.log(leaflet);
     const messageBox = document.createElement("div");
     messageBox.classList.add("message-box");
     messageBox.innerHTML = `

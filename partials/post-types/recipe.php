@@ -102,22 +102,22 @@ if (term_exists(yoast_get_primary_term())) {
             <div class="top-wrapper__contents contents">
                 <span>Spis treści:</span>
                 <ol class="contents__list">
-                    <li data-scroll-element="ingredients">Składniki</li>
-                    <li data-scroll-element="promotions">Promocje na składniki</li>
-                    <li data-scroll-element="preparation">Jak zrobić <?php echo the_title(); ?></li>
-                    <li data-scroll-element="tips">Wskazówki</li>
+                    <li data-scroll-element="ingredients"><a href="#składniki">Składniki</a></li>
+                    <li data-scroll-element="promotions"><a href="#promocje-na-składniki">Promocje na składniki</a></li>
+                    <li data-scroll-element="preparation"><a href="#jak-zrobić-<?php echo $post->post_name; ?>">Jak zrobić <?php echo the_title(); ?></a></li>
+                    <li data-scroll-element="tips"><a href="#wskazówki">Wskazówki</a></li>
                 </ol>
             </div>
         </div>
 
         <div class="bottom-wrapper">
-            <div class="bottom-wrapper__ingredients" data-scroll="ingredients">
+            <div id="składniki" class="bottom-wrapper__ingredients" data-scroll="ingredients">
                 <div class="bottom-wrapper__ingredients-inner-wrapper">
                     <h2>Składniki</h2>
                     <?php echo the_field("ingredients"); ?>
                 </div>
             </div>
-            <div class="bottom-wrapper__embed" data-scroll="promotions">
+            <div id="promocje-na-składniki" class="bottom-wrapper__embed" data-scroll="promotions">
                 <h2>Promocje na składniki</h2>
                 <div class="bottom-wrapper__embed-pills pills">
                     <div class="pills__wrapper">
@@ -138,11 +138,11 @@ if (term_exists(yoast_get_primary_term())) {
                 </div>
                 <?php include __DIR__ . '/../embed.php' ?>
             </div>
-            <div class="bottom-wrapper__preparation" data-scroll="preparation">
+            <div id="jak-zrobić-<?php echo $post->post_name; ?>" class="bottom-wrapper__preparation" data-scroll="preparation">
                 <h2>Jak zrobić <?php echo $post->post_title; ?></h2>
                 <?php echo the_field("preparation"); ?>
             </div>
-            <div class="bottom-wrapper__tips" data-scroll="tips">
+            <div id="wskazówki" class="bottom-wrapper__tips" data-scroll="tips">
                 <h2>Wskazówki</h2>
                 <?php echo the_field("tips"); ?>
             </div>

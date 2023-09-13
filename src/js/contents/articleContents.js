@@ -5,27 +5,50 @@ const scrollTo = (element) => {
   window.scrollTo({ top: y, behavior: "smooth" });
 };
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   const contents = document.querySelector(".contents");
   const contentsList = document.querySelector(".contents__list");
   const contentHeadings = document.querySelectorAll(".content .wp-block-heading");
+  let initialScrollElement = null;
 
   if (contentHeadings.length === 0) {
     return;
   } else {
     contents.classList.remove("d-none");
-    contentHeadings.forEach((heading) => {
+    const promises = Array.from(contentHeadings).map(async (heading) => {
       const smallerHeadings = ["H3", "H4", "H5", "H6"];
       const li = document.createElement("li");
-      li.innerText = heading.innerText;
+      const a = document.createElement("a");
+      const headingId = heading.innerText.toLowerCase().replaceAll(" ", "-");
+      const itemHref = "#" + heading.innerText.toLowerCase().replaceAll(" ", "-");
 
+      heading.id = headingId;
+      a.innerText = heading.innerText;
+      a.href = itemHref;
+
+      if (decodeURIComponent(window.location.href).split("#")[1] === headingId) initialScrollElement = heading;
       if (smallerHeadings.includes(heading.nodeName)) li.classList.add("with-margin");
+
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        hash = a.href;
+        window.location = hash;
+      });
 
       li.addEventListener("click", () => {
         scrollTo(heading);
       });
 
+      li.appendChild(a);
       contentsList.appendChild(li);
     });
+
+    await Promise.all(promises);
+
+    if (initialScrollElement) {
+      setTimeout(() => {
+        scrollTo(initialScrollElement);
+      }, 1000);
+    }
   }
 });
