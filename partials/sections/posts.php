@@ -1,5 +1,5 @@
 <section class="section">
-    <?php if (isset($vars->header)) : ?><h1><?php echo $vars->header; ?></h1><?php endif ?>
+    <?php if (isset($vars->header)) : ?><h2><?php echo $vars->header; ?></h2><?php endif ?>
     <div class="section__items section__items--articles">
         <?php foreach ($vars->elements as $element) : ?>
             <article class="article section__item">
@@ -12,7 +12,14 @@
                         </button>
                     </div>
                     <div class="article__info">
-                        <span class="article__category"><?php echo get_the_category($element)[0]->name ?></span>
+                        <?php
+                        if (term_exists(yoast_get_primary_term('category', $element))) {
+                            $main_category = get_term(yoast_get_primary_term_id('category', $element));
+                        } else {
+                            $main_category = get_the_category($element)[0];
+                        }
+                        ?>
+                        <span class="article__category"><?php echo $main_category->name ?></span>
                         <span class="article__name"><?php echo $element->post_title ?></span>
                         <div class="article__details details">
                             <div class="details__date"><?php echo get_the_date('d.m.Y', $element); ?></div>

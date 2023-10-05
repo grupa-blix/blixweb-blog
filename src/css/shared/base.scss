@@ -392,6 +392,6 @@ html {
 div {
   &:has(.grecaptcha-badge) {
     position: relative;
-    z-index: 3;
+    z-index: 5;
   }
 }

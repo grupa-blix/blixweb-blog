@@ -7,7 +7,7 @@ usort($post_categories, function($a, $b) {
  });
 
 if (term_exists(yoast_get_primary_term())) {
-    $main_category = get_term(yoast_get_primary_term_id('category', $post->id));
+    $main_category = get_term(yoast_get_primary_term_id('category', $post));
 } else {
     $main_category = $post_categories[0];
 }

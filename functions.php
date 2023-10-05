@@ -21,6 +21,10 @@ function register_styles()
     if(is_page("autorzy")){
         wp_enqueue_style('authors', get_stylesheet_directory_uri() . "/assets/css/authors.css");
     }
+
+    if(is_404()){
+        wp_enqueue_style('error404', get_stylesheet_directory_uri() . "/assets/css/error404.css");
+    }
 }
 add_action('wp_enqueue_scripts', 'register_styles', 100);
 
@@ -251,3 +255,39 @@ function custom_author_base() {
     $wp_rewrite->author_base = 'autor';
 }
 add_action( 'init', 'custom_author_base' );
+
+/**
+ * Filters the title.
+ *
+ * @param string $title The current page's generated title.
+ *
+ * @return string The filtered title.
+ */
+function prefix_filter_title_example( $title ) {
+	if(is_single() && in_category('przepisy')){
+		$title = get_the_title() . ' - przepis ❇️ | Gotuj z Blix!';
+	}elseif(is_category() && get_the_category_by_ID(get_queried_object()->parent) == "Przepisy"){
+		$title = get_queried_object()->cat_name . ' - przepisy ❇️ | Gotuj z Blix!';
+	}elseif(is_category() && get_queried_object()->cat_name == "Przepisy"){
+		$title = get_queried_object()->cat_name . ' ❇️ | Gotuj z Blix!';
+	}
+    return $title;
+  }
+  add_filter( 'wpseo_title', 'prefix_filter_title_example' );
+
+  /**
+ * Filters the description.
+ *
+ * @param string $description The current page's generated meta description.
+ *
+ * @return string The filtered meta description.
+ */
+function prefix_filter_description_example( $description ) {
+	if(is_single() && in_category('przepisy')){
+		$description = get_the_content();
+	}elseif(is_single() && !in_category('przepisy')){
+		$description = get_field("short_description");
+	}
+    return $description;
+  }
+  add_filter( 'wpseo_metadesc', 'prefix_filter_description_example' );

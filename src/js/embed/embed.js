@@ -382,6 +382,15 @@ const handleMessageDisplay = (embed, leaflet) => {
       <span>Gazetka niedostępna. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}.</span>
     `;
     embed.appendChild(messageBox);
+  } else if (embed.classList.contains("archival")) {
+    embed.classList.add("with-message-box");
+    const messageBox = document.createElement("div");
+    messageBox.classList.add("message-box");
+    messageBox.innerHTML = `
+      <img src="${infoIcon}" />
+      <span>Ta gazetka straciła ważność.</span>
+    `;
+    embed.appendChild(messageBox);
   }
 };
 

@@ -1,10 +1,16 @@
 <?php get_header(); ?>
 
 <?php $current_category = get_queried_object(); ?>
-
+<?php
+if(get_the_category_by_ID($current_category->parent) == "Przepisy"){
+    $mainHeader = $current_category->name . ' - przepisy';
+}else{
+    $mainHeader = $current_category->name;
+}
+?>
 <?php
 $vars = (object) [
-    'header' => $current_category->name
+    'header' => $mainHeader
 ]
 ?>
 <?php include "partials/pills-navigation.php"; ?>

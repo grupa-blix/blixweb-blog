@@ -234,40 +234,16 @@
     }
 
     .availability {
-      height: 28px;
       border-radius: 0 0 8px 8px;
-
-      &__dot {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-      }
 
       &__label {
         max-width: calc(100% - 36px);
-        font-size: 16px;
       }
     }
 
     &__info {
-      grid-template-columns: 48px 1fr;
-      grid-template-rows: 24px 24px;
-    }
-
-    &__brand-name {
-      font-size: 18px;
-
-      h6 {
-        font-size: 18px;
-      }
-    }
-
-    &__leaflet-name {
-      font-size: 16px;
-
-      span {
-        font-size: 16px;
-      }
+      grid-template-columns: 32px 1fr;
+      grid-template-rows: 16px 16px;
     }
 
     .adult-content-overlay {
