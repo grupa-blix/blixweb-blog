@@ -29,8 +29,6 @@
             ];
             include 'partials/sections/posts.php'; ?>
 
-            <!-- <pre><?php var_dump($footerUpperItems); ?></pre> -->
-
             <section class="section section--gray section--full brands">
                 <div class="footer__nav">
                     <h4>Gazetki Blix</h4>
