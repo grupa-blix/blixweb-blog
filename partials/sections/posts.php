@@ -16,11 +16,16 @@
                         if (term_exists(yoast_get_primary_term('category', $element))) {
                             $main_category = get_term(yoast_get_primary_term_id('category', $element));
                         } else {
-                            $main_category = get_the_category($element)[0];
+                            $post_categories = get_the_category($element);
+                            usort($post_categories, function($a, $b) {
+                                return $a->term_id - $b->term_id;
+                             });
+
+                            $main_category = $post_categories[0];
                         }
                         ?>
                         <span class="article__category"><?php echo $main_category->name ?></span>
-                        <span class="article__name"><?php echo $element->post_title ?></span>
+                        <h4 class="article__name"><?php echo $element->post_title ?></h4>
                         <div class="article__details details">
                             <div class="details__date"><?php echo get_the_date('d.m.Y', $element); ?></div>
                             <div class="details__inner-wrapper">

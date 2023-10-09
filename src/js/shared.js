@@ -13,7 +13,6 @@ import "../css/shared/section.scss";
 import "../css/shared/adult-content.scss";
 import "./navbar/navbar.js";
 import "./search/search.js";
-import "./brands/brands.js";
 import "./leaflets/leaflets.js";
 import "./products/products.js";
 import "./pills/pills.js";

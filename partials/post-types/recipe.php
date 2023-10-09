@@ -1,3 +1,4 @@
+<?php wpb_set_post_views(get_the_ID()); ?>
 <?php
 $post_categories = get_the_category($post);
 $top_category = get_term(1229);
@@ -5,12 +6,6 @@ $top_category = get_term(1229);
 usort($post_categories, function($a, $b) {
     return $a->term_id - $b->term_id;
  });
-
-if (term_exists(yoast_get_primary_term())) {
-    $main_category = get_term(yoast_get_primary_term_id('category', $post));
-} else {
-    $main_category = $post_categories[0];
-}
 ?>
 
 <section class="section recipe-info">
@@ -24,7 +19,7 @@ if (term_exists(yoast_get_primary_term())) {
                     'orderby' => 'ID',
                     'post_status' => 'publish',
                     'order' => 'DESC',
-                    'cat' => $main_category->term_id,
+                    'cat' => $top_category->term_id,
                     'post__not_in' => [$post->ID],
                     'posts_per_page' => 9
                 );
@@ -139,7 +134,7 @@ if (term_exists(yoast_get_primary_term())) {
                 <?php include __DIR__ . '/../embed.php' ?>
             </div>
             <div id="jak-zrobić-<?php echo $post->post_name; ?>" class="bottom-wrapper__preparation" data-scroll="preparation">
-                <h2>Jak zrobić <?php echo $post->post_title; ?></h2>
+                <h2>Jak zrobić <?php echo mb_strtolower($post->post_title); ?></h2>
                 <?php echo the_field("preparation"); ?>
             </div>
             <div id="wskazówki" class="bottom-wrapper__tips" data-scroll="tips">

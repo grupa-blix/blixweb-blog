@@ -2,13 +2,15 @@
     <?php
     $args = array(
         'post_type' => 'post',
-        'orderby' => 'ID',
         'post_status' => 'publish',
+        'meta_key' => 'wpb_post_views_count',
+        'orderby' => 'meta_value_num',
         'order' => 'DESC',
         'posts_per_page' => 4
     );
 
     $result = new WP_Query($args);
+    $footerUpperItems = wp_get_nav_menu_items(1232);
     $footerLowerItems = wp_get_nav_menu_items(11);
     $footerLowerMainItems = array_filter($footerLowerItems, function ($k) {
         return $k->menu_item_parent == 0;
@@ -27,10 +29,18 @@
             ];
             include 'partials/sections/posts.php'; ?>
 
+            <!-- <pre><?php var_dump($footerUpperItems); ?></pre> -->
+
             <section class="section section--gray section--full brands">
                 <div class="footer__nav">
                     <h4>Gazetki Blix</h4>
-                    <ul class="footer__grid"></ul>
+                    <ul class="footer__grid">
+                        <?php foreach ($footerUpperItems as $item) : ?>
+                            <li>
+                                <a href="<?php echo $item->url; ?>"><?php echo $item->title; ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             </section>
 
@@ -52,7 +62,7 @@
                     </div>
                     <?php foreach ($footerLowerMainItems as $mainItem) : ?>
                         <div class="footer__nav">
-                            <h4><?php echo $mainItem->post_title ?></h4>
+                            <h4><?php echo $mainItem->title ?></h4>
                             <ul>
                                 <?php
                                 $footerLowerSubItems = array_filter($footerLowerItems, function ($v) use ($mainItem) {
@@ -60,7 +70,7 @@
                                 });
                                 foreach ($footerLowerSubItems as $subItem) :
                                 ?>
-                                    <li><a href="<?php echo $subItem->url; ?>"><?php echo $subItem->post_title; ?></a></li>
+                                    <li><a href="<?php echo $subItem->url; ?>"><?php echo $subItem->title; ?></a></li>
                                 <?php endforeach ?>
                             </ul>
                         </div>
