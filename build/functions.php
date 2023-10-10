@@ -292,6 +292,19 @@ function prefix_filter_description_example( $description ) {
   }
   add_filter( 'wpseo_metadesc', 'prefix_filter_description_example' );
 
+  /**
+ * Changes the locale output.
+ *
+ * @param string $locale The current locale.
+ *
+ * @return string The locale.
+ */
+function yst_wpseo_change_og_locale( $locale ) {
+    return 'pl_PL';
+}
+
+add_filter( 'wpseo_locale', 'yst_wpseo_change_og_locale' );
+
 function wpb_set_post_views($postID) {
     $count_key = 'wpb_post_views_count';
     $count = get_post_meta($postID, $count_key, true);
@@ -306,3 +319,36 @@ function wpb_set_post_views($postID) {
 }
 //To keep the count accurate, lets get rid of prefetching
 remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+
+function str_lreplace($search, $replace, $subject)
+{
+    $pos = strrpos($subject, $search);
+
+    if($pos !== false)
+    {
+        $subject = substr_replace($subject, $replace, $pos, strlen($search));
+    }
+
+    return $subject;
+}
+
+function print_processed_ingredients($string)
+{
+    $search  = Array("&lt;ul&gt;", "&lt;/ul&gt;", "&lt;li&gt;", "&lt;/li&gt;");
+    $replace = Array("", "", '"', '",');
+
+    $t = htmlspecialchars($string);
+    $processed_string = str_replace($search, $replace , $t);
+
+    return str_lreplace(',','',$processed_string);
+ }
+
+ function print_processed_preparation($string)
+{
+    $search  = Array("<ol>", "</ol>", "<li>", "</li>");
+    $replace = Array("", "", "", "");
+
+    $processed_string = str_replace($search, $replace , $string);
+
+    return $processed_string;
+ }
