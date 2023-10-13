@@ -22,7 +22,7 @@
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy']) ?>
+                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => $post->post_title]) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
@@ -46,13 +46,13 @@
             <div class="pills__track">
                 <div class="pills__overlay pills__overlay--left">
                     <button class="pills__button pills__button--left">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                     </button>
                 </div>
                 <a href="<?php echo get_category_link($main_category) ?>" class="pill pill--main"><?php echo $main_category->name; ?></a>
                 <div class="pills__overlay pills__overlay--right">
                     <button class="pills__button pills__button--right">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                     </button>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     if($searchPhrase != '') include __DIR__ . '/../embed.php';
                 endif;
             else : ?>
-            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img">
+            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img" alt="<?php echo $post->post_title; ?>">
         <?php endif; ?>
         <div class="main__contents contents d-none">
             <span>Spis treści:</span>
@@ -95,14 +95,14 @@
                 </div>
                 <div class="share">
                     <button class="share__btn">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/share.svg'; ?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/share.svg'; ?>" alt="Udostępnij" />
                     </button>
                     <span>Udostępnij</span>
                 </div>
             </div>
         </div>
         <div class="main__author">
-            <?php echo get_avatar(get_the_author_meta('ID'), 96); ?>
+            <?php echo get_avatar(get_the_author_meta('ID'), 96,'', get_the_author_meta('display_name')); ?>
             <span>Autor: </span>
             <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
                 <?php echo get_the_author_meta('display_name') ?>

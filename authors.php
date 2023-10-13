@@ -20,7 +20,7 @@
 <section class="section authors-list">
     <?php foreach ($authors as $author) : ?>
         <div class="authors-list__single">
-            <?php echo get_avatar($author->ID, 48); ?>
+            <?php echo get_avatar($author->ID, 48, '', $author->display_name); ?>
             <a href="<?php echo get_author_posts_url($author->ID); ?>">
                 <h4><?php echo $author->display_name; ?></h4>
             </a>

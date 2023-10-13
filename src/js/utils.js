@@ -28,15 +28,15 @@ const getHeaderHeight = () => {
 };
 
 const getLeafletUrl = (brandSlug, leafletId) => {
-  return `${fancyUrl}sklep/${brandSlug}/gazetka/${leafletId}`;
+  return `${blixUrl}sklep/${brandSlug}/gazetka/${leafletId}`;
 };
 
 const getBrandUrl = (brandSlug) => {
-  return `${fancyUrl}sklep/${brandSlug}`;
+  return `${blixUrl}sklep/${brandSlug}`;
 };
 
 const getProductUrl = (productSlug, productHash) => {
-  return `${fancyUrl}produkt/${productSlug},${productHash}`;
+  return `${blixUrl}produkt/${productSlug},${productHash}`;
 };
 
 export {

@@ -47,6 +47,16 @@
     }
   }
 
+  &.empty {
+    .swiper {
+      .swiper-button-prev,
+      .swiper-button-next,
+      .swiper__special-buttons {
+        display: none !important;
+      }
+    }
+  }
+
   .swiper {
     height: 100%;
     opacity: 1;

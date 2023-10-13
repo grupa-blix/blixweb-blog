@@ -29,7 +29,7 @@ usort($post_categories, function($a, $b) {
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy']) ?>
+                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => 'Przepis na ' . strtolower($post->post_title)]) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
@@ -48,7 +48,7 @@ usort($post_categories, function($a, $b) {
                     <div class="pills__track">
                         <div class="pills__overlay pills__overlay--left">
                             <button class="pills__button pills__button--left">
-                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                             </button>
                         </div>
                         <a href="<?php echo get_category_link($top_category); ?>" class="pill pill--main"><?php echo $top_category->name; ?></a>
@@ -58,37 +58,37 @@ usort($post_categories, function($a, $b) {
                         <?php endif; endforeach; ?>
                         <div class="pills__overlay pills__overlay--right">
                             <button class="pills__button pills__button--right">
-                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="top-wrapper__featured-img">
+            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="top-wrapper__featured-img" alt="Przepis na <?php echo $post->post_title; ?>">
 
             <div class="top-wrapper__details">
                 <?php if(get_field("servings")) : ?>
-                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/servings.svg'; ?>" /><strong><?php echo the_field("servings"); ?></strong></div>
+                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/servings.svg'; ?>" alt="Porcje"/><strong><?php echo the_field("servings"); ?></strong></div>
                 <?php endif; ?>
                 <?php if(get_field("preparation_time")) : ?>
-                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/time.svg'; ?>" /><strong><?php echo the_field("preparation_time"); ?></strong></div>
+                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/time.svg'; ?>" alt="Czas przygotowania"/><strong><?php echo the_field("preparation_time"); ?></strong></div>
                 <?php endif; ?>
                 <?php if(get_field("difficulty")) : ?>
-                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/difficulty.svg'; ?>" /><strong><?php echo the_field("difficulty"); ?></strong></div>
+                    <div class="top-wrapper__detail"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/difficulty.svg'; ?>" alt="Poziom trudności"/><strong><?php echo the_field("difficulty"); ?></strong></div>
                 <?php endif; ?>
             </div>
 
             <div class="top-wrapper__data">
                 <?php if(get_field('rating') && get_field('rating_count') != 0) : ?>
                     <div class="data__rating">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" alt="Ocena"/>
                         <span><?php echo number_format(get_field('rating'), 1)?></span>
                     </div>
                 <?php endif; ?>
                 <?php if(get_comments_number($post) > 0) : ?>
                     <div class="data__comments">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" alt="Liczba komentarzy"/>
                         <span><?php echo count(get_comments($post)); ?></span>
                     </div>
                 <?php endif; ?>
@@ -119,13 +119,13 @@ usort($post_categories, function($a, $b) {
                         <div class="pills__track">
                             <div class="pills__overlay pills__overlay--left">
                                 <button class="pills__button pills__button--left">
-                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                                 </button>
                             </div>
 
                             <div class="pills__overlay pills__overlay--right">
                                 <button class="pills__button pills__button--right">
-                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                                 </button>
                             </div>
                         </div>
@@ -157,7 +157,7 @@ usort($post_categories, function($a, $b) {
                             ?>
                             <div class="rating__bg">
                                 <div class="rating__progress" style="width:<?php echo $progress . "px"?>"></div>
-                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/stars-bg.svg'; ?>">
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/stars-bg.svg'; ?>" alt="Gwiazdka">
                             </div>
                             <div class="rating__btns-wrapper">
                                 <button class="star" data-rating="1"></button>
@@ -179,20 +179,20 @@ usort($post_categories, function($a, $b) {
                     </div>
                     <div class="share">
                         <button class="share__btn">
-                            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/share.svg'; ?>" />
+                            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/share.svg'; ?>" alt="Udostępnij"/>
                         </button>
                         <span>Udostępnij</span>
                     </div>
                     <div class="comments">
                         <button class="comments__btn">
-                            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" />
+                            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" alt="Dodaj komentarz"/>
                         </button>
                         <span>Komentarze</span>
                     </div>
                 </div>
             </div>
             <div class="bottom-wrapper__author">
-                <?php echo get_avatar(get_the_author_meta('ID'), 96); ?>
+                <?php echo get_avatar(get_the_author_meta('ID'), 96,'', get_the_author_meta('display_name')); ?>
                 <span>Autor: </span>
                 <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">
                     <?php echo get_the_author_meta('display_name') ?>

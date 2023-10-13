@@ -7,7 +7,7 @@
         <div class="comments-bottomsheet__inner-wrapper">
             <div class="comments-bottomsheet__header-wrapper">
                 <button class="back-btn">
-                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>">
+                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka">
                     <span>Wstecz</span>
                 </button>
                 <h2>Komentarze</h2>
@@ -28,9 +28,9 @@
                 </div>
                 <form data-post-id="<?php echo $post->ID; ?>">
                     <label for="comment">Dodaj komentarz*</label>
-                    <textarea name="comment" placeholder="Wpisz swój komentarz" required></textarea>
+                    <textarea name="comment" placeholder="Wpisz swój komentarz" minlength="5" required></textarea>
                     <label for="name">Podaj imię*</label>
-                    <input type="text" name="name" required/>
+                    <input type="text" name="name" minlength="3" required/>
                     <button class="button button--green">Opublikuj komentarz</button>
                 </form>
             </div>

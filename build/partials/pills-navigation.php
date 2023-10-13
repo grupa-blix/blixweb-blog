@@ -30,7 +30,7 @@ if ($is_category) {
         <div class="pills__track">
             <div class="pills__overlay pills__overlay--left">
                 <button class="pills__button pills__button--left">
-                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                 </button>
             </div>
             <a href="/" class="pill pill--blue<?php if (is_front_page()) echo " active"; ?>">Strona Główna</a>
@@ -41,7 +41,7 @@ if ($is_category) {
             <?php endforeach ?>
             <div class="pills__overlay pills__overlay--right">
                 <button class="pills__button pills__button--right">
-                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                 </button>
             </div>
         </div>
@@ -60,7 +60,7 @@ if ($is_category) {
             <div class="pills__track">
                 <div class="pills__overlay pills__overlay--left">
                     <button class="pills__button pills__button--left">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                     </button>
                 </div>
                 <a href="<?php echo get_category_link($top_ancestor); ?>" class="pill pill<?php if ($current_term->term_id == $top_ancestor->term_id) echo " active" ?>">Wszystko</a>
@@ -69,7 +69,7 @@ if ($is_category) {
                 <?php endforeach ?>
                 <div class="pills__overlay pills__overlay--right">
                     <button class="pills__button pills__button--right">
-                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" />
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                     </button>
                 </div>
             </div>

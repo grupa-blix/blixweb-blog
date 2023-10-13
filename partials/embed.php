@@ -8,22 +8,22 @@
             </div>
         </div>
         <button class="swiper-button-prev">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>"/>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
         </button>
         <button class="swiper-button-next">
-            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>"/>
+            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
         </button>
         <div class="swiper__special-buttons">
             <a href target="__blank">
                 <button class="swiper__leaflet-btn">
-                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/book.svg';?>"/>
+                    <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/book.svg';?>" alt="Pełna gazetka"/>
                 </button>
             </a>
             <button class="swiper__zoom-in-btn">
-                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/plus.svg';?>"/>
+                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/plus.svg';?>" alt="Zbliż"/>
             </button>
             <button class="swiper__zoom-out-btn">
-                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/minus.svg';?>"/>
+                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/minus.svg';?>" alt="Oddal"/>
             </button>
         </div>
     </div>

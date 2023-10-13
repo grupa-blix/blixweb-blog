@@ -173,6 +173,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const commentsCloseBtn = document.querySelector(".comments-bottomsheet .close-btn");
   const commentsBg = document.querySelector(".comments-bottomsheet__bg");
   const commentsTextarea = document.querySelector(".comments-bottomsheet textarea");
+  const commentsInput = document.querySelector(".comments-bottomsheet input");
   const commentsForm = document.querySelector(".comments-bottomsheet form");
   const respondBtns = document.querySelectorAll(".single-comment__respond");
   const responseClearBtn = document.querySelector(".response__clear-btn");
@@ -185,6 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
   commentsTextarea.addEventListener("focus", unwrapForm);
   commentsForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (commentsTextarea.value.length < 5 || commentsInput.value.length < 3) return;
     clearRespond();
     submitForm();
   });

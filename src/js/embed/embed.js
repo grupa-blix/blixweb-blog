@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
 import { initPills, getTrackScrolled } from "../pills/pills";
 import infoIcon from "../../img/info.svg";
+import leafletPlaceholder from "../../img/embed-placeholder.png";
 
 const options = {
   modules: [Navigation, Zoom, Mousewheel, Manipulation],
@@ -27,7 +28,7 @@ const options = {
 };
 
 const getLeafletByBrand = async (brandSlug, leafletId = 0) => {
-  const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
+  const res = await fetch(`https://blix.pl/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
   const data = await res.json();
   return data;
 };
@@ -45,18 +46,22 @@ const getLeafletBySearch = async (searchQuery) => {
     } else return;
   }
 
-  const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/search/${query}`);
+  const res = await fetch(`https://blix.pl/api/blog/leaflet/search/${query}`);
   const data = await res.json();
 
-  const dataToArray = Object.keys(data.pages).map((key) => data.pages[key]);
-  const arrayWithUrls = dataToArray.map((el) => {
-    return {
-      ...el,
-      page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + (parseInt(el.page, 10) + 1),
-      hasAlcohol: data.alcohol_leaflets.includes(el.leafletId),
-    };
-  });
-  return arrayWithUrls;
+  if (data.pages) {
+    const dataToArray = Object.keys(data.pages).map((key) => data.pages[key]);
+    const arrayWithUrls = dataToArray.map((el) => {
+      return {
+        ...el,
+        page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + (parseInt(el.page, 10) + 1),
+        hasAlcohol: data.alcohol_leaflets.includes(el.leafletId),
+      };
+    });
+    return arrayWithUrls;
+  } else {
+    return data;
+  }
 };
 
 const generateDate = (value, format) => (value ? dayjs(value.date).format(format) : "");
@@ -109,7 +114,9 @@ const generateAdditionalLeaflets = (lastPageData) => `
                       </button>
                     </div>
                     <div class="leaflet__info">
-                      <img class="leaflet__brand-logo brand-logo lazyload" src="${brand.thumbnail}" loading="lazy">
+                      <img class="leaflet__brand-logo brand-logo lazyload" src="${
+                        brand.thumbnail
+                      }" loading="lazy"alt="${brand.name}">
                       <h6 class="leaflet__brand-name">${brand.name}</h6>
                       <span class="leaflet__leaflet-name">${leafletName}</span>
                     </div>
@@ -123,21 +130,22 @@ const generateAdditionalLeaflets = (lastPageData) => `
   `;
 
 const generateSinglePage = (data) => {
-  const { page, hidePage, additionalLeaflets, hasAlcohol, brandThumbnail } = data;
+  const { page, hidePage, additionalLeaflets, hasAlcohol, brandThumbnail, leafletName } = data;
   const slide = document.createElement("div");
   const imageUrl = page.image_url
     ? page.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800)
     : page.imageUrl.replace(".jpg", ".webp") + "?bucket=800";
 
   const addOverlay = hasAlcohol || page.hasAlcohol;
+  const alt = leafletName ? leafletName + ` - strona ${page.page + 1}` : `Strona ${page.page + 1}`;
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target${hidePage ? " hidden" : ""}">
         <div class="page-wrapper swipe-zoom-target" data-uri="${page.page_uri}">
-          ${addOverlay && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
-          <img src="${imageUrl}" class="page-img" loading="lazy"/>
+          ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
+          <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
           ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
         </div>
       </div>
@@ -156,23 +164,26 @@ const generateDoublePage = (data) => {
     additionalLeafletsOnRight,
     hasAlcohol,
     brandThumbnail,
+    leafletName,
   } = data;
   const slide = document.createElement("div");
   const leftImageUrl = leftPage.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800);
   const rightImageUrl = rightPage.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800);
+  const leftAlt = leafletName ? leafletName + ` - strona ${leftPage.page + 1}` : `Strona ${leftPage.page + 1}`;
+  const rightAlt = leafletName ? leafletName + ` - strona ${rightPage.page + 1}` : `Strona ${rightPage.page + 1}`;
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target">
         <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${leftPage.page_uri}">
-          ${hasAlcohol && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
-          <img src="${leftImageUrl}" class="page-img" loading="lazy" />
+          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
+          <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
           ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
         </div>
         <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${rightPage.page_uri}">
-          ${hasAlcohol && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
-          <img src="${rightImageUrl}" class="page-img" loading="lazy" />
+          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
+          <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
           ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
         </div>
       </div>
@@ -187,6 +198,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
   const pages = leaflet.viewer ? leaflet.viewer.pages : leaflet;
   const additionalLeaflets = leaflet.lastPageData ? leaflet.lastPageData : null;
   const brandThumbnail = leaflet.brand ? leaflet.brand.thumbnail : null;
+  const leafletName = leaflet.viewer ? leaflet.viewer.leaflet_name : null;
   let hasAlcohol = leaflet.viewer ? leaflet.viewer.has_alcohol : false;
 
   if (isUserAdult()) {
@@ -207,6 +219,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           additionalLeafletsOnRight: null,
           hasAlcohol,
           brandThumbnail,
+          leafletName,
         };
         wrapper.appendChild(generateDoublePage(data));
       } else if (index % 2 !== 0) {
@@ -220,6 +233,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             additionalLeafletsOnRight: null,
             hasAlcohol,
             brandThumbnail,
+            leafletName,
           };
           wrapper.appendChild(generateDoublePage(data));
         } else if (pages[index + 1] && index + 2 !== pages.length) {
@@ -232,6 +246,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             additionalLeafletsOnRight: null,
             hasAlcohol,
             brandThumbnail,
+            leafletName,
           };
           wrapper.appendChild(generateDoublePage(data));
         } else {
@@ -244,6 +259,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             additionalLeafletsOnRight: additionalLeaflets,
             hasAlcohol,
             brandThumbnail,
+            leafletName,
           };
           wrapper.appendChild(generateDoublePage(data));
         }
@@ -258,6 +274,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           additionalLeaflets: additionalLeaflets,
           hasAlcohol,
           brandThumbnail,
+          leafletName,
         };
         wrapper.appendChild(generateSinglePage(data));
       } else {
@@ -267,6 +284,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           additionalLeaflets: null,
           hasAlcohol,
           brandThumbnail,
+          leafletName,
         };
         wrapper.appendChild(generateSinglePage(data));
       }
@@ -328,7 +346,7 @@ const handleRecipeEmbed = async (embed, swiper) => {
     return;
   }
 
-  const promises = Array.from(anchors).map(async (anchor, index) => {
+  anchors.forEach((anchor, index) => {
     const btn = document.createElement("button");
     btn.innerText = decodeURIComponent(anchor.href.split("=")[1]).replaceAll("-", " ");
     btn.dataset.phrase = decodeURIComponent(anchor.href.split("=")[1]);
@@ -336,29 +354,30 @@ const handleRecipeEmbed = async (embed, swiper) => {
 
     pillsTrack.appendChild(btn);
 
-    const leaflet = await getLeafletBySearch(decodeURIComponent(anchor.href.split("=")[1]));
+    if (index === 0) btn.classList.add("active");
 
-    if (leaflet.length === 0) {
-      pillsTrack.removeChild(btn);
-    } else {
-      if (index === 0) btn.classList.add("active");
+    btn.addEventListener("pointerup", async (b) => {
+      if (getTrackScrolled()) return;
+      embed.classList.add("loading");
 
-      btn.addEventListener("pointerup", async (b) => {
-        if (getTrackScrolled()) return;
-        embed.classList.add("loading");
+      const leaflet = await getLeafletBySearch(decodeURIComponent(anchor.href.split("=")[1]));
 
-        setTimeout(() => {
-          swiper.removeAllSlides();
+      setTimeout(() => {
+        swiper.removeAllSlides();
+
+        if (leaflet.emptyState) {
+          handleEmptyState(embed, leaflet);
+          swiper.updateSlides();
+          swiper.slideTo(0);
+        } else {
           generatePages(embed, false, leaflet, false);
           swiper.updateSlides();
           swiper.slideTo(0);
           loadAdjacentPages(embed);
-        }, 200);
-      });
-    }
+        }
+      }, 200);
+    });
   });
-
-  await Promise.all(promises);
 };
 
 const removeEmbed = (embed) => {
@@ -373,25 +392,63 @@ const removeEmbed = (embed) => {
 
 const handleMessageDisplay = (embed, leaflet) => {
   if (embed.querySelector(".message-box")) return;
-  if (parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
+
+  if (parseInt(embed.dataset.leafletId, 10) !== 0 && parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
     embed.classList.add("with-message-box");
     const messageBox = document.createElement("div");
     messageBox.classList.add("message-box");
     messageBox.innerHTML = `
-      <img src="${infoIcon}" />
-      <span>Gazetka niedostępna. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}.</span>
-    `;
+        <img src="${infoIcon}" alt="Informacja"/>
+        <span>Gazetka niedostępna. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}.</span>
+      `;
     embed.appendChild(messageBox);
   } else if (embed.classList.contains("archival")) {
     embed.classList.add("with-message-box");
     const messageBox = document.createElement("div");
     messageBox.classList.add("message-box");
     messageBox.innerHTML = `
-      <img src="${infoIcon}" />
-      <span>Ta gazetka straciła ważność.</span>
-    `;
+        <img src="${infoIcon}" alt="Informacja"/>
+        <span>Ta gazetka straciła ważność. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}</span>
+      `;
     embed.appendChild(messageBox);
   }
+};
+
+const handleEmptyState = (embed, leaflet) => {
+  const wrapper = embed.querySelector(".swiper-wrapper");
+
+  embed.classList.add("empty");
+
+  if (!wrapper.querySelector(".placeholder")) {
+    const wrapper = embed.querySelector(".swiper-wrapper");
+    const slide = document.createElement("div");
+
+    slide.classList.add("swiper-slide", "placeholder");
+
+    slide.innerHTML =
+      `<div class="page-wrapper"><img src="${leafletPlaceholder}" class="page-img">` +
+      generateAdditionalLeaflets(leaflet.emptyState) +
+      "</div>";
+
+    wrapper.appendChild(slide);
+
+    setTimeout(() => {
+      embed.classList.remove("loading");
+      slide.classList.remove("placeholder");
+    }, 200);
+  } else {
+    const placeholder = wrapper.querySelector(".placeholder");
+
+    placeholder.querySelector(".page-wrapper").innerHTML =
+      placeholder.querySelector(".page-wrapper").innerHTML + generateAdditionalLeaflets(leaflet.emptyState);
+
+    setTimeout(() => {
+      embed.classList.remove("loading");
+      placeholder.classList.remove("placeholder");
+    }, 200);
+  }
+
+  addAdultOverlayClickHandlers();
 };
 
 const initEmbed = async (embed) => {
@@ -415,7 +472,10 @@ const initEmbed = async (embed) => {
     ? await getLeafletByBrand(brandSlug, leafletId)
     : await getLeafletBySearch(searchPhrase);
 
-  if (!(await leaflet) || (await leaflet.length) === 0) {
+  if (leaflet.emptyState) {
+    handleEmptyState(embed, leaflet);
+    return;
+  } else if (!(await leaflet) || (await leaflet.length) === 0) {
     removeEmbed(embed);
     return;
   }

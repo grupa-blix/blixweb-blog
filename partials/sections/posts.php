@@ -5,7 +5,14 @@
             <article class="article section__item">
                 <a href="<?php echo get_permalink($element); ?>">
                     <div class="article__img-wrapper">
-                        <?php echo get_the_post_thumbnail($element, 'large', ['class' => 'article__img', 'loading' => 'lazy']) ?>
+                        <?php
+                        if(in_category('przepisy', $element)){
+                            $alt = 'Przepis na ' . strtolower($element->post_title);
+                        }else{
+                            $alt = $element->post_title;
+                        }
+                        ?>
+                        <?php echo get_the_post_thumbnail($element, 'large', ['class' => 'article__img', 'loading' => 'lazy', 'alt' => $alt]) ?>
                         <button class="article__btn-cta button">
                             <i class="icon-eye"></i>
                             <span>Zobacz</span>
@@ -31,19 +38,19 @@
                             <div class="details__inner-wrapper">
                                 <?php if(get_field('likes', $element->ID)) : ?>
                                     <div class="details__likes">
-                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" loading="lazy"/>
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/like.svg'; ?>" loading="lazy" alt="Polubienia"/>
                                         <span><?php echo the_field('likes', $element->ID); ?></span>
                                     </div>
                                 <?php endif ?>
                                 <?php if(get_field('rating', $element->ID) && get_field('rating_count', $element->ID) != 0) : ?>
                                     <div class="details__rating">
-                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" loading="lazy" />
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/rate.svg'; ?>" loading="lazy" alt="Ocena"/>
                                         <span><?php echo number_format(get_field('rating', $element->ID), 1)?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if(get_comments_number($element) > 0) : ?>
                                     <div class="details__comments">
-                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" loading="lazy" />
+                                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/comment.svg'; ?>" loading="lazy" alt="Liczba komentarzy"/>
                                         <span><?php echo get_comments_number($element); ?></span>
                                     </div>
                                 <?php endif; ?>
