@@ -360,13 +360,19 @@ const handleRecipeEmbed = async (embed, swiper) => {
       if (getTrackScrolled()) return;
       embed.classList.add("loading");
 
+      if (embed.querySelector(".message-box")) {
+        const messageBox = embed.querySelector(".message-box");
+        embed.removeChild(messageBox);
+        embed.classList.remove("with-message-box");
+      }
+
       const leaflet = await getLeafletBySearch(decodeURIComponent(anchor.href.split("=")[1]));
 
       setTimeout(() => {
         swiper.removeAllSlides();
 
         if (leaflet.emptyState) {
-          handleEmptyState(embed, leaflet);
+          handleEmptyState(embed, leaflet, false, btn.innerText);
           swiper.updateSlides();
           swiper.slideTo(0);
         } else {
@@ -393,7 +399,25 @@ const removeEmbed = (embed) => {
 const handleMessageDisplay = (embed, leaflet) => {
   if (embed.querySelector(".message-box")) return;
 
-  if (parseInt(embed.dataset.leafletId, 10) !== 0 && parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
+  if (leaflet.emptyState) {
+    embed.classList.add("with-message-box");
+    const messageBox = document.createElement("div");
+    messageBox.classList.add("message-box");
+
+    if (leaflet.isBrandLeaflet) {
+      messageBox.innerHTML = `
+      <img src="${infoIcon}" alt="Informacja"/>
+      <span>Ta gazetka straciła ważność. Poznaj najnowsze promocje w innych sklepach.</span>
+    `;
+    } else {
+      messageBox.innerHTML = `
+      <img src="${infoIcon}" alt="Informacja"/>
+      <span>Aktualnie nie mamy ofert na ${leaflet.productName.toLowerCase()}. Poznaj najnowsze promocje w Blix.</span>
+    `;
+    }
+
+    embed.appendChild(messageBox);
+  } else if (parseInt(embed.dataset.leafletId, 10) !== 0 && parseInt(embed.dataset.leafletId, 10) !== leaflet.id) {
     embed.classList.add("with-message-box");
     const messageBox = document.createElement("div");
     messageBox.classList.add("message-box");
@@ -414,8 +438,9 @@ const handleMessageDisplay = (embed, leaflet) => {
   }
 };
 
-const handleEmptyState = (embed, leaflet) => {
+const handleEmptyState = (embed, leaflet, isBrandLeaflet, productName) => {
   const wrapper = embed.querySelector(".swiper-wrapper");
+  leaflet = { ...leaflet, isBrandLeaflet, productName };
 
   embed.classList.add("empty");
 
@@ -433,6 +458,7 @@ const handleEmptyState = (embed, leaflet) => {
     wrapper.appendChild(slide);
 
     setTimeout(() => {
+      handleMessageDisplay(embed, leaflet);
       embed.classList.remove("loading");
       slide.classList.remove("placeholder");
     }, 200);
@@ -443,6 +469,7 @@ const handleEmptyState = (embed, leaflet) => {
       placeholder.querySelector(".page-wrapper").innerHTML + generateAdditionalLeaflets(leaflet.emptyState);
 
     setTimeout(() => {
+      handleMessageDisplay(embed, leaflet);
       embed.classList.remove("loading");
       placeholder.classList.remove("placeholder");
     }, 200);
@@ -473,7 +500,7 @@ const initEmbed = async (embed) => {
     : await getLeafletBySearch(searchPhrase);
 
   if (leaflet.emptyState) {
-    handleEmptyState(embed, leaflet);
+    handleEmptyState(embed, leaflet, isBrandLeaflet, searchPhrase);
     return;
   } else if (!(await leaflet) || (await leaflet.length) === 0) {
     removeEmbed(embed);

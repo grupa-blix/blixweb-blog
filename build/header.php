@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lanh="pl-PL">
+<html lang="pl-PL">
 
 <head>
 	<meta charset="<?php bloginfo('charset'); ?>">
@@ -28,9 +28,9 @@
 				"recipeIngredient": [<?php echo $processed_ingredients; ?>],
 				"name": "<?php echo $post->post_title; ?>",
 				"prepTime": "PT<?php echo get_field("preparation_time_micro") ?>",
-				"recipeInstructions": "<?php echo $processed_preparation; ?>",
+				"recipeInstructions": "<?php echo $processed_preparation; ?>"
 				<?php if(get_field('rating') != 0) : ?>
-					"aggregateRating": {
+					,"aggregateRating": {
 						"@type": "AggregateRating",
 						"ratingValue": "<?php echo number_format(get_field('rating')); ?>",
 						"reviewCount": "<?php echo number_format(get_field('rating_count')); ?>"
