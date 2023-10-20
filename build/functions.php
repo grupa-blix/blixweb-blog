@@ -268,8 +268,6 @@ function prefix_filter_title_example( $title ) {
 		$title = get_the_title() . ' - przepis ❇️ | Gotuj z Blix!';
 	}elseif(is_category() && get_the_category_by_ID(get_queried_object()->parent) == "Przepisy"){
 		$title = get_queried_object()->cat_name . ' - przepisy ❇️ | Gotuj z Blix!';
-	}elseif(is_category() && get_queried_object()->cat_name == "Przepisy"){
-		$title = get_queried_object()->cat_name . ' ❇️ | Gotuj z Blix!';
 	}
     return $title;
   }

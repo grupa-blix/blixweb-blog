@@ -46,6 +46,8 @@ const getLeafletBySearch = async (searchQuery) => {
     } else return;
   }
 
+  query = query.replace("%", "");
+
   const res = await fetch(`https://blix.pl/api/blog/leaflet/search/${query}`);
   const data = await res.json();
 
@@ -343,13 +345,23 @@ const handleRecipeEmbed = async (embed, swiper) => {
   const anchors = document.querySelectorAll(".bottom-wrapper__ingredients-inner-wrapper a");
 
   if (anchors.length === 0) {
+    removeEmbed(embed);
     return;
   }
 
+  let phrases = [];
+
   anchors.forEach((anchor, index) => {
+    const phrase = decodeURIComponent(anchor.href.split("=")[1]);
+
+    if (phrases.includes(phrase)) return;
+    else {
+      phrases.push(phrase);
+    }
+
     const btn = document.createElement("button");
-    btn.innerText = decodeURIComponent(anchor.href.split("=")[1]).replaceAll("-", " ");
-    btn.dataset.phrase = decodeURIComponent(anchor.href.split("=")[1]);
+    btn.innerText = phrase.replaceAll("-", " ");
+    btn.dataset.phrase = phrase;
     btn.classList.add("pill");
 
     pillsTrack.appendChild(btn);
@@ -365,10 +377,11 @@ const handleRecipeEmbed = async (embed, swiper) => {
         embed.removeChild(messageBox);
         embed.classList.remove("with-message-box");
       }
-
-      const leaflet = await getLeafletBySearch(decodeURIComponent(anchor.href.split("=")[1]));
+      console.log(phrase);
+      const leaflet = await getLeafletBySearch(phrase);
 
       setTimeout(() => {
+        console.log(swiper);
         swiper.removeAllSlides();
 
         if (leaflet.emptyState) {
@@ -412,7 +425,7 @@ const handleMessageDisplay = (embed, leaflet) => {
     } else {
       messageBox.innerHTML = `
       <img src="${infoIcon}" alt="Informacja"/>
-      <span>Aktualnie nie mamy ofert na ${leaflet.productName.toLowerCase()}. Poznaj najnowsze promocje w Blix.</span>
+      <span>Aktualnie nie mamy ofert na ${leaflet.searchPhrase.toLowerCase()}. Poznaj najnowsze promocje w Blix.</span>
     `;
     }
 
@@ -432,15 +445,15 @@ const handleMessageDisplay = (embed, leaflet) => {
     messageBox.classList.add("message-box");
     messageBox.innerHTML = `
         <img src="${infoIcon}" alt="Informacja"/>
-        <span>Ta gazetka straciła ważność. Poznaj aktualne promocje w gazetce ${leaflet.brand.name}</span>
+        <span>Ta gazetka straciła ważność.</span>
       `;
     embed.appendChild(messageBox);
   }
 };
 
-const handleEmptyState = (embed, leaflet, isBrandLeaflet, productName) => {
+const handleEmptyState = (embed, leaflet, isBrandLeaflet, searchPhrase) => {
   const wrapper = embed.querySelector(".swiper-wrapper");
-  leaflet = { ...leaflet, isBrandLeaflet, productName };
+  leaflet = { ...leaflet, isBrandLeaflet, searchPhrase };
 
   embed.classList.add("empty");
 
@@ -485,6 +498,7 @@ const initEmbed = async (embed) => {
   const zoomOutBtn = embed.querySelector(".swiper__zoom-out-btn");
   const { brandSlug, leafletId, searchPhrase } = embed.dataset;
   const isBrandLeaflet = brandSlug;
+  const isRecipeEmbed = !brandSlug && !searchPhrase;
 
   await handleRecipeEmbed(embed, swiper);
 
@@ -499,10 +513,29 @@ const initEmbed = async (embed) => {
     ? await getLeafletByBrand(brandSlug, leafletId)
     : await getLeafletBySearch(searchPhrase);
 
-  if (leaflet.emptyState) {
-    handleEmptyState(embed, leaflet, isBrandLeaflet, searchPhrase);
+  // if (leaflet.emptyState) {
+  //   handleEmptyState(embed, leaflet, isBrandLeaflet, searchPhrase);
+  //   return;
+  // } else if (!(await leaflet) || (await leaflet.length) === 0) {
+  //   removeEmbed(embed);
+  //   return;
+  // }
+
+  if (leaflet && leaflet.emptyState) {
+    if (isRecipeEmbed) {
+      handleEmptyState(
+        embed,
+        leaflet,
+        isBrandLeaflet,
+        document.querySelector(".bottom-wrapper__embed-pills .pill.active").dataset.phrase
+      );
+    } else {
+      handleEmptyState(embed, leaflet, isBrandLeaflet, searchPhrase);
+    }
+
+    swiper.init();
     return;
-  } else if (!(await leaflet) || (await leaflet.length) === 0) {
+  } else if (!leaflet || leaflet.length === 0) {
     removeEmbed(embed);
     return;
   }

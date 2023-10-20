@@ -199,6 +199,10 @@
     margin-right: -24px;
   }
 
+  &--leaflets {
+    margin: 16px 0;
+  }
+
   @media (max-width: 991px) {
     &--m-no-padding-x {
       padding-left: 0;
