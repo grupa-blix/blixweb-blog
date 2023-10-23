@@ -100,7 +100,7 @@ usort($post_categories, function($a, $b) {
                     <li data-scroll-element="ingredients"><a href="#składniki">Składniki</a></li>
                     <li data-scroll-element="promotions"><a href="#promocje-na-składniki">Promocje na składniki</a></li>
                     <li data-scroll-element="preparation"><a href="#jak-zrobić-<?php echo $post->post_name; ?>">Jak zrobić <?php echo the_title(); ?></a></li>
-                    <li data-scroll-element="tips"><a href="#wskazówki">Wskazówki</a></li>
+                    <?php if(get_field('tips')) : ?><li data-scroll-element="tips"><a href="#wskazówki">Wskazówki</a></li><?php endif ?>
                 </ol>
             </div>
         </div>
@@ -137,10 +137,12 @@ usort($post_categories, function($a, $b) {
                 <h2>Jak zrobić <?php echo mb_strtolower($post->post_title); ?></h2>
                 <?php echo the_field("preparation"); ?>
             </div>
+            <?php if(get_field("tips")) : ?>
             <div id="wskazówki" class="bottom-wrapper__tips" data-scroll="tips">
                 <h2>Wskazówki</h2>
                 <?php echo the_field("tips"); ?>
             </div>
+            <?php endif ?>
             <div class="bottom-wrapper__engagement">
                 <h2>Podoba Ci się ten artykuł?</h2>
                 <div class="engagement-wrapper">
