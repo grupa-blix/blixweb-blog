@@ -20,6 +20,7 @@
             <?php
             $header = "Gazetki dla Ciebie w Blix";
             $leaflets = "promoted";
+            $ga_label = "footer-leaflets";
             $no_padding_top = true;
             include 'partials/sections/leaflets.php'; ?>
 

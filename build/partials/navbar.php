@@ -81,7 +81,7 @@ $menuMainItems = array_filter($menuItems, function ($k) {
 		<div id="overlay_search" class="search-overlay overlay"></div>
 
 		<div class="search-container d-none d-lg-block">
-			<form class="search navbar__search" action="" method="POST" autocomplete="off">
+			<form class="search navbar__search" action="https://blix.pl/szukaj/" method="POST" autocomplete="off">
 				<input type="text" name="szukaj" class="search__input" placeholder="Wyszukaj w Blix np. masło, jaja" autocomplete="off" tabindex="-1">
 				<button type="button" class="button search__button-close"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/x-icon.svg'; ?>"></button>
 				<button class="button button--green search__button"><img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/search-icon.svg'; ?>"></button>

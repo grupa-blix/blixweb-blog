@@ -5,6 +5,18 @@ import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adul
 
 let carousels = [];
 
+const setProductAnalytics = (product, index, isLast) => {
+  const sectionLabel = product.closest(".swiper").dataset.gaLabel;
+  product.addEventListener("click", () => {
+    dataLayer.push({
+      event: "BLOG_PRODUCT_CLICK",
+      sectionLabel,
+      position: index + 1,
+      isLast,
+    });
+  });
+};
+
 const getBestProducts = async () => {
   const res = await fetch("https://blix.pl/api/blog/offers/best");
   const data = await res.json();
@@ -127,6 +139,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     products.forEach((product, j) => {
       const currentProductData = bestProducts[j];
       setProduct(product, currentProductData);
+      setProductAnalytics(product, j, j === products.length - 1);
     });
   });
 

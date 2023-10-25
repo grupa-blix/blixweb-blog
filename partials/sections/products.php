@@ -5,7 +5,7 @@
           <button class="section__btn-cta-top button">Zobacz więcej</button>
         </a>
     </div>
-    <div class="swiper section__swiper section__swiper--products">
+    <div class="swiper section__swiper section__swiper--products" data-ga-label="<?php echo $ga_label; ?>">
         <div class="swiper-wrapper section__items section__items--horizontal">
             <?php for ($i = 1; $i <= 12; $i++) : ?>
                 <div class="swiper-slide">
@@ -40,3 +40,4 @@
     </a>
 </section>
 <?php unset($leaflets); ?>
+<?php unset($ga_label); ?>

@@ -31,6 +31,11 @@ $vars = (object) [
     <?php
     $header = "Najnowsze gazetki Blix";
     $leaflets = "newest";
+    if(get_the_category_by_ID($current_category->parent) == "Przepisy"){
+        $ga_label = 'category-second-level-newest-leaflets';
+    }else{
+        $ga_label = 'category-first-level-newest-leaflets';
+    }
     include 'partials/sections/leaflets.php';
     include 'partials/sections/posts.php'; ?>
 <?php endif ?>
@@ -42,6 +47,11 @@ $vars = (object) [
 ?>
 <?php if (count($vars->elements) != 0) : ?>
     <?php
+    if(get_the_category_by_ID($current_category->parent) == "Przepisy"){
+        $ga_label = 'category-second-level-products';
+    }else{
+        $ga_label = 'category-first-level-products';
+    }
     include 'partials/sections/products.php';
     include 'partials/sections/posts.php'; ?>
 <?php endif ?>

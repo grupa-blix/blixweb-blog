@@ -27,6 +27,24 @@ const options = {
   },
 };
 
+// const setEmbedAnalytics = (embed, currentLeafletId) => {
+//   const activeLeaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
+//   const { leafletId, leafletName, brandId, brandName } = activeLeaflet.dataset;
+//   if (leafletId !== currentLeafletId) {
+//     dataLayer.push({
+//       event: "LEAFLET_ENTER",
+//       leafletId: activeLeafletId.toString(),
+//       leafletName,
+//       brandId: brandId.toString(),
+//       brandName,
+//       placement: "blog",
+//       openType: "manual",
+//       state: isArchival ? "archived" : "current",
+//     });
+//   }
+//   return activeLeaflet;
+// };
+
 const getLeafletByBrand = async (brandSlug, leafletId = 0) => {
   const res = await fetch(`https://blix.pl/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
   const data = await res.json();
@@ -57,6 +75,7 @@ const getLeafletBySearch = async (searchQuery) => {
       return {
         ...el,
         page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + (parseInt(el.page, 10) + 1),
+        brandName: data.leaflet_brands[el.leafletId].brand_name,
         hasAlcohol: data.alcohol_leaflets.includes(el.leafletId),
       };
     });
@@ -499,6 +518,7 @@ const initEmbed = async (embed) => {
   const { brandSlug, leafletId, searchPhrase } = embed.dataset;
   const isBrandLeaflet = brandSlug;
   const isRecipeEmbed = !brandSlug && !searchPhrase;
+  //let currentLeafletId;
 
   await handleRecipeEmbed(embed, swiper);
 
@@ -512,14 +532,6 @@ const initEmbed = async (embed) => {
   const leaflet = isBrandLeaflet
     ? await getLeafletByBrand(brandSlug, leafletId)
     : await getLeafletBySearch(searchPhrase);
-
-  // if (leaflet.emptyState) {
-  //   handleEmptyState(embed, leaflet, isBrandLeaflet, searchPhrase);
-  //   return;
-  // } else if (!(await leaflet) || (await leaflet.length) === 0) {
-  //   removeEmbed(embed);
-  //   return;
-  // }
 
   if (leaflet && leaflet.emptyState) {
     if (isRecipeEmbed) {
@@ -574,6 +586,8 @@ const initEmbed = async (embed) => {
   swiper.on("slideChangeTransitionEnd", () => {
     loadAdjacentPages(embed);
 
+    //currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
+
     setTimeout(() => {
       setLeafletBtn(embed);
     }, 500);
@@ -581,6 +595,8 @@ const initEmbed = async (embed) => {
 
   swiper.on("afterInit", () => {
     loadAdjacentPages(embed);
+
+    //currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
 
     setTimeout(() => {
       setLeafletBtn(embed);

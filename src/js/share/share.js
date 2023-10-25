@@ -13,6 +13,9 @@ const handleShareClick = async () => {
     await navigator.share({
       url: window.location.href,
     });
+    dataLayer.push({
+      event: "POST_SHARE_NATIVE",
+    });
   } catch (e) {
     if (!e.toString().includes("AbortError")) {
       toggleShareModal(true);
@@ -32,8 +35,16 @@ window.addEventListener("DOMContentLoaded", () => {
   share.addEventListener("click", handleShareClick);
   shareCloseBtn.addEventListener("click", toggleShareModal);
   shareBg.addEventListener("click", toggleShareModal);
-  shareCopyBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(shareCopyUrl.innerText);
+  shareCopyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(shareCopyUrl.innerText);
+      dataLayer.push({
+        event: "POST_SHARE_CLIPBOARD",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     toggleShareModal();
   });
 });

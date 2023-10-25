@@ -9,6 +9,20 @@ let promotedLeaflets = [];
 let brandLeaflets = [];
 let categoryLeaflets = [];
 
+const setLeafletAnalytics = (leaflet, index, isLast) => {
+  const sectionLabel = leaflet.closest(".swiper").dataset.gaLabel;
+  const brandName = leaflet.querySelector(".leaflet__brand-name").innerText;
+  leaflet.addEventListener("click", () => {
+    dataLayer.push({
+      event: "BLOG_LEAFLET_CLICK",
+      sectionLabel,
+      position: index + 1,
+      isLast,
+      brandName,
+    });
+  });
+};
+
 const getNewestLeaflets = async () => {
   const res = await fetch("https://blix.pl/api/blog/leaflets/new");
   const data = await res.json();
@@ -219,6 +233,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     leaflets.forEach((leaflet, j) => {
       const currentLeafletData = leafletsData[j];
       setLeaflet(leaflet, currentLeafletData);
+      setLeafletAnalytics(leaflet, j, j === leaflets.length - 1);
     });
   });
 });
