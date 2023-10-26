@@ -30,12 +30,13 @@ add_action('wp_enqueue_scripts', 'register_styles', 100);
 
 function register_scripts()
 {
-	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'','',true);
+    $version = "7.0.1";
+	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'',$version,true);
 
     if(is_single() && in_category("aktualnosci")){
-        wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'','',true);
+        wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'',$version,true);
 
-        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','','', array(
+        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','',$version, array(
         'strategy'  => 'defer',
         'in_footer' => true,
         ));
@@ -45,15 +46,15 @@ function register_scripts()
     }
 
     if(is_single() && in_category("przepisy")){
-        wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'','',true);
+        wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'',$version,true);
 
-        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','','', array(
+        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','',$version, array(
         'strategy'  => 'defer',
         'in_footer' => true,
         ));
         wp_localize_script( 'rating_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
 
-        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','','', array(
+        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','',$version, array(
         'strategy'  => 'defer',
         'in_footer' => true,
         ));
