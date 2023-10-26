@@ -27,23 +27,24 @@ const options = {
   },
 };
 
-// const setEmbedAnalytics = (embed, currentLeafletId) => {
-//   const activeLeaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
-//   const { leafletId, leafletName, brandId, brandName } = activeLeaflet.dataset;
-//   if (leafletId !== currentLeafletId) {
-//     dataLayer.push({
-//       event: "LEAFLET_ENTER",
-//       leafletId: activeLeafletId.toString(),
-//       leafletName,
-//       brandId: brandId.toString(),
-//       brandName,
-//       placement: "blog",
-//       openType: "manual",
-//       state: isArchival ? "archived" : "current",
-//     });
-//   }
-//   return activeLeaflet;
-// };
+const setEmbedAnalytics = (embed, currentLeafletId) => {
+  const activeLeaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
+  const { leafletId, leafletName, brandId, brandName, isArchival } = activeLeaflet.dataset;
+  console.log(leafletId, currentLeafletId);
+  if (leafletId != currentLeafletId) {
+    dataLayer.push({
+      event: "LEAFLET_ENTER",
+      leafletId: leafletId.toString(),
+      leafletName,
+      brandId: brandId.toString(),
+      brandName,
+      placement: "blog",
+      openType: "manual",
+      state: isArchival === "true" ? "archived" : "current",
+    });
+  }
+  return leafletId;
+};
 
 const getLeafletByBrand = async (brandSlug, leafletId = 0) => {
   const res = await fetch(`https://blix.pl/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
@@ -66,7 +67,7 @@ const getLeafletBySearch = async (searchQuery) => {
 
   query = query.replace("%", "");
 
-  const res = await fetch(`https://blix.pl/api/blog/leaflet/search/${query}`);
+  const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/search/${query}`);
   const data = await res.json();
 
   if (data.pages) {
@@ -76,6 +77,8 @@ const getLeafletBySearch = async (searchQuery) => {
         ...el,
         page_uri: data.leaflet_urls[el.leafletId] + "?pageNumber=" + (parseInt(el.page, 10) + 1),
         brandName: data.leaflet_brands[el.leafletId].brand_name,
+        brandId: data.leaflet_brands[el.leafletId].brand_id,
+        leafletName: data.leaflet_titles[el.leafletId],
         hasAlcohol: data.alcohol_leaflets.includes(el.leafletId),
       };
     });
@@ -151,7 +154,18 @@ const generateAdditionalLeaflets = (lastPageData) => `
   `;
 
 const generateSinglePage = (data) => {
-  const { page, hidePage, additionalLeaflets, hasAlcohol, brandThumbnail, leafletName } = data;
+  const {
+    page,
+    hidePage,
+    additionalLeaflets,
+    hasAlcohol,
+    brandThumbnail,
+    leafletName,
+    leafletId,
+    brandName,
+    brandId,
+    isArchival,
+  } = data;
   const slide = document.createElement("div");
   const imageUrl = page.image_url
     ? page.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800)
@@ -159,12 +173,18 @@ const generateSinglePage = (data) => {
 
   const addOverlay = hasAlcohol || page.hasAlcohol;
   const alt = leafletName ? leafletName + ` - strona ${page.page + 1}` : `Strona ${page.page + 1}`;
+  const dataLeafletName = leafletName ? leafletName : page.leafletName;
+  const dataLeafletId = leafletId ? leafletId : page.leafletId;
+  const databrandName = brandName ? brandName : page.brandName;
+  const databrandId = brandId ? brandId : page.brandId;
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target${hidePage ? " hidden" : ""}">
-        <div class="page-wrapper swipe-zoom-target" data-uri="${page.page_uri}">
+        <div class="page-wrapper swipe-zoom-target" data-uri="${
+          page.page_uri
+        }" data-leaflet-name="${dataLeafletName}" data-leaflet-id="${dataLeafletId}" data-brand-name="${databrandName}" data-brand-id="${databrandId}" data-is-archival="${isArchival}">
           ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
           <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
           ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
@@ -186,6 +206,10 @@ const generateDoublePage = (data) => {
     hasAlcohol,
     brandThumbnail,
     leafletName,
+    leafletId,
+    brandName,
+    brandId,
+    isArchival,
   } = data;
   const slide = document.createElement("div");
   const leftImageUrl = leftPage.image_url.replace("$$$EXT$$$", "webp").replace("$$$BUCKET$$$", 800);
@@ -197,12 +221,16 @@ const generateDoublePage = (data) => {
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target">
-        <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${leftPage.page_uri}">
+        <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${
+    leftPage.page_uri
+  }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
           ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
           <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
           ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
         </div>
-        <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${rightPage.page_uri}">
+        <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${
+    rightPage.page_uri
+  }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
           ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
           <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
           ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
@@ -220,6 +248,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
   const additionalLeaflets = leaflet.lastPageData ? leaflet.lastPageData : null;
   const brandThumbnail = leaflet.brand ? leaflet.brand.thumbnail : null;
   const leafletName = leaflet.viewer ? leaflet.viewer.leaflet_name : null;
+  const leafletId = leaflet.viewer ? leaflet.id : null;
+  const brandName = leaflet.viewer ? leaflet.brand.name : null;
+  const brandId = leaflet.viewer ? leaflet.brand.id : null;
+  const isArchival = leaflet.viewer ? leaflet.badge.class === "lav-archive" : false;
   let hasAlcohol = leaflet.viewer ? leaflet.viewer.has_alcohol : false;
 
   if (isUserAdult()) {
@@ -241,6 +273,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           hasAlcohol,
           brandThumbnail,
           leafletName,
+          leafletId,
+          brandName,
+          brandId,
+          isArchival,
         };
         wrapper.appendChild(generateDoublePage(data));
       } else if (index % 2 !== 0) {
@@ -255,6 +291,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             hasAlcohol,
             brandThumbnail,
             leafletName,
+            leafletId,
+            brandName,
+            brandId,
+            isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
         } else if (pages[index + 1] && index + 2 !== pages.length) {
@@ -268,6 +308,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             hasAlcohol,
             brandThumbnail,
             leafletName,
+            leafletId,
+            brandName,
+            brandId,
+            isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
         } else {
@@ -281,6 +325,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             hasAlcohol,
             brandThumbnail,
             leafletName,
+            leafletId,
+            brandName,
+            brandId,
+            isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
         }
@@ -296,6 +344,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           hasAlcohol,
           brandThumbnail,
           leafletName,
+          leafletId,
+          brandName,
+          brandId,
+          isArchival,
         };
         wrapper.appendChild(generateSinglePage(data));
       } else {
@@ -306,6 +358,10 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           hasAlcohol,
           brandThumbnail,
           leafletName,
+          leafletId,
+          brandName,
+          brandId,
+          isArchival,
         };
         wrapper.appendChild(generateSinglePage(data));
       }
@@ -518,7 +574,7 @@ const initEmbed = async (embed) => {
   const { brandSlug, leafletId, searchPhrase } = embed.dataset;
   const isBrandLeaflet = brandSlug;
   const isRecipeEmbed = !brandSlug && !searchPhrase;
-  //let currentLeafletId;
+  let currentLeafletId;
 
   await handleRecipeEmbed(embed, swiper);
 
@@ -586,7 +642,7 @@ const initEmbed = async (embed) => {
   swiper.on("slideChangeTransitionEnd", () => {
     loadAdjacentPages(embed);
 
-    //currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
+    currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
 
     setTimeout(() => {
       setLeafletBtn(embed);
@@ -596,7 +652,7 @@ const initEmbed = async (embed) => {
   swiper.on("afterInit", () => {
     loadAdjacentPages(embed);
 
-    //currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
+    currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
 
     setTimeout(() => {
       setLeafletBtn(embed);
