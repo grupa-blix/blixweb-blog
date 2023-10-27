@@ -33,7 +33,7 @@ if ($is_category) {
                     <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                 </button>
             </div>
-            <a href="/" class="pill pill--blue<?php if (is_front_page()) echo " active"; ?>">Strona Główna</a>
+            <a href="<?php echo get_home_url(); ?>" class="pill pill--blue<?php if (is_front_page()) echo " active"; ?>">Strona Główna</a>
             <?php foreach ($categories as $category) : ?>
                 <?php if ($category->parent == 0) : ?>
                     <a href="<?php echo get_category_link($category); ?>" class="pill pill--blue<?php if ($is_category && $top_ancestor->term_id == $category->term_id) echo " active" ?>"><?php echo $category->name; ?></a>
