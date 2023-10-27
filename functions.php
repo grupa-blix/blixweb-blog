@@ -135,6 +135,12 @@ function wpbeginner_numeric_posts_nav()
     echo '</div>' . "\n";
 }
 
+function set_pagination_base () {
+    global $wp_rewrite;
+    $wp_rewrite->pagination_base = 'strona';
+}
+add_action( 'init', 'set_pagination_base' );
+
 /*remove term descriptions from post editor */
 
 function wpse_hide_cat_descr()
