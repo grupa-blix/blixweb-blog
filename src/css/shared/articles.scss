@@ -145,7 +145,8 @@
         }
 
         .details {
-          &__likes {
+          &__likes,
+          &__comments {
             img {
               filter: invert(1);
             }
