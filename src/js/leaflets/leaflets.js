@@ -11,14 +11,22 @@ let categoryLeaflets = [];
 
 const setLeafletAnalytics = (leaflet, index, isLast) => {
   const sectionLabel = leaflet.closest(".swiper").dataset.gaLabel;
+  const { leafletId, brandId } = leaflet.dataset;
+  const leafletName = leaflet.querySelector(".leaflet__leaflet-name").innerText;
   const brandName = leaflet.querySelector(".leaflet__brand-name").innerText;
   leaflet.addEventListener("click", () => {
+    dataLayer.push(function () {
+      this.reset();
+    });
     dataLayer.push({
       event: "BLOG_LEAFLET_CLICK",
       sectionLabel,
-      position: index + 1,
-      isLast,
+      leafletId,
+      brandId,
+      leafletName,
       brandName,
+      position: (index + 1).toString(),
+      isLast: isLast.toString(),
     });
   });
 };
@@ -139,10 +147,12 @@ const setLeaflet = (leaflet, currentLeafletData) => {
   const leafletBrandName = leaflet.querySelector(".leaflet__brand-name");
   const leafletName = leaflet.querySelector(".leaflet__leaflet-name");
   const { id, brand, name, availability, thumbnail, hasAlcohol } = currentLeafletData;
-  const { slug, name: brandName, thumbnail: brandThumbnail } = brand;
+  const { id: brandId, slug, name: brandName, thumbnail: brandThumbnail } = brand;
   const { class: availabilityClass, message } = availability;
   const leafletUrl = getLeafletUrl(slug, id);
 
+  leaflet.dataset.leafletId = id;
+  leaflet.dataset.brandId = brandId;
   leafletLink.href = leafletUrl;
   leafletLink.title = name;
   leafletCoverImg.src = thumbnail;

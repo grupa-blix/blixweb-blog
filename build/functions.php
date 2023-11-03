@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.1";
+$version = "7.0.2";
 
 function deregister_styles()
 {
@@ -10,6 +10,7 @@ add_action('wp_enqueue_scripts', 'deregister_styles', 100);
 
 function register_styles()
 {
+    global $version;
 	wp_enqueue_style('shared', get_stylesheet_directory_uri() . "/assets/css/shared.css",'',$version);
 
     if(is_single() && in_category("aktualnosci")){
@@ -32,6 +33,7 @@ add_action('wp_enqueue_scripts', 'register_styles', 100);
 
 function register_scripts()
 {
+    global $version;
 	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'',$version,true);
 
     if(is_single() && in_category("aktualnosci")){
@@ -358,3 +360,33 @@ function print_processed_ingredients($string)
 
     return $processed_string;
  }
+
+ // Remove tags support from posts
+function myprefix_unregister_tags() {
+    unregister_taxonomy_for_object_type('post_tag', 'post');
+}
+add_action('init', 'myprefix_unregister_tags');
+
+add_action('admin_head', 'my_custom_fonts');
+
+function my_custom_fonts() {
+  echo '<style>
+    .acf-checkbox-list{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .acf-checkbox-list:before, .acf-checkbox-list:after{
+        content: none;
+    }
+    .acf-checkbox-list li {
+        order: 2;
+    }
+    .acf-checkbox-list li:has(.selected) {
+        order: 1;
+    }
+    .acf-checkbox-list .selected {
+      font-weight: 700;
+      color: red;
+    }
+  </style>';
+}

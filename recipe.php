@@ -1,3 +1,7 @@
+<?php /* Template Name: Przepis
+Template Post Type: post */ ?>
+
+<?php get_header(); ?>
 <?php wpb_set_post_views(get_the_ID()); ?>
 <?php
 $post_categories = get_the_category($post);
@@ -10,7 +14,7 @@ usort($post_categories, function($a, $b) {
 
 <section class="section recipe-info">
     <div class="sidebar">
-        <?php include __DIR__ . "/../search.php"; ?>
+        <?php include __DIR__ . "/partials/search.php"; ?>
         <div class="sidebar-posts">
             <strong class="sidebar-posts__header">Zobacz również</strong>
             <?php
@@ -131,7 +135,7 @@ usort($post_categories, function($a, $b) {
                         </div>
                     </div>
                 </div>
-                <?php include __DIR__ . '/../embed.php' ?>
+                <?php include __DIR__ . '/partials/embed.php' ?>
             </div>
             <div id="jak-zrobić-<?php echo $post->post_name; ?>" class="bottom-wrapper__preparation" data-scroll="preparation">
                 <h2>Jak zrobić <?php echo mb_strtolower($post->post_title); ?></h2>
@@ -204,11 +208,13 @@ usort($post_categories, function($a, $b) {
                     'class' => 'socials--small',
                     'author_id' => get_the_author_meta('ID')
                 ];
-                include __DIR__ . '/../socials.php' ?>
+                include __DIR__ . '/partials/socials.php' ?>
             </div>
         </div>
     </div>
 </section>
-<?php include __DIR__ . "/../comments.php"; ?>
-<?php include __DIR__ . "/../share.php"; ?>
+<?php include __DIR__ . "/partials/comments.php"; ?>
+<?php include __DIR__ . "/partials/share.php"; ?>
 <?php wp_reset_postdata(); ?>
+
+<? get_footer(); ?>

@@ -7,12 +7,17 @@ let carousels = [];
 
 const setProductAnalytics = (product, index, isLast) => {
   const sectionLabel = product.closest(".swiper").dataset.gaLabel;
+  const productName = product.querySelector(".product__name").innerText;
   product.addEventListener("click", () => {
+    dataLayer.push(function () {
+      this.reset();
+    });
     dataLayer.push({
       event: "BLOG_PRODUCT_CLICK",
       sectionLabel,
-      position: index + 1,
-      isLast,
+      productName,
+      position: (index + 1).toString(),
+      isLast: isLast.toString(),
     });
   });
 };

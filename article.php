@@ -1,9 +1,13 @@
+<?php /* Template Name: Artykuł
+Template Post Type: post */ ?>
+
+<?php get_header(); ?>
 <?php wpb_set_post_views(get_the_ID()); ?>
 <?php $main_category = get_the_category($post)[0]; ?>
 
 <section class="section article-info">
     <div class="sidebar">
-        <?php include __DIR__ . "/../search.php"; ?>
+        <?php include __DIR__ . "/partials/search.php"; ?>
         <div class="sidebar-posts">
             <strong class="sidebar-posts__header">Zobacz również</strong>
             <?php
@@ -64,17 +68,17 @@
         </div>
         <?php
             if(get_field("distinguished_element") === "embed") :
-                $type = get_field( 'embed_type' )['value'];
+                $type = get_field( 'embed_type' );
 
                 if($type === "brand") :
-                    $brand = get_field( 'related_brand' )['value'];
+                    $brand = get_field( 'brand_slug' );
                     $leafletId = get_field( 'leaflet_ID' );
 
-                    include __DIR__ . '/../embed.php';
+                    include __DIR__ . '/partials/embed.php';
                 elseif ($type == "search") :
                     $searchPhrase = get_field( 'search_phrase' );
 
-                    if($searchPhrase != '') include __DIR__ . '/../embed.php';
+                    if($searchPhrase != '') include __DIR__ . '/partials/embed.php';
                 endif;
             else : ?>
             <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img" alt="<?php echo $post->post_title; ?>">
@@ -112,9 +116,11 @@
                 'class' => 'socials--small',
                 'author_id' => get_the_author_meta('ID')
             ];
-            include __DIR__ . '/../socials.php' ?>
+            include __DIR__ . '/partials/socials.php' ?>
         </div>
     </div>
 </section>
-<?php include __DIR__ . "/../share.php"; ?>
+<?php include __DIR__ . "/partials/share.php"; ?>
 <?php wp_reset_postdata(); ?>
+
+<? get_footer(); ?>
