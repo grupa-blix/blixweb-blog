@@ -30,7 +30,7 @@ const options = {
 const setEmbedAnalytics = (embed, currentLeafletId) => {
   const activeLeaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
   const { leafletId, leafletName, brandId, brandName, isArchival } = activeLeaflet.dataset;
-  console.log(leafletId, currentLeafletId);
+
   if (leafletId != currentLeafletId) {
     dataLayer.push({
       event: "LEAFLET_ENTER",
@@ -452,11 +452,10 @@ const handleRecipeEmbed = async (embed, swiper) => {
         embed.removeChild(messageBox);
         embed.classList.remove("with-message-box");
       }
-      console.log(phrase);
+
       const leaflet = await getLeafletBySearch(phrase);
 
       setTimeout(() => {
-        console.log(swiper);
         swiper.removeAllSlides();
 
         if (leaflet.emptyState) {

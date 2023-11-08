@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.2";
+$version = "7.0.3";
 
 function deregister_styles()
 {
@@ -13,7 +13,7 @@ function register_styles()
     global $version;
 	wp_enqueue_style('shared', get_stylesheet_directory_uri() . "/assets/css/shared.css",'',$version);
 
-    if(is_single() && in_category("aktualnosci")){
+    if(is_single() && is_page_template( 'article.php' )){
         wp_enqueue_style('article', get_stylesheet_directory_uri() . "/assets/css/article.css",'',$version);
     }
 
@@ -36,7 +36,7 @@ function register_scripts()
     global $version;
 	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'',$version,true);
 
-    if(is_single() && in_category("aktualnosci")){
+    if(is_single() && is_page_template( 'article.php' )){
         wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'',$version,true);
 
         wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','',$version, array(
