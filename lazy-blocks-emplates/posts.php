@@ -3,7 +3,7 @@ global $post;
 $category = get_category_by_slug( $attributes['category'] );
 $args = array(
   'post_type' => 'post',
-  'orderby' => 'ID',
+  'orderby' => 'modified',
   'post_status' => 'publish',
   'order' => 'DESC',
   'cat' => $category->cat_ID,
@@ -61,7 +61,7 @@ if ( $result-> have_posts() ) : ?>
                     <span class="article__category"><?php echo $main_category->name; ?></span>
                     <h4 class="article__name"><?php echo the_title() ?></h4>
                     <div class="article__details details">
-                        <div class="details__date"><?php echo get_the_date('d.m.Y', $post); ?></div>
+                        <div class="details__date"><?php echo get_the_modified_date('d.m.Y', $post); ?></div>
                         <div class="details__inner-wrapper">
                           <?php if(get_field('likes', $post->ID)) : ?>
                             <div class="details__likes">

@@ -11,7 +11,7 @@
 <?php
 $args = array(
 'post_type' => 'post',
-'orderby' => 'ID',
+'orderby' => 'modified',
 'post_status' => 'publish',
 'order' => 'DESC',
 'posts_per_page' => 8

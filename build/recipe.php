@@ -20,7 +20,7 @@ usort($post_categories, function($a, $b) {
             <?php
                 $args = array(
                     'post_type' => 'post',
-                    'orderby' => 'ID',
+                    'orderby' => 'modified',
                     'post_status' => 'publish',
                     'order' => 'DESC',
                     'cat' => $top_category->term_id,
@@ -36,7 +36,7 @@ usort($post_categories, function($a, $b) {
                             <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => 'Przepis na ' . strtolower($post->post_title)]) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
-                                <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
+                                <span class="single-post__date"><?php echo get_the_modified_date('d.m.Y', $post); ?></span>
                             </div>
                         </a>
                     </div>
@@ -96,7 +96,7 @@ usort($post_categories, function($a, $b) {
                         <span><?php echo count(get_comments($post)); ?></span>
                     </div>
                 <?php endif; ?>
-                <?php echo get_the_date('d.m.Y'); ?></div>
+                <?php echo get_the_modified_date('d.m.Y'); ?></div>
             <div class="top-wrapper__content"><?php echo the_content(); ?></div>
             <div class="top-wrapper__contents contents">
                 <span>Spis treści:</span>

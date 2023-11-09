@@ -13,7 +13,7 @@ Template Post Type: post */ ?>
             <?php
                 $args = array(
                     'post_type' => 'post',
-                    'orderby' => 'ID',
+                    'orderby' => 'modified',
                     'post_status' => 'publish',
                     'order' => 'DESC',
                     'cat' => $main_category->term_id,
@@ -29,7 +29,7 @@ Template Post Type: post */ ?>
                             <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => $post->post_title]) ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
-                                <span class="single-post__date"><?php echo get_the_date('d.m.Y', $post); ?></span>
+                                <span class="single-post__date"><?php echo get_the_modified_date('d.m.Y', $post); ?></span>
                             </div>
                         </a>
                     </div>
@@ -40,7 +40,7 @@ Template Post Type: post */ ?>
     <div class="main">
         <h1 class="main__title"><?php echo the_title(); ?></h1>
         <div class="main__details details">
-            <div class="details__date"><?php echo get_the_date('d.m.Y'); ?></div>
+            <div class="details__date"><?php echo get_the_modified_date('d.m.Y'); ?></div>
             <div class="details__likes hidden">
                 <div class="likes-icon"></div>
                 <span><?php echo the_field('likes', $post->ID); ?></span>

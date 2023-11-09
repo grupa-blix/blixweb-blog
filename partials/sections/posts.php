@@ -34,7 +34,7 @@
                         <span class="article__category"><?php echo $main_category->name ?></span>
                         <h4 class="article__name"><?php echo $element->post_title ?></h4>
                         <div class="article__details details">
-                            <div class="details__date"><?php echo get_the_date('d.m.Y', $element); ?></div>
+                            <div class="details__date"><?php echo get_the_modified_date('d.m.Y', $element); ?></div>
                             <div class="details__inner-wrapper">
                                 <?php if(get_field('likes', $element->ID)) : ?>
                                     <div class="details__likes">
