@@ -67,7 +67,7 @@ const getLeafletBySearch = async (searchQuery) => {
 
   query = query.replace("%", "");
 
-  const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/search/${query}`);
+  const res = await fetch(`https://blix.pl/api/blog/leaflet/search/${query}`);
   const data = await res.json();
 
   if (data.pages) {

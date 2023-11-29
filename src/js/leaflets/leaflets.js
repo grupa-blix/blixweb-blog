@@ -6,8 +6,6 @@ import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adul
 let carousels = [];
 let newestLeaflets = [];
 let promotedLeaflets = [];
-let brandLeaflets = [];
-let categoryLeaflets = [];
 
 const setLeafletAnalytics = (leaflet, index, isLast) => {
   const sectionLabel = leaflet.closest(".swiper").dataset.gaLabel;
@@ -176,10 +174,6 @@ const setLeaflet = (leaflet, currentLeafletData) => {
 window.addEventListener("DOMContentLoaded", async () => {
   const leafletsCarousels = document.querySelectorAll(".section__swiper--leaflets");
   const isNewestCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=newest]");
-  const isBrandCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=brand]");
-  const isCategoryCarousel = document.querySelector(".section__swiper--leaflets[data-leaflets=category]");
-  let brandSlug;
-  let category;
 
   leafletsCarousels.forEach(async (carousel) => {
     const isSmall = carousel.classList.contains("section__swiper--leaflets-small");
@@ -190,10 +184,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
     swiper.init();
-
-    if (carousel.dataset.brand) brandSlug = carousel.dataset.brand;
-    if (carousel.dataset.category) category = carousel.dataset.category;
-
     carousels.push(swiper);
   });
 
@@ -203,17 +193,9 @@ window.addEventListener("DOMContentLoaded", async () => {
     newestLeaflets = await getNewestLeaflets();
   }
 
-  if (isBrandCarousel) {
-    brandLeaflets = await getBrandLeaflets(brandSlug);
-  }
-
-  if (isCategoryCarousel) {
-    categoryLeaflets = await getCategoryLeaflets(category);
-  }
-
-  leafletsCarousels.forEach((carousel, i) => {
+  leafletsCarousels.forEach(async (carousel, i) => {
     const currentCarousel = carousels[i];
-    const { leaflets: carouselLeaflets } = carousel.dataset;
+    const { leaflets: carouselLeaflets, brand, category } = carousel.dataset;
     let leafletsData;
 
     switch (carouselLeaflets) {
@@ -224,10 +206,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         leafletsData = promotedLeaflets;
         break;
       case "brand":
-        leafletsData = brandLeaflets;
+        leafletsData = await getBrandLeaflets(brand);
         break;
       case "category":
-        leafletsData = categoryLeaflets;
+        leafletsData = await getCategoryLeaflets(category);
         break;
       default:
         break;
