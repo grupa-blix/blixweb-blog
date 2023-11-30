@@ -59,6 +59,7 @@
 
     &__short-description {
       margin-bottom: 12px;
+      line-height: 1.8;
 
       p {
         &:last-child {
@@ -86,7 +87,7 @@
     }
 
     &__contents {
-      margin-bottom: 24px;
+      line-height: 1.8;
 
       span {
         display: inline-block;
@@ -112,10 +113,25 @@
     }
 
     &__content {
+      p,
+      ul,
+      ol {
+        line-height: 1.8;
+      }
+
+      .wp-block-heading {
+        margin-top: 2rem;
+      }
+
+      .embed,
+      .section {
+        margin-bottom: 2rem;
+      }
+
       .wp-block-image {
         img {
           display: block;
-          margin: 1rem auto;
+          margin: 1rem 0;
           border-radius: 12px;
         }
       }
