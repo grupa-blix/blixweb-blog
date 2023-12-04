@@ -8,7 +8,9 @@ const scrollTo = (element) => {
 window.addEventListener("DOMContentLoaded", async () => {
   const contents = document.querySelector(".contents");
   const contentsList = document.querySelector(".contents__list");
-  const contentHeadings = document.querySelectorAll(".content .wp-block-heading");
+  const contentHeadings = Array.from(document.querySelectorAll(".content .wp-block-heading")).filter((el) => {
+    return el.tagName === "H2" || el.tagName == "H3";
+  });
   let initialScrollElement = null;
 
   if (contentHeadings.length === 0) {

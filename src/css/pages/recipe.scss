@@ -83,8 +83,11 @@
 
         li {
           margin-bottom: 6px;
-          text-decoration: underline;
           cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.8";
+$version = "7.0.9";
 
 function deregister_styles()
 {
@@ -291,14 +291,37 @@ function prefix_filter_title_example( $title ) {
  * @return string The filtered meta description.
  */
 function prefix_filter_description_example( $description ) {
-	if(is_single() && in_category('przepisy')){
-		$description = get_the_content();
-	}elseif(is_single() && !in_category('przepisy')){
-		$description = get_field("short_description");
-	}
+    if(is_single() && get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true)){
+        $description = get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true);
+    }else{
+        $description = get_the_excerpt();
+    }
     return $description;
   }
   add_filter( 'wpseo_metadesc', 'prefix_filter_description_example' );
+
+
+function category_image($image) {
+    global $posts;
+    if(is_single() && has_post_thumbnail(get_queried_object()->ID)){
+        $image = get_the_post_thumbnail_url(null, 'full');
+    }else if(is_category() && has_post_thumbnail($posts[0]->ID)){
+        $image = get_the_post_thumbnail_url($posts[0], 'full');
+    }else if(is_front_page()){
+        $category = get_category_by_slug('aktualnosci');
+        $args = array(
+            'posts_per_page' => 1,
+            'cat' => $category->cat_ID,
+        );
+        $q = new WP_Query( $args);
+
+        if ( $q->have_posts() ) {
+            $image = get_the_post_thumbnail_url($q->posts[0], 'full');
+        }
+    }
+    return $image;
+}
+add_filter('wpseo_opengraph_image', 'category_image');
 
   /**
  * Changes the locale output.

@@ -101,12 +101,15 @@
         li {
           width: max-content;
           margin-bottom: 6px;
-          text-decoration: underline;
           cursor: pointer;
 
           &.with-margin {
             margin-left: 20px;
             list-style-type: circle;
+          }
+
+          &:hover {
+            text-decoration: underline;
           }
         }
       }

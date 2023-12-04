@@ -123,4 +123,4 @@ Template Post Type: post */ ?>
 <?php include __DIR__ . "/partials/share.php"; ?>
 <?php wp_reset_postdata(); ?>
 
-<? get_footer(); ?>
+<?php get_footer(); ?>
