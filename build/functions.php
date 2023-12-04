@@ -312,6 +312,7 @@ function category_image($image) {
         $args = array(
             'posts_per_page' => 1,
             'cat' => $category->cat_ID,
+            'orderby' => 'modified',
         );
         $q = new WP_Query( $args);
 
