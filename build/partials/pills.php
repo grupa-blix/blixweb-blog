@@ -38,7 +38,7 @@ if ($term->taxonomy == "category") {
 <?php if (isset($all_tags)) : ?>
     <section class="section pills pb-0">
         <div class="pills__track">
-            <a href="<?php echo get_category_link($active_category); ?>" class="pill pill<?php if (!isset($active_term)) echo " active" ?>">Wszystko</a>
+            <a href="<?php echo get_category_link($active_category); ?>" class="pill<?php if (!isset($active_term)) echo " active" ?>">Wszystko</a>
             <?php foreach ($all_tags as $tag) : ?>
                 <a href="<?php echo get_tag_link($tag); ?>" class="pill<?php if (isset($active_term) && $active_term->term_id == $tag->term_id) echo " active" ?>"><?php echo $tag->name; ?></a>
             <?php endforeach ?>

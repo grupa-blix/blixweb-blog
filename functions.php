@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.10";
+$version = "7.0.11";
 
 function deregister_styles()
 {
@@ -419,14 +419,22 @@ function redirect_to_primary_category() {
 	global $post;
 	if ( is_single( $post->ID ) ) {
 		$cats = wp_get_post_categories( $post->ID );
+
 		if ( count( $cats ) > 1 ) {
 			global $wp;
-			$primary_category = get_term(yoast_get_primary_term_id('category', $post->id));
             $url = explode('/', $wp->request);
             array_pop($url);
 
-			if ( end($url) != $primary_category->slug ) {
-				$primary_url = get_category_link($primary_category) . $post->post_name;
+            if(term_exists(yoast_get_primary_term_id('category', $post->id) )){
+                $main_category = get_term(yoast_get_primary_term_id('category', $post->id));
+            }else{
+                $categories =get_the_category();
+                usort($categories, function($a, $b) {return strcmp($a->cat_ID, $b->cat_ID);});
+                $main_category = $categories[0];
+            }
+
+			if ( end($url) != $main_category->slug ) {
+				$primary_url = get_category_link($main_category) . $post->post_name;
 				wp_safe_redirect( $primary_url, 301 );
 				exit;
 			}

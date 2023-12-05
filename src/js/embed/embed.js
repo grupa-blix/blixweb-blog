@@ -444,7 +444,6 @@ const handleRecipeEmbed = async (embed, swiper) => {
     if (index === 0) btn.classList.add("active");
 
     btn.addEventListener("pointerup", async (b) => {
-      if (getTrackScrolled()) return;
       embed.classList.add("loading");
 
       if (embed.querySelector(".message-box")) {

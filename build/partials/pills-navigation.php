@@ -63,7 +63,7 @@ if ($is_category) {
                         <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/caret.svg';?>" alt="Strzałka"/>
                     </button>
                 </div>
-                <a href="<?php echo get_category_link($top_ancestor); ?>" class="pill pill<?php if ($current_term->term_id == $top_ancestor->term_id) echo " active" ?>">Wszystko</a>
+                <a href="<?php echo get_category_link($top_ancestor); ?>" class="pill<?php if ($current_term->term_id == $top_ancestor->term_id) echo " active" ?>">Wszystko</a>
                 <?php foreach ($top_ancestor_children as $subcategory) : ?>
                     <a href="<?php echo get_category_link($subcategory); ?>" class="pill<?php if ($current_term->term_id == $subcategory->term_id) echo " active" ?>"><?php echo $subcategory->name; ?></a>
                 <?php endforeach ?>

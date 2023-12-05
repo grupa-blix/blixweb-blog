@@ -63,8 +63,9 @@ const handleTrackPositionChange = (e) => {
 const pillsPointerMoveHandler = (e) => {
   const position = getTrackPosition(currentTrack);
   const dx = e.clientX - position.x;
+  console.log([position, dx]);
   currentTrack.scrollLeft = position.left - dx;
-  trackScrolled = true;
+  if (dx !== 0) trackScrolled = true;
   handleTrackPositionChange(currentTrack);
 };
 
@@ -73,6 +74,7 @@ const pillsPointerUpHandler = (e) => {
   document.removeEventListener("pointerup", pillsPointerUpHandler);
 
   currentTrack = null;
+  unsetTrackScrolled();
 };
 
 const pillsPointerDownHandler = (e) => {
