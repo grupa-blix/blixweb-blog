@@ -9,7 +9,7 @@ $menuMainItems = array_filter($menuItems, function ($k) {
 <div class="navbar__outer">
 	<div class="navbar">
 		<div class="navbar__logo-outer">
-			<a href="<?php echo get_home_url(); ?>">
+			<a href="https://blix.pl/">
 				<img alt="Blix logo" src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-logo.svg'; ?>" class="navbar__logo" width="86" height="40">
 			</a>
 		</div>

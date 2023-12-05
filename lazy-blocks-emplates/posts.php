@@ -35,11 +35,15 @@ if ( $result-> have_posts() ) : ?>
                         $alt = $post->post_title;
                       }
                     ?>
-                    <?php if($i == 0 and $attributes['first-post-distinguished']) :
-                      echo get_the_post_thumbnail(null, 'large', ['class' => 'article__img', 'loading' => false, 'alt' => $alt]);
-                    else :
-                      echo get_the_post_thumbnail(null, 'large', ['class' => 'article__img', 'loading' => 'lazy', 'alt' => $alt]);
-                    endif; ?>
+                    <?php if(has_post_thumbnail($post)){
+                      if($i == 0 and $attributes['first-post-distinguished']) :
+                        echo get_the_post_thumbnail(null, 'large', ['class' => 'article__img', 'loading' => false, 'alt' => $alt]);
+                      else :
+                        echo get_the_post_thumbnail(null, 'large', ['class' => 'article__img', 'loading' => 'lazy', 'alt' => $alt]);
+                      endif;
+                    }else { ?>
+                        <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-placeholder.jpg'; ?>" class="article__img" width="800" height="600" loading="lazy" />
+                    <?php } ?>
                     <button class="article__btn-cta button">
                         <i class="icon-eye"></i>
                         <span>Zobacz</span>

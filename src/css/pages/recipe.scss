@@ -82,6 +82,7 @@
         padding-left: 24px;
 
         li {
+          max-width: 100%;
           margin-bottom: 6px;
           cursor: pointer;
 
@@ -156,11 +157,19 @@
 
     &__embed {
       .pill {
-        color: #000000;
+        background-color: #fff;
+        color: #808080;
+        border: 1px solid #d9d9d9;
+        font-weight: 400;
 
         &.active {
-          color: #fff;
-          background-color: #333333;
+          color: #000;
+          border: 1px solid #000;
+        }
+
+        &:hover {
+          color: #000;
+          border: 1px solid #000;
         }
 
         &::first-letter {

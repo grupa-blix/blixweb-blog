@@ -26,7 +26,11 @@ Template Post Type: post */ ?>
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => $post->post_title]) ?>
+                            <?php if(has_post_thumbnail($post)){
+                                echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => $post->post_title]);
+                            }else { ?>
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-placeholder.jpg'; ?>" class="single-post__img" width="150" height="150" loading="lazy" style="object-fit:cover;" />
+                            <?php } ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_modified_date('d.m.Y', $post); ?></span>
@@ -66,6 +70,7 @@ Template Post Type: post */ ?>
                 <?php echo the_field("short_description");?>
             <?php endif; ?>
         </div>
+        <?php echo has_post_thumbnail() ?>
         <?php
             if(get_field("distinguished_element") === "embed") :
                 $type = get_field( 'embed_type' );
@@ -80,8 +85,10 @@ Template Post Type: post */ ?>
 
                     if($searchPhrase != '') include __DIR__ . '/partials/embed.php';
                 endif;
-            else : ?>
-            <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img" alt="<?php echo $post->post_title; ?>">
+            elseif(has_post_thumbnail()) : ?>
+                <img src="<?php echo get_the_post_thumbnail_url($post, "full"); ?>" class="main__featured-img" alt="<?php echo $post->post_title; ?>">
+            <?php else : ?>
+                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-placeholder.jpg'; ?>" class="main__featured-img" />
         <?php endif; ?>
         <div class="main__contents contents d-none">
             <span>Spis treści:</span>

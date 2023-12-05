@@ -12,7 +12,11 @@
                             $alt = $element->post_title;
                         }
                         ?>
-                        <?php echo get_the_post_thumbnail($element, 'large', ['class' => 'article__img', 'loading' => 'lazy', 'alt' => $alt]) ?>
+                        <?php if(has_post_thumbnail($element)){
+                            echo get_the_post_thumbnail($element, 'large', ['class' => 'article__img', 'loading' => 'lazy', 'alt' => $alt]);
+                        }else { ?>
+                            <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-placeholder.jpg'; ?>" class="article__img" width="800" height="600" loading="lazy" />
+                        <?php } ?>
                         <button class="article__btn-cta button">
                             <i class="icon-eye"></i>
                             <span>Zobacz</span>

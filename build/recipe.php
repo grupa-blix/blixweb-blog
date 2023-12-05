@@ -33,7 +33,11 @@ usort($post_categories, function($a, $b) {
                 while ( $result->have_posts() ) : $result->the_post() ?>
                     <div class="single-post">
                         <a href="<?php echo get_permalink(); ?>">
-                            <?php echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => 'Przepis na ' . strtolower($post->post_title)]) ?>
+                            <?php if(has_post_thumbnail($post)){
+                                echo get_the_post_thumbnail(null, 'thumbnail', ['class' => 'single-post__img', 'loading' => 'lazy', 'alt' => 'Przepis na ' . strtolower($post->post_title)]);
+                            }else { ?>
+                                <img src="<?php echo get_stylesheet_directory_uri() . '/assets/img/blix-placeholder.jpg'; ?>" class="single-post__img" width="150" height="150" loading="lazy" style="object-fit:cover;" />
+                            <?php } ?>
                             <div class="single-post__data">
                                 <span class="single-post__title"><?php echo the_title(); ?></span>
                                 <span class="single-post__date"><?php echo get_the_modified_date('d.m.Y', $post); ?></span>

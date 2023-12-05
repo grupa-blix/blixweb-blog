@@ -21,7 +21,7 @@
                         </li>
                     <?php endforeach; ?>
                     <li class="breadcrumbs__step">
-                        <a href="<?php echo get_home_url(); ?>"><?php echo get_queried_object()->cat_name; ?></a>
+                        <a href="<?php echo get_category_link(get_queried_object()); ?>"><?php echo get_queried_object()->cat_name; ?></a>
                     </li>
                 <?php elseif (is_single()) :
                     $post_categories = get_the_category($post);

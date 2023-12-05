@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.9";
+$version = "7.0.10";
 
 function deregister_styles()
 {
@@ -414,3 +414,23 @@ function my_custom_fonts() {
     }
   </style>';
 }
+
+function redirect_to_primary_category() {
+	global $post;
+	if ( is_single( $post->ID ) ) {
+		$cats = wp_get_post_categories( $post->ID );
+		if ( count( $cats ) > 1 ) {
+			global $wp;
+			$primary_category = get_term(yoast_get_primary_term_id('category', $post->id));
+            $url = explode('/', $wp->request);
+            array_pop($url);
+
+			if ( end($url) != $primary_category->slug ) {
+				$primary_url = get_category_link($primary_category) . $post->post_name;
+				wp_safe_redirect( $primary_url, 301 );
+				exit;
+			}
+		}
+	}
+}
+add_action( 'template_redirect', 'redirect_to_primary_category' );
