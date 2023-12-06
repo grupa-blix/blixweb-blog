@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.11";
+$version = "7.0.13";
 
 function deregister_styles()
 {
@@ -231,7 +231,7 @@ function recipe_comment() {
         "comment_approved" => 0
     );
 
-    wp_insert_comment($obj);
+    wp_new_comment($obj);
     echo json_encode($obj);
     die();
 }
@@ -417,24 +417,24 @@ function my_custom_fonts() {
 
 function redirect_to_primary_category() {
 	global $post;
-	if ( is_single( $post->ID ) ) {
-		$cats = wp_get_post_categories( $post->ID );
+	if ( $post != null && is_single( $post->ID ) ) {
+		$cats = get_the_category();
 
-		if ( count( $cats ) > 1 ) {
+		if ( count( $cats ) > 1 && in_category('przepisy') ) {
 			global $wp;
             $url = explode('/', $wp->request);
             array_pop($url);
+            $main_category = null;
 
-            if(term_exists(yoast_get_primary_term_id('category', $post->id) )){
-                $main_category = get_term(yoast_get_primary_term_id('category', $post->id));
-            }else{
-                $categories =get_the_category();
-                usort($categories, function($a, $b) {return strcmp($a->cat_ID, $b->cat_ID);});
-                $main_category = $categories[0];
+            foreach($cats as $cat){
+                if($cat->parent == 0){
+                    $main_category = $cat;
+                }
             }
 
 			if ( end($url) != $main_category->slug ) {
 				$primary_url = get_category_link($main_category) . $post->post_name;
+                echo $primary_url;
 				wp_safe_redirect( $primary_url, 301 );
 				exit;
 			}
@@ -442,3 +442,43 @@ function redirect_to_primary_category() {
 	}
 }
 add_action( 'template_redirect', 'redirect_to_primary_category' );
+
+/*
+ * Add here your functions below, and overwrite native theme functions
+ */
+function wpb_modify_jquery() {
+    //check if front-end is being viewed
+    if (!is_admin()) {
+        // Remove default WordPress jQuery
+        wp_deregister_script('jquery');
+        // Register new jQuery script via Google Library
+        wp_register_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js', false, '2.2.4');
+        // Enqueue the script
+        wp_enqueue_script('jquery');
+    }
+}
+// Execute the action when WordPress is initialized
+add_action('init', 'wpb_modify_jquery');
+
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+function custom_remove_subcategories_from_permalink($url, $post) {
+    $categories = get_the_category($post->ID);
+
+    if ($categories) {
+        // Loop through categories and remove the subcategories
+        foreach ($categories as $category) {
+            if($category->parent != 0){
+                $url = str_replace("/" . $category->slug . "/", "/", $url);
+            }
+        }
+    }
+
+    return $url;
+}
+
+add_filter('post_link', 'custom_remove_subcategories_from_permalink', 10, 2);
+add_filter('post_type_link', 'custom_remove_subcategories_from_permalink', 10, 2);
+
+add_filter( 'wpseo_primary_term_taxonomies', '__return_empty_array' );

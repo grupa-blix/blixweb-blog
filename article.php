@@ -70,7 +70,6 @@ Template Post Type: post */ ?>
                 <?php echo the_field("short_description");?>
             <?php endif; ?>
         </div>
-        <?php echo has_post_thumbnail() ?>
         <?php
             if(get_field("distinguished_element") === "embed") :
                 $type = get_field( 'embed_type' );

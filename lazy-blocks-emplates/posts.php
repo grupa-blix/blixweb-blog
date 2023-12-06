@@ -51,16 +51,13 @@ if ( $result-> have_posts() ) : ?>
                 </div>
                 <div class="article__info">
                     <?php
-                      if (term_exists(yoast_get_primary_term('category', $post))) {
-                        $main_category = get_term(yoast_get_primary_term_id('category', $post));
-                      } else {
-                        $post_categories = get_the_category($post);
-                        usort($post_categories, function($a, $b) {
-                          return $a->term_id - $b->term_id;
-                        });
-
+                        $post_categories = get_the_category($element);
                         $main_category = $post_categories[0];
-                      }
+                        foreach($post_categories as $category) {
+                            if($category->parent == 0){
+                                $main_category = $category;
+                            }
+                         };
                     ?>
                     <span class="article__category"><?php echo $main_category->name; ?></span>
                     <h4 class="article__name"><?php echo the_title() ?></h4>
