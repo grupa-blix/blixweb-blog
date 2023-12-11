@@ -9,13 +9,13 @@ $vars = (object) [
 
 <?php
 $s = get_search_query();
-$args = array('s' => $s);
-$the_query = new WP_Query($args); ?>
+$args = array('s' => $s, 'orderby' => 'modified');
+$result = new WP_Query($args); ?>
 
 <?php
-    if(count($posts) > 0) :
+    if(count($result->posts) > 0) :
         $vars = (object) [
-                'elements' => $posts
+                'elements' => $result->posts
         ];
         include 'partials/sections/posts.php';
     else : ?>

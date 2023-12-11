@@ -51,7 +51,7 @@ if ( $result-> have_posts() ) : ?>
                 </div>
                 <div class="article__info">
                     <?php
-                        $post_categories = get_the_category($element);
+                        $post_categories = get_the_category($post);
                         $main_category = $post_categories[0];
                         foreach($post_categories as $category) {
                             if($category->parent == 0){

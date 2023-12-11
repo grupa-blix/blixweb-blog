@@ -3,7 +3,7 @@ import { Navigation, Zoom, Mousewheel, Manipulation } from "swiper/modules";
 import { isDesktop, getLeafletUrl } from "../utils";
 import dayjs from "dayjs";
 import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
-import { initPills, getTrackScrolled } from "../pills/pills";
+import { initPills } from "../pills/pills";
 import infoIcon from "../../img/info.svg";
 import leafletPlaceholder from "../../img/embed-placeholder.png";
 
@@ -177,18 +177,20 @@ const generateSinglePage = (data) => {
   const dataLeafletId = leafletId ? leafletId : page.leafletId;
   const databrandName = brandName ? brandName : page.brandName;
   const databrandId = brandId ? brandId : page.brandId;
-
+  console.log(data);
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target${hidePage ? " hidden" : ""}">
-        <div class="page-wrapper swipe-zoom-target" data-uri="${
-          page.page_uri
-        }" data-leaflet-name="${dataLeafletName}" data-leaflet-id="${dataLeafletId}" data-brand-name="${databrandName}" data-brand-id="${databrandId}" data-is-archival="${isArchival}">
-          ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
-          <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
-          ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
-        </div>
+        <a href="${page.page_uri}" target"__blank">
+          <div class="page-wrapper swipe-zoom-target" data-uri="${
+            page.page_uri
+          }" data-leaflet-name="${dataLeafletName}" data-leaflet-id="${dataLeafletId}" data-brand-name="${databrandName}" data-brand-id="${databrandId}" data-is-archival="${isArchival}">
+            ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
+            <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
+            ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
+          </div>
+        </a>
       </div>
     </div>
   `;
@@ -221,20 +223,24 @@ const generateDoublePage = (data) => {
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target">
+        <a href="${leftPage.page_uri}" target="__blank">
         <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${
     leftPage.page_uri
   }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
-          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
-          <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
-          ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
-        </div>
+                ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
+                <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
+                ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
+              </div>
+        </a>
+        <a href="${rightPage.page_uri}" target="__blank">
         <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${
     rightPage.page_uri
   }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
-          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
-          <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
-          ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
-        </div>
+                ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
+                <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
+                ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
+              </div>
+        </a>
       </div>
     </div>
   `;
