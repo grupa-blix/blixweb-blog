@@ -1,0 +1,1 @@
+window.addEventListener("load",(()=>{(()=>{const e=document.querySelector(".editor-post-publish-button__button");e&&e.addEventListener("click",(e=>{document.querySelector(".editor-post-featured-image img")||(e.preventDefault(),e.stopPropagation(),alert('Pole "Obrazek wyróżniający" nie może być puste'))}))})()}));

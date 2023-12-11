@@ -12,6 +12,7 @@ const devConfig = {
     }),
   ],
   entry: {
+    adminSingle: "./src/js/admin/single.js",
     error404: "./src/js/pages/error404.js",
     authors: "./src/js/pages/authors.js",
     article: "./src/js/pages/article.js",
@@ -69,6 +70,7 @@ const prodConfig = {
     }),
   ],
   entry: {
+    adminSingle: "./src/js/admin/single.js",
     error404: "./src/js/pages/error404.js",
     authors: "./src/js/pages/authors.js",
     article: "./src/js/pages/article.js",
