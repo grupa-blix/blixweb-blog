@@ -177,7 +177,7 @@ const generateSinglePage = (data) => {
   const dataLeafletId = leafletId ? leafletId : page.leafletId;
   const databrandName = brandName ? brandName : page.brandName;
   const databrandId = brandId ? brandId : page.brandId;
-  console.log(data);
+
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
     <div class="swiper-zoom-container">

@@ -63,7 +63,7 @@ const handleTrackPositionChange = (e) => {
 const pillsPointerMoveHandler = (e) => {
   const position = getTrackPosition(currentTrack);
   const dx = e.clientX - position.x;
-  console.log([position, dx]);
+
   currentTrack.scrollLeft = position.left - dx;
   if (dx !== 0) trackScrolled = true;
   handleTrackPositionChange(currentTrack);
