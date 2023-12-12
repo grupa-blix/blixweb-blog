@@ -3,7 +3,7 @@ import { Navigation, Zoom, Mousewheel, Manipulation } from "swiper/modules";
 import { isDesktop, getLeafletUrl } from "../utils";
 import dayjs from "dayjs";
 import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
-import { initPills } from "../pills/pills";
+import { initPills, getTrackScrolled } from "../pills/pills";
 import infoIcon from "../../img/info.svg";
 import leafletPlaceholder from "../../img/embed-placeholder.png";
 
@@ -450,6 +450,7 @@ const handleRecipeEmbed = async (embed, swiper) => {
     if (index === 0) btn.classList.add("active");
 
     btn.addEventListener("pointerup", async (b) => {
+      if (!/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) && getTrackScrolled()) return;
       embed.classList.add("loading");
 
       if (embed.querySelector(".message-box")) {

@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.17";
+$version = "7.0.18";
 
 function deregister_styles()
 {
@@ -301,11 +301,14 @@ function prefix_filter_title_example( $title ) {
  * @return string The filtered meta description.
  */
 function prefix_filter_description_example( $description ) {
-    if(is_single() && get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true)){
-        $description = get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true);
-    }else{
-        $description = get_the_excerpt();
+    if(is_single()){
+        if(get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true)){
+            $description = get_post_meta(get_queried_object()->ID, '_yoast_wpseo_metadesc', true);
+        }else{
+            $description = get_the_excerpt();
+        }
     }
+
     return $description;
   }
   add_filter( 'wpseo_metadesc', 'prefix_filter_description_example' );
@@ -492,3 +495,21 @@ add_filter('post_link', 'custom_remove_subcategories_from_permalink', 10, 2);
 add_filter('post_type_link', 'custom_remove_subcategories_from_permalink', 10, 2);
 
 add_filter( 'wpseo_primary_term_taxonomies', '__return_empty_array' );
+
+function change_canonical($url) {
+    global $post;
+
+    $categories = get_the_category($post->ID);
+
+    if ($categories) {
+        // Loop through categories and remove the subcategories
+        foreach ($categories as $category) {
+            if($category->parent != 0){
+                $url = str_replace("/" . $category->slug . "/", "/", $url);
+            }
+        }
+    }
+
+    return $url;
+}
+add_filter( 'wpseo_canonical', 'change_canonical' );

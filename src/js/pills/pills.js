@@ -74,7 +74,14 @@ const pillsPointerUpHandler = (e) => {
   document.removeEventListener("pointerup", pillsPointerUpHandler);
 
   currentTrack = null;
-  unsetTrackScrolled();
+
+  if (/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)) {
+    unsetTrackScrolled();
+  } else {
+    setTimeout(() => {
+      unsetTrackScrolled();
+    }, 100);
+  }
 };
 
 const pillsPointerDownHandler = (e) => {
