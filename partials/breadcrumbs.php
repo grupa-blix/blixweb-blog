@@ -45,11 +45,11 @@
                     </li>
                 <?php elseif (is_page('autorzy')) : ?>
                     <li class="breadcrumbs__step">
-                        <a href="/autorzy">Autorzy</a>
+                        <a href="/blog/autorzy">Autorzy</a>
                     </li>
                 <?php elseif (is_author()) : ?>
                     <li class="breadcrumbs__step">
-                        <a href="/autorzy">Autorzy</a>
+                        <a href="/blog/autorzy">Autorzy</a>
                     </li>
                     <li class="breadcrumbs__step">
                         <a href="<?php echo get_author_posts_url(get_the_author_meta('ID')); ?>">

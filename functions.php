@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.18";
+$version = "7.0.19";
 
 function deregister_styles()
 {
@@ -497,15 +497,17 @@ add_filter('post_type_link', 'custom_remove_subcategories_from_permalink', 10, 2
 add_filter( 'wpseo_primary_term_taxonomies', '__return_empty_array' );
 
 function change_canonical($url) {
-    global $post;
+    if(is_single()){
+        global $post;
 
-    $categories = get_the_category($post->ID);
+        $categories = get_the_category($post->ID);
 
-    if ($categories) {
-        // Loop through categories and remove the subcategories
-        foreach ($categories as $category) {
-            if($category->parent != 0){
-                $url = str_replace("/" . $category->slug . "/", "/", $url);
+        if ($categories) {
+            // Loop through categories and remove the subcategories
+            foreach ($categories as $category) {
+                if($category->parent != 0){
+                    $url = str_replace("/" . $category->slug . "/", "/", $url);
+                }
             }
         }
     }
