@@ -1,5 +1,13 @@
 import interact from "interactjs";
 
+const captchaEndpoint =
+  window.location.origin === "https://blix.pl"
+    ? "https://blix.pl/blog/wp-json/blog/isUserAllowed/"
+    : "/wp-json/blog/isUserAllowed/";
+const commentEndpoint =
+  window.location.origin === "https://blix.pl"
+    ? "https://blix.pl/blog/wp-json/blog/comment/"
+    : "/wp-json/blog/comment/";
 let responseId = 0;
 
 const clearForm = () => {
@@ -40,18 +48,13 @@ const closeCommentsBottomsheet = () => {
 };
 
 const isUserAllowed = async (token) => {
-  const formData = new FormData();
-  formData.append("action", "recaptcha");
-  formData.append("recaptcha", token);
-
-  const res = await fetch(myAjax.ajaxurl, {
-    method: "post",
-    body: formData,
+  const res = await fetch(captchaEndpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      token,
+    }),
   });
-
-  const data = await res.json();
-  const { score } = data;
-
+  const { score } = await res.json();
   if (score > 0.3) return true;
   return false;
 };
@@ -80,21 +83,18 @@ const submitForm = () => {
       if (isAllowed) {
         const form = document.querySelector(".comments-bottomsheet form");
         const { postId } = form.dataset;
-        const formData = new FormData();
 
-        formData.append("action", "recipe_comment");
-        formData.append("comment_post_ID", postId);
-        formData.append("comment_author", form.querySelector("input[name=name]").value);
-        formData.append("comment_content", form.querySelector("textarea").value);
-        formData.append("comment_parent", responseId);
-
-        const res = await fetch(myAjax.ajaxurl, {
-          method: "post",
-          body: formData,
+        const res = await fetch(commentEndpoint, {
+          method: "POST",
+          body: JSON.stringify({
+            comment_post_ID: postId,
+            comment_author: form.querySelector("input[name=name]").value,
+            comment_content: form.querySelector("textarea").value,
+            comment_parent: responseId,
+          }),
         });
 
         const { status } = res;
-
         clearForm();
 
         if (status === 200) handleSubmitSuccess();

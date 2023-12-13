@@ -1,3 +1,5 @@
+const endpoint =
+  window.location.origin === "https://blix.pl" ? "https://blix.pl/blog/wp-json/blog/like/" : "/wp-json/blog/like/";
 const handleNoStorageData = () => {
   const likedPosts = JSON.parse(localStorage.getItem("likedPosts"));
   if (!likedPosts) localStorage.setItem("likedPosts", JSON.stringify([]));
@@ -53,25 +55,21 @@ const handleLikesClick = async () => {
   const detailsLikes = document.querySelector(".details__likes");
   const { postId } = likes.dataset;
   const isAlreadyLiked = checkIfAlreadyLiked(postId);
-  const formData = new FormData();
+  let modifier = 1;
 
-  formData.append("action", "article_like");
-  formData.append("postId", postId);
+  if (isAlreadyLiked) modifier = -1;
 
-  if (isAlreadyLiked) {
-    formData.append("newValue", -1);
-  } else {
-    formData.append("newValue", 1);
-  }
-
-  const res = await fetch(myAjax.ajaxurl, {
-    method: "post",
-    body: formData,
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      postId,
+      modifier,
+    }),
   });
 
-  const newCount = await res.json();
-  likes.querySelector(".value").innerText = newCount;
-  detailsLikes.querySelector("span").innerText = newCount;
+  const { newValue } = await res.json();
+  likes.querySelector(".value").innerText = newValue;
+  detailsLikes.querySelector("span").innerText = newValue;
   updateAlreadyLikedPosts(postId, isAlreadyLiked);
   handleThumbDisplay();
   handleLikesCountDisplay();

@@ -1,3 +1,5 @@
+const endpoint =
+  window.location.origin === "https://blix.pl" ? "https://blix.pl/blog/wp-json/blog/rate/" : "/wp-json/blog/rate/";
 const handleNoStorageData = () => {
   const ratedPosts = JSON.parse(localStorage.getItem("ratedPosts"));
   if (!ratedPosts) localStorage.setItem("ratedPosts", JSON.stringify([]));
@@ -52,21 +54,19 @@ const handleStarClick = async (starBtn) => {
   const { rating } = starBtn.dataset;
   const { postId } = starBtn.closest(".rating").dataset;
   const ratingValue = document.querySelector(".rating__value");
-  const formData = new FormData();
 
-  formData.append("action", "recipe_rating");
-  formData.append("rating", rating);
-  formData.append("postId", postId);
-
-  const res = await fetch(myAjax.ajaxurl, {
-    method: "post",
-    body: formData,
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      postId,
+      rating,
+    }),
   });
 
-  const newRating = await res.json();
-  ratingValue.innerText = newRating.toFixed(1);
+  const { newRating } = await res.json();
+  ratingValue.innerText = parseFloat(newRating).toFixed(1);
   updateAlreadyRatedPosts(postId);
-  updateProgress(newRating);
+  updateProgress(parseFloat(newRating));
   hideStars();
 };
 

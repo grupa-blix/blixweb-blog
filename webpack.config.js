@@ -65,6 +65,7 @@ const prodConfig = {
         { from: "./style.css", to: "./" },
         { from: "./*.php", to: "./" },
         { from: "partials/*.php", to: "./" },
+        { from: "partials/sections/*.php", to: "./" },
         { from: "src/img", to: "assets/img" },
       ],
     }),

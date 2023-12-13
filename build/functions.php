@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.19";
+$version = "7.0.21";
 
 function deregister_styles()
 {
@@ -34,37 +34,17 @@ add_action('wp_enqueue_scripts', 'register_styles', 100);
 function register_scripts()
 {
     global $version;
-	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'',$version,true);
+	wp_enqueue_script('shared', get_stylesheet_directory_uri() . "/assets/js/shared.js",'',$version, true);
 
     if(is_single() && is_page_template( 'article.php' )){
-        wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'',$version,true);
-
-        wp_register_script( "likes_script", get_stylesheet_directory_uri().'/assets/js/likes.js','',$version, array(
-        'strategy'  => 'defer',
-        'in_footer' => true,
-        ));
-        wp_localize_script( 'likes_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
-
-        wp_enqueue_script( 'likes_script' );
+        wp_enqueue_script('article', get_stylesheet_directory_uri() . "/assets/js/article.js",'',$version, true);
+        wp_enqueue_script('likes', get_stylesheet_directory_uri() . "/assets/js/likes.js",'',$version, true);
     }
 
     if(is_single() && in_category("przepisy")){
-        wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'',$version,true);
-
-        wp_register_script( "rating_script", get_stylesheet_directory_uri().'/assets/js/rating.js','',$version, array(
-        'strategy'  => 'defer',
-        'in_footer' => true,
-        ));
-        wp_localize_script( 'rating_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
-
-        wp_register_script( "comments", get_stylesheet_directory_uri().'/assets/js/comments.js','',$version, array(
-        'strategy'  => 'defer',
-        'in_footer' => true,
-        ));
-        wp_localize_script( 'comments', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
-
-        wp_enqueue_script( 'rating_script' );
-        wp_enqueue_script( 'comments' );
+        wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'',$version, true);
+        wp_enqueue_script('rating', get_stylesheet_directory_uri() . "/assets/js/rating.js",'',$version, true);
+        wp_enqueue_script('comments', get_stylesheet_directory_uri() . "/assets/js/comments.js",'',$version, true);
     }
 }
 add_action('wp_enqueue_scripts', 'register_scripts', 100);
@@ -188,62 +168,86 @@ function disallow_insert_term($term, $taxonomy)
 
 add_filter('pre_insert_term', 'disallow_insert_term', 10, 2);
 
-add_action("wp_ajax_article_like", "article_like");
-add_action("wp_ajax_nopriv_article_like", "article_like");
+add_action('rest_api_init', function () {
+    register_rest_route( 'blog', 'like/',array(
+        'methods'  => 'POST',
+        'callback' => 'like_post'
+    ));
 
-function article_like() {
-    header("Content-type:application/json");
-    $field = (int) get_field('likes', $_POST["postId"]);
-    $modifier = (int) $_POST["newValue"];
+    register_rest_route( 'blog', 'rate/',array(
+        'methods'  => 'POST',
+        'callback' => 'rate_post'
+    ));
+
+    register_rest_route( 'blog', 'isUserAllowed/',array(
+        'methods'  => 'POST',
+        'callback' => 'check_recaptcha'
+    ));
+
+    register_rest_route( 'blog', 'comment/',array(
+        'methods'  => 'POST',
+        'callback' => 'comment_post'
+    ));
+  });
+
+function like_post($request) {
+    $data = json_decode($request->get_body(), true);
+    $field = (int) get_field('likes', $data['postId']);
+    $modifier = (int) $data['modifier'];
     $newValue = $field + $modifier;
-    update_field('likes', $newValue, $_POST["postId"]);
-    echo the_field('likes', $_POST["postId"]);
-    die();
+    update_field('likes', $newValue, $data['postId']);
+    $response['newValue'] = $newValue;
+    $res = new WP_REST_Response($response);
+    $res->set_headers(array('Cache-Control' => 'no-cache'));
+    $res->set_status(200);
+    return $res;
 }
 
-add_action("wp_ajax_recipe_rating", "recipe_rating");
-add_action("wp_ajax_nopriv_recipe_rating", "recipe_rating");
-
-function recipe_rating() {
-    header("Content-type:application/json");
-    $newSum = (int) get_field('rating_sum', $_POST["postId"]) + $_POST["rating"];
-    $newCount = (int) get_field('rating_count', $_POST["postId"]) + 1;
+function rate_post($request) {
+    $data = json_decode($request->get_body(), true);
+    $newSum = (int) get_field('rating_sum', $data["postId"]) + $data["rating"];
+    $newCount = (int) get_field('rating_count', $data["postId"]) + 1;
     $newRating = number_format($newSum / $newCount, 1);
-    update_field('rating_sum', $newSum, $_POST["postId"]);
-    update_field('rating_count', $newCount, $_POST["postId"]);
-    update_field('rating', $newRating, $_POST["postId"]);
-    echo the_field('rating', $_POST["postId"]);
-    die();
+    update_field('rating_sum', $newSum, $data["postId"]);
+    update_field('rating_count', $newCount, $data["postId"]);
+    update_field('rating', $newRating, $data["postId"]);
+    $response['newRating'] = $newRating;
+    $res = new WP_REST_Response($response);
+    $res->set_headers(array('Cache-Control' => 'no-cache'));
+    $res->set_status(200);
+    return $res;
 }
 
-add_action("wp_ajax_recaptcha", "recaptcha");
-add_action("wp_ajax_nopriv_recaptcha", "recaptcha");
+function check_recaptcha($request) {
+    $data = json_decode($request->get_body(), true);
 
-function recaptcha() {
     $response = file_get_contents(
-        "https://www.google.com/recaptcha/api/siteverify?secret=6LfyoAYoAAAAANZzhfiiyJKq0yEurvVHasvW028U&response=" . $_POST["recaptcha"]
+        "https://www.google.com/recaptcha/api/siteverify?secret=6LfyoAYoAAAAANZzhfiiyJKq0yEurvVHasvW028U&response=" . $data["token"]
     );
-
-    echo json_encode(json_decode($response));
-    die();
+    $res = new WP_REST_Response(json_decode($response));
+    $res->set_headers(array('Cache-Control' => 'no-cache'));
+    $res->set_status(200);
+    return $res;
 }
 
-add_action("wp_ajax_recipe_comment", "recipe_comment");
-add_action("wp_ajax_nopriv_recipe_comment", "recipe_comment");
 
-function recipe_comment() {
-    header("Content-type:application/json");
+function comment_post($request) {
+    $data = json_decode($request->get_body(), true);
+
     $obj = array(
-        "comment_post_ID" => $_POST["comment_post_ID"],
-        "comment_author" => $_POST["comment_author"],
-        "comment_content" => $_POST["comment_content"],
-        "comment_parent" => $_POST["comment_parent"],
+        "comment_post_ID" => $data["comment_post_ID"],
+        "comment_author" => $data["comment_author"],
+        "comment_content" => $data["comment_content"],
+        "comment_parent" => $data["comment_parent"],
         "comment_approved" => 0
     );
 
     wp_new_comment($obj);
-    echo json_encode($obj);
-    die();
+
+    $res = new WP_REST_Response();
+    $res->set_headers(array('Cache-Control' => 'no-cache'));
+    $res->set_status(200);
+    return $res;
 }
 
 // This will suppress empty email errors when submitting the user form
