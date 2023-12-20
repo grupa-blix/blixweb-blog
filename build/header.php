@@ -23,7 +23,7 @@
 				"@type": "Recipe",
 				"author": "<?php echo get_the_author_meta('display_name') ?>",
 				"cookTime": "PT<?php echo get_field("preparation_time_micro") ?>",
-				"description": "<?php echo get_the_content(); ?>",
+				"description": "<?php echo strip_tags(get_the_content()); ?>",
 				"image": "<?php echo get_the_post_thumbnail_url($post, "full"); ?>",
 				"recipeIngredient": [<?php echo $processed_ingredients; ?>],
 				"name": "<?php echo $post->post_title; ?>",
@@ -40,7 +40,6 @@
 		</script>
 
 	<?php endif;?>
-
 
 	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

@@ -182,15 +182,13 @@ const generateSinglePage = (data) => {
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target${hidePage ? " hidden" : ""}">
-        <a href="${page.page_uri}" target"__blank">
-          <div class="page-wrapper swipe-zoom-target" data-uri="${
-            page.page_uri
-          }" data-leaflet-name="${dataLeafletName}" data-leaflet-id="${dataLeafletId}" data-brand-name="${databrandName}" data-brand-id="${databrandId}" data-is-archival="${isArchival}">
-            ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
+        <div class="page-wrapper swipe-zoom-target" data-uri="${
+          page.page_uri
+        }" data-leaflet-name="${dataLeafletName}" data-leaflet-id="${dataLeafletId}" data-brand-name="${databrandName}" data-brand-id="${databrandId}" data-is-archival="${isArchival}">
+          ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
             <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
             ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
-          </div>
-        </a>
+        </div>
       </div>
     </div>
   `;
@@ -223,24 +221,20 @@ const generateDoublePage = (data) => {
   slide.innerHTML = `
     <div class="swiper-zoom-container">
       <div class="swiper-zoom-target">
-        <a href="${leftPage.page_uri}" target="__blank">
         <div class="page-wrapper swipe-zoom-target${hideLeftPage ? " hidden" : ""}" data-uri="${
     leftPage.page_uri
   }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
-                ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
-                <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
-                ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
-              </div>
-        </a>
-        <a href="${rightPage.page_uri}" target="__blank">
+          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
+          <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
+          ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
+        </div>
         <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${
     rightPage.page_uri
   }" data-leaflet-name="${leafletName}" data-leaflet-id="${leafletId}" data-brand-name="${brandName}" data-brand-id="${brandId}" data-is-archival="${isArchival}">
-                ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
-                <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
-                ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
-              </div>
-        </a>
+          ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
+          <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
+          ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
+        </div>
       </div>
     </div>
   `;

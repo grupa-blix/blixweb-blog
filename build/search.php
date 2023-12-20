@@ -9,7 +9,7 @@ $vars = (object) [
 
 <?php
 $s = get_search_query();
-$args = array('s' => $s, 'orderby' => 'modified');
+$args = array('s' => $s, 'orderby' => 'modified', 'paged' => $paged);
 $result = new WP_Query($args); ?>
 
 <?php

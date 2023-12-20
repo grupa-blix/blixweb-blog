@@ -4,7 +4,7 @@ Template Post Type: post */ ?>
 <?php get_header(); ?>
 <?php wpb_set_post_views(get_the_ID()); ?>
 <?php $main_category = get_the_category($post)[0]; ?>
-<?php echo the_field('likes'); ?>
+
 <section class="section article-info">
     <div class="sidebar">
         <?php include __DIR__ . "/partials/search.php"; ?>
