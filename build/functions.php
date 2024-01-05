@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.0.22";
+$version = "7.0.24";
 
 function deregister_styles()
 {
@@ -17,7 +17,7 @@ function register_styles()
         wp_enqueue_style('article', get_stylesheet_directory_uri() . "/assets/css/article.css",'',$version);
     }
 
-    if(is_single() && in_category("przepisy")){
+    if(is_single() && is_page_template( 'recipe.php' )){
         wp_enqueue_style('recipe', get_stylesheet_directory_uri() . "/assets/css/recipe.css",'',$version);
     }
 
@@ -41,7 +41,7 @@ function register_scripts()
         wp_enqueue_script('likes', get_stylesheet_directory_uri() . "/assets/js/likes.js",'',$version, true);
     }
 
-    if(is_single() && in_category("przepisy")){
+    if(is_single() && is_page_template( 'recipe.php' )){
         wp_enqueue_script('recipe', get_stylesheet_directory_uri() . "/assets/js/recipe.js",'',$version, true);
         wp_enqueue_script('rating', get_stylesheet_directory_uri() . "/assets/js/rating.js",'',$version, true);
         wp_enqueue_script('comments', get_stylesheet_directory_uri() . "/assets/js/comments.js",'',$version, true);
@@ -195,6 +195,7 @@ function like_post($request) {
     $field = (int) get_field('likes', $data['postId']);
     $modifier = (int) $data['modifier'];
     $newValue = $field + $modifier;
+    if($newValue < 0) $newValue = 0;
     update_field('likes', $newValue, $data['postId']);
     $response['newValue'] = $newValue;
     $res = new WP_REST_Response($response);

@@ -201,6 +201,7 @@
     padding: 8px 12px;
     border-radius: 4px;
     background-color: #72a5ea4d;
+    font-size: 14px;
   }
 
   @media (min-width: 992px) {
@@ -241,10 +242,6 @@
           box-shadow: 0 0 12px rgba(52, 181, 123, 0.75);
         }
       }
-    }
-
-    .message-box {
-      font-size: 14px;
     }
 
     &.with-message-box {

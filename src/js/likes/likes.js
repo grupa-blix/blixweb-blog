@@ -1,5 +1,7 @@
 const endpoint =
   window.location.origin === "https://blix.pl" ? "https://blix.pl/blog/wp-json/blog/like/" : "/wp-json/blog/like/";
+let isParsing = false;
+
 const handleNoStorageData = () => {
   const likedPosts = JSON.parse(localStorage.getItem("likedPosts"));
   if (!likedPosts) localStorage.setItem("likedPosts", JSON.stringify([]));
@@ -51,6 +53,9 @@ const updateAlreadyLikedPosts = (postId, isAlreadyLiked) => {
 };
 
 const handleLikesClick = async () => {
+  if (isParsing) return;
+  isParsing = true;
+
   const likes = document.querySelector(".likes");
   const detailsLikes = document.querySelector(".details__likes");
   const { postId } = likes.dataset;
@@ -73,6 +78,10 @@ const handleLikesClick = async () => {
   updateAlreadyLikedPosts(postId, isAlreadyLiked);
   handleThumbDisplay();
   handleLikesCountDisplay();
+
+  setTimeout(() => {
+    isParsing = false;
+  }, 2000);
 };
 
 window.addEventListener("DOMContentLoaded", () => {
