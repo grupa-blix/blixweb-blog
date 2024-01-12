@@ -3,7 +3,7 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   margin-bottom: 12px;
   padding: 8px 12px;
   border-radius: 4px;
@@ -52,6 +52,12 @@
       .swiper-button-next,
       .swiper__special-buttons {
         display: none !important;
+      }
+
+      .page-wrapper {
+        &:not(.page-wrapper--additional) {
+          box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
+        }
       }
     }
   }
@@ -239,7 +245,6 @@
       justify-content: center;
       align-items: center;
       height: 100%;
-      padding: 16px;
 
       &.placeholder {
         opacity: 0;

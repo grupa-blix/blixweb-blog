@@ -104,7 +104,7 @@ const adultContent = (brandThumbnail) => {
   `;
 };
 
-const updateNavigation = (embed, swiper) => {
+const updateNavigation = (embed) => {
   const activePage = embed.querySelector(".swiper-slide-active .page-wrapper");
 
   if (!activePage || embed.classList.contains("empty")) return;
@@ -565,7 +565,7 @@ const removeEmbed = (embed) => {
 };
 
 const handleMessageDisplay = (embed, leaflet) => {
-  if (embed.parentNode.querySelector(".message-box")) return;
+  if (embed.parentNode.querySelector("& > .message-box")) return;
 
   if (leaflet.emptyState) {
     const messageBox = document.createElement("div");

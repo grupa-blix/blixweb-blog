@@ -71,10 +71,10 @@ Template Post Type: post */ ?>
             <?php endif; ?>
         </div>
         <?php
-            if(get_field("distinguished_element") === "embed") :
+            if(get_field("distinguished_element") == "embed") :
                 $type = get_field( 'embed_type' );
 
-                if($type === "brand") :
+                if($type == "brand") :
                     $brand = get_field( 'brand_slug' );
                     $leafletId = get_field( 'leaflet_ID' );
 

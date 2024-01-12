@@ -339,7 +339,8 @@
       &__content,
       &__engagement,
       &__author,
-      &__contents {
+      &__contents,
+      & > .message-box {
         grid-column: span 2;
       }
     }
