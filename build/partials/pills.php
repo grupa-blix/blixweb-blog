@@ -28,7 +28,7 @@ if ($term->taxonomy == "category") {
 
 <section class="section pills py-0">
     <div class="pills__track">
-        <a href="/" class="pill pill--blue<?php if (is_front_page()) echo " active"; ?>">Strona Główna</a>
+        <a href="/" class="pill pill--blue<?php if (is_front_page()) echo " active"; ?>">Strona główna</a>
         <?php foreach (get_categories() as $category) : ?>
             <a href="<?php echo get_category_link($category); ?>" class="pill pill--blue<?php if (isset($active_category) && $active_category->term_id == $category->term_id) echo " active" ?>"><?php echo $category->name; ?></a>
         <?php endforeach ?>
