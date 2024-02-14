@@ -6,6 +6,8 @@ import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adul
 import { initPills, getTrackScrolled } from "../pills/pills";
 import infoIcon from "../../img/info.svg";
 import leafletPlaceholder from "../../img/embed-placeholder.png";
+import handleInserts from "./embed-inserts";
+import { sendLeafletEnterEvent, handleLastPageView, addLastPageItemsClickHandlers } from "./embed-analytics";
 
 const options = {
   modules: [Navigation, Zoom, Mousewheel, Manipulation],
@@ -27,23 +29,14 @@ const options = {
   },
 };
 
-const setEmbedAnalytics = (embed, currentLeafletId) => {
+const setLeafletId = (embed, currentLeafletId) => {
   const activeLeaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
   if (!activeLeaflet || embed.classList.contains("empty")) return;
 
-  const { leafletId, leafletName, brandId, brandName, isArchival } = activeLeaflet.dataset;
+  const { leafletId } = activeLeaflet.dataset;
 
   if (leafletId && leafletId != currentLeafletId) {
-    dataLayer.push({
-      event: "LEAFLET_ENTER",
-      leafletId: leafletId.toString(),
-      leafletName,
-      brandId: brandId.toString(),
-      brandName,
-      placement: "blog",
-      openType: "manual",
-      state: isArchival === "true" ? "archived" : "current",
-    });
+    sendLeafletEnterEvent(activeLeaflet);
   }
   return leafletId;
 };
@@ -183,7 +176,9 @@ const generateAdditionalLeaflets = (lastPageData) => `
               }
 
               return `
-                <div class="leaflet small">
+                <div class="leaflet small" data-leaflet-id="${id}" data-leaflet-name="${name}" data-brand-id="${brandId}" data-brand-name="${
+                brand.name
+              }" >
                   ${hasAlcohol && !isUserAdult() ? adultContent(brand.thumbnail) : ""}
                   <a href="${leafletUrl}" class="leaflet__link">
                     <div class="leaflet__cover-wrapper">
@@ -210,6 +205,21 @@ const generateAdditionalLeaflets = (lastPageData) => `
     </div>
   `;
 
+const generateAdInsert = (inserts, pageIndex) => {
+  if (!inserts) return "";
+
+  const insert = inserts.find((ins) => ins.afterPage === pageIndex);
+
+  if (insert && insert.type === 1) {
+    const { click_url: clickUrl, src, click_urls: clickUrls, view_urls: viewUrls } = insert;
+    return `<div class="insert-wrapper" data-click-url="${clickUrl}">
+      <img src="${src}" class="insert-img" draggable="false">
+      ${viewUrls.map((url) => `<div class="d-none" data-view-url="${url}"></div>`)}
+      ${clickUrls.map((url) => `<div class="d-none" data-click-url="${url}"></div>`)}
+    </div>`;
+  } else return "";
+};
+
 const generateSinglePage = (data) => {
   const {
     page,
@@ -223,6 +233,7 @@ const generateSinglePage = (data) => {
     brandName,
     brandId,
     badge,
+    inserts,
     isArchival,
   } = data;
   const slide = document.createElement("div");
@@ -238,6 +249,7 @@ const generateSinglePage = (data) => {
   const dataBrandId = brandId ? brandId : page.brandId;
   const dataBrandLogo = brandThumbnail ? brandThumbnail : page.brandLogo;
   const dataBadge = badge ? badge : page.badge;
+  const insert = generateAdInsert(inserts, pageIndex);
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
@@ -252,6 +264,7 @@ const generateSinglePage = (data) => {
           ${addOverlay && !isUserAdult() && !additionalLeaflets ? adultContent(brandThumbnail) : ""}
             <img src="${imageUrl}" class="page-img" loading="lazy" alt="${alt}"/>
             ${additionalLeaflets ? generateAdditionalLeaflets(additionalLeaflets) : ""}
+            ${insert}
         </div>
       </div>
     </div>
@@ -276,6 +289,7 @@ const generateDoublePage = (data) => {
     brandName,
     brandId,
     badge,
+    inserts,
     isArchival,
   } = data;
   const slide = document.createElement("div");
@@ -285,6 +299,8 @@ const generateDoublePage = (data) => {
   const rightAlt = leafletName ? leafletName + ` - strona ${rightPage.page + 1}` : `Strona ${rightPage.page + 1}`;
   const dataBrandLogo = brandThumbnail ? brandThumbnail : leftPage.brandLogo;
   const dataBadge = badge ? badge : leftPage.badge;
+  const leftInsert = generateAdInsert(inserts, leftPageIndex);
+  const rightInsert = generateAdInsert(inserts, rightPageIndex);
 
   slide.classList.add("swiper-slide");
   slide.innerHTML = `
@@ -298,6 +314,7 @@ const generateDoublePage = (data) => {
           ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnLeft ? adultContent(brandThumbnail) : ""}
           <img src="${leftImageUrl}" class="page-img" loading="lazy" alt="${leftAlt}" />
           ${additionalLeafletsOnLeft ? generateAdditionalLeaflets(additionalLeafletsOnLeft) : ""}
+          ${leftInsert}
         </div>
         <div class="page-wrapper swipe-zoom-target${hideRightPage ? " hidden" : ""}" data-uri="${
     rightPage.page_uri
@@ -307,6 +324,7 @@ const generateDoublePage = (data) => {
           ${hasAlcohol && !isUserAdult() && !additionalLeafletsOnRight ? adultContent(brandThumbnail) : ""}
           <img src="${rightImageUrl}" class="page-img" loading="lazy" alt="${rightAlt}" />
           ${additionalLeafletsOnRight ? generateAdditionalLeaflets(additionalLeafletsOnRight) : ""}
+          ${rightInsert}
         </div>
       </div>
     </div>
@@ -326,6 +344,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
   const brandId = leaflet.viewer ? leaflet.brand.id : null;
   const badge = leaflet.viewer ? leaflet.badge : null;
   const isArchival = leaflet.viewer ? leaflet.badge.class === "lav-archive" : false;
+  const inserts = leaflet.inserts ? leaflet.inserts : null;
   let hasAlcohol = leaflet.viewer ? leaflet.viewer.has_alcohol : false;
 
   if (isUserAdult()) {
@@ -352,6 +371,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           brandName,
           brandId,
           badge,
+          inserts,
           isArchival,
         };
         wrapper.appendChild(generateDoublePage(data));
@@ -371,6 +391,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             brandName,
             brandId,
             badge,
+            inserts,
             isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
@@ -391,6 +412,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             brandName,
             brandId,
             badge,
+            inserts,
             isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
@@ -410,6 +432,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
             brandName,
             brandId,
             badge,
+            inserts,
             isArchival,
           };
           wrapper.appendChild(generateDoublePage(data));
@@ -446,6 +469,7 @@ const generatePages = (embed, isDouble, leaflet, isBrandLeaflet) => {
           brandName,
           brandId,
           badge,
+          inserts,
           isArchival,
         };
         wrapper.appendChild(generateSinglePage(data));
@@ -656,6 +680,7 @@ const initEmbed = async (embed) => {
   const isBrandLeaflet = brandSlug;
   const isRecipeEmbed = !brandSlug && !searchPhrase;
   let currentLeafletId;
+  let wasLastPageViewed = false;
 
   await handleRecipeEmbed(embed, swiper);
 
@@ -683,6 +708,7 @@ const initEmbed = async (embed) => {
     }
 
     swiper.init();
+    addLastPageItemsClickHandlers(embed);
     return;
   } else if (!leaflet || leaflet.length === 0) {
     removeEmbed(embed);
@@ -724,14 +750,19 @@ const initEmbed = async (embed) => {
     loadAdjacentPages(embed);
     updateNavigation(embed, swiper);
 
-    currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
+    currentLeafletId = setLeafletId(embed, currentLeafletId);
+    if (!wasLastPageViewed) {
+      wasLastPageViewed = handleLastPageView(embed);
+    }
   });
 
   swiper.on("afterInit", () => {
     loadAdjacentPages(embed);
     updateNavigation(embed, swiper);
+    handleInserts(embed, swiper);
+    addLastPageItemsClickHandlers(embed);
 
-    currentLeafletId = setEmbedAnalytics(embed, currentLeafletId);
+    currentLeafletId = setLeafletId(embed, currentLeafletId);
   });
 
   swiper.init();

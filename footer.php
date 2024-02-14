@@ -6,7 +6,8 @@
         'meta_key' => 'wpb_post_views_count',
         'orderby' => 'meta_value_num',
         'order' => 'DESC',
-        'posts_per_page' => 4
+        'posts_per_page' => 4,
+        'ignore_sticky_posts' => -1
     );
 
     $result = new WP_Query($args);
