@@ -38,15 +38,22 @@ const handleInserts = (embed, swiper) => {
   };
 
   const handleInsertZoom = () => {
+    const zoomInBtn = emb.querySelector(".swiper__zoom-in-btn");
+    const zoomOutBtn = emb.querySelector(".swiper__zoom-out-btn");
+
     if (currentInsertSlide) {
       const active = isInsertActive();
       if (active) {
         swp.params.zoom.maxRatio = 1;
+        zoomInBtn.classList.add("d-none");
+        zoomOutBtn.classList.add("d-none");
         return;
       }
     }
 
     swp.params.zoom.maxRatio = 2;
+    zoomInBtn.classList.remove("d-none");
+    zoomOutBtn.classList.remove("d-none");
   };
 
   const handleInsertPagination = () => {
@@ -58,11 +65,11 @@ const handleInserts = (embed, swiper) => {
     if (active) {
       currentPage.innerText = "AD";
     } else {
-      const currentSlidePages = emb.querySelectorAll(".swiper-slide-active .page-img");
+      const currentSlidePages = emb.querySelectorAll(".swiper-slide-active .page-wrapper");
       const pageNumbers = [];
 
       currentSlidePages.forEach((page) => {
-        const { pageNumber } = page.dataset;
+        const { pageIndex: pageNumber } = page.dataset;
 
         if (!pageNumber) return;
         if (!pageNumbers.includes(pageNumber)) {
@@ -80,6 +87,32 @@ const handleInserts = (embed, swiper) => {
     }
   };
 
+  const addPixel = (url) => {
+    const img = document.createElement("img");
+    img.width = 0;
+    img.height = 0;
+    img.src = url;
+    document.body.appendChild(img);
+  };
+
+  const sendDataLayer = (action) => {
+    const currentPage = emb.querySelector(".swiper-slide-active .page-wrapper");
+    const { leafletId, leafletName, brandId, brandName } = currentPage.dataset;
+
+    dataLayer.push({
+      event: "ADINSERT",
+      leafletId,
+      leafletName,
+      brandId,
+      brandName,
+      action,
+    });
+
+    dataLayer.push(function () {
+      this.reset();
+    });
+  };
+
   const handleInsertView = async () => {
     if (!currentInsertSlide) return;
 
@@ -89,10 +122,8 @@ const handleInserts = (embed, swiper) => {
     const insert = currentInsertSlide.querySelector(".insert-wrapper");
     const viewUrlItems = [...insert.querySelectorAll("[data-view-url]")];
     const viewUrls = viewUrlItems.map((item) => item.dataset.viewUrl);
-    viewUrls.map(async (url) => {
-      const response = await fetch(url, { method: "GET" });
-      return response.json();
-    });
+    viewUrls.map((url) => addPixel(url));
+    sendDataLayer("view");
   };
 
   const handleInsertClick = async () => {
@@ -102,23 +133,22 @@ const handleInserts = (embed, swiper) => {
     if (!active) return;
 
     const insert = currentInsertSlide.querySelector(".insert-wrapper");
+    const insertImg = insert.querySelector(".insert-img");
+    if (e.target !== insertImg) return;
+
     const { clickUrl } = insert.dataset;
     const clickUrlItems = [...insert.querySelectorAll("[data-click-url]")];
     const clickUrls = clickUrlItems.map((item) => item.dataset.clickUrl);
+    clickUrls.map((url) => addPixel(url));
+    sendDataLayer("click");
+
     const anchor = document.createElement("a");
     anchor.classList.add("d-none");
     anchor.href = clickUrl;
-    if (!clickUrl.includes(window.location.origin)) anchor.target = "__blank";
     document.body.appendChild(anchor);
-
-    await Promise.all(
-      clickUrls.map(async (url) => {
-        const response = await fetch(url, { method: "GET" });
-        return response.json();
-      })
-    );
-
-    anchor.click();
+    setTimeout(() => {
+      anchor.click();
+    }, 500);
   };
 
   const toggleInsert = (direction) => {
@@ -190,7 +220,6 @@ const handleInserts = (embed, swiper) => {
     const insert = embed.querySelector(".swiper-slide-active .insert-wrapper");
 
     if (insert) {
-      console.log(123);
       swp.allowSlideNext = false;
       swp.allowSlidePrev = false;
       currentInsertSlide = insert.closest(".swiper-slide");

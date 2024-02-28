@@ -220,6 +220,8 @@
     &:not(.swiper-initialized) {
       .swiper-slide {
         .insert-wrapper {
+          transform: translateX(200%);
+
           .insert-img {
             display: none;
           }
@@ -235,7 +237,7 @@
       display: flex;
       min-width: 0;
       height: 100%;
-      transition: min-width 0ms linear 300ms;
+      transition: min-width 0ms linear 200ms;
 
       &:has(.page-wrapper--ad) {
         min-width: 100%;
@@ -245,10 +247,11 @@
 
     .swiper-zoom-target {
       display: flex;
+      justify-content: center;
+      align-items: center;
       min-width: 0;
       height: 100%;
-      overflow: hidden;
-      transition: min-width 0ms linear 300ms, transform 100ms;
+      transition: min-width 0ms linear 200ms, transform 100ms;
 
       &:has(.page-wrapper--ad) {
         min-width: 100%;
@@ -295,6 +298,7 @@
         height: auto;
         max-height: 427px;
         transition: opacity 300ms;
+        transition: transform 200ms linear;
       }
 
       &.hidden {
@@ -341,12 +345,15 @@
         z-index: 2;
         display: flex;
         align-items: center;
+        width: 100%;
         transform: translateX(200%);
-        transition: transform 300ms linear;
+        transition: transform 200ms linear;
 
         .insert-img {
+          cursor: pointer;
           max-height: 427px;
-          box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
+          opacity: 0;
+          transition: opacity 0ms linear 200ms;
         }
       }
 
@@ -358,12 +365,18 @@
 
         .page-img {
           opacity: 0;
-          transition: opacity 300ms ease-in 300ms;
+          transform: translateX(-200%);
+          transition: transform 200ms linear, opacity 0ms linear 200ms;
         }
 
         .insert-wrapper {
           transform: translateX(0);
-          transition: transform 300ms linear 300ms;
+          transition: transform 200ms linear;
+
+          .insert-img {
+            opacity: 1;
+            transition: unset;
+          }
         }
       }
     }
@@ -490,7 +503,7 @@
       .page-wrapper {
         display: flex;
         align-items: center;
-        max-width: 50%;
+        // max-width: 50%;
 
         .page-wrapper {
           max-width: unset;
@@ -498,6 +511,7 @@
 
         .page-img {
           max-height: 519px;
+          transform: unset;
         }
 
         &--insert {

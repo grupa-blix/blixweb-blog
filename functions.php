@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.1.14";
+$version = "7.1.16";
 
 function deregister_styles()
 {
