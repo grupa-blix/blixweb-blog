@@ -3,7 +3,7 @@
 
 <head>
 	<?php
-		if(get_site_url() == "https://blix.pl"){ ?>
+		if(get_site_url() == "https://blix.pl/blog"){ ?>
 			<!-- Start cookieyes banner --> <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/f4dc276acf8e1d082bb2a9d2/script.js"></script> <!-- End cookieyes banner -->
 		<?php }
 	?>
