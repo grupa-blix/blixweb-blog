@@ -17,3 +17,4 @@ import "./leaflets/leaflets.js";
 import "./products/products.js";
 import "./pills/pills.js";
 import "./adult-content/adult-content.js";
+import "./cookie-settings/cookie-settings.js";

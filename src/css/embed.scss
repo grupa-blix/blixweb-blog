@@ -239,7 +239,7 @@
       height: 100%;
       transition: min-width 0ms linear 200ms;
 
-      &:has(.page-wrapper--ad) {
+      &:has(.page-wrapper--insert) {
         min-width: 100%;
         transition: unset;
       }
@@ -253,7 +253,7 @@
       height: 100%;
       transition: min-width 0ms linear 200ms, transform 100ms;
 
-      &:has(.page-wrapper--ad) {
+      &:has(.page-wrapper--insert) {
         min-width: 100%;
         transition: unset;
       }
@@ -290,14 +290,13 @@
       position: relative;
       height: 100%;
       min-width: 0;
-      transition: min-width 0ms linear 300ms;
+      transition: min-width 0ms linear 200ms;
 
       .page-img {
         display: block;
         width: auto;
         height: auto;
         max-height: 427px;
-        transition: opacity 300ms;
         transition: transform 200ms linear;
       }
 
@@ -344,6 +343,7 @@
         top: 0;
         z-index: 2;
         display: flex;
+        justify-content: center;
         align-items: center;
         width: 100%;
         transform: translateX(200%);

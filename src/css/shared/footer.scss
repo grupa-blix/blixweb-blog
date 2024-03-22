@@ -49,8 +49,15 @@
   }
 
   &__sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
     padding-top: 24px;
     border-top: 1px solid #d9d9d9;
+  }
+
+  &__cookie-settings {
+    cursor: pointer;
   }
 
   section {

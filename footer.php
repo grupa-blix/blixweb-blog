@@ -77,6 +77,7 @@
                     <?php endforeach ?>
                     <div class="footer__sub">
                         <span class="footer__sub-text">Wszystkie prawa zastrzeżone 2023</span>
+                        <span class="footer__cookie-settings">Ustawienia plików cookies</span>
                     </div>
                 </div>
                 <div class="turl" data-turl="<?php echo get_stylesheet_directory_uri();?>"></div>

@@ -42,7 +42,7 @@ const setLeafletId = (embed, currentLeafletId) => {
 };
 
 const getLeafletByBrand = async (brandSlug, leafletId = 0) => {
-  const res = await fetch(`https://fancy.blix.app/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
+  const res = await fetch(`https://blix.pl/api/blog/leaflet/brand/${brandSlug}/${leafletId}`);
   const data = await res.json();
   return data;
 };
@@ -759,10 +759,12 @@ const initEmbed = async (embed) => {
   swiper.on("afterInit", () => {
     loadAdjacentPages(embed);
     updateNavigation(embed, swiper);
-    handleInserts(embed, swiper);
     addLastPageItemsClickHandlers(embed);
-
     currentLeafletId = setLeafletId(embed, currentLeafletId);
+
+    setTimeout(() => {
+      handleInserts(embed, swiper);
+    }, 500);
   });
 
   swiper.init();

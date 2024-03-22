@@ -4,25 +4,32 @@ const handleInserts = (embed, swiper) => {
   const emb = embed;
   const swp = swiper;
   let currentInsertSlide;
-  let currentInsertPageWrapper;
   let scrolling = false;
   let initialTouch;
 
-  const isInsertActive = () => currentInsertPageWrapper.classList.contains("page-wrapper--insert");
+  const isInsertActive = () => currentInsertSlide.querySelector(".page-wrapper--insert");
 
-  const showInsert = () => currentInsertPageWrapper.classList.add("page-wrapper--insert");
+  const showInsert = () => {
+    const insertToShow = currentInsertSlide.querySelector(".page-wrapper:not(.page-wrapper--insert) .insert-wrapper");
+    const insertWrapper = insertToShow.closest(".page-wrapper");
+    insertWrapper.classList.add("page-wrapper--insert");
+  };
 
-  const hideInsert = () => currentInsertPageWrapper.classList.remove("page-wrapper--insert");
+  const hideInsert = () => {
+    const inserts = currentInsertSlide.querySelectorAll(".page-wrapper--insert");
+    const insertToHide = inserts[inserts.length - 1];
+    insertToHide.classList.remove("page-wrapper--insert");
+  };
 
   const setLeafletInsertsPosition = () => {
     const slides = emb.querySelectorAll(".swiper-slide");
     const currentSlideIndex = swp.realIndex;
 
     slides.forEach((slide) => {
-      const slideInsert = slide.querySelector(".insert-wrapper");
+      const slideInserts = slide.querySelectorAll(".insert-wrapper");
 
-      if (slideInsert) {
-        const pageWrapper = slideInsert.closest(".page-wrapper");
+      slideInserts.forEach((insert) => {
+        const pageWrapper = insert.closest(".page-wrapper");
         const isActive = pageWrapper.classList.contains("page-wrapper--insert");
         const { swiperSlideIndex } = slide.dataset;
 
@@ -33,7 +40,7 @@ const handleInserts = (embed, swiper) => {
         if (isActive && currentSlideIndex < swiperSlideIndex) {
           pageWrapper.classList.remove("page-wrapper--insert");
         }
-      }
+      });
     });
   };
 
@@ -122,8 +129,8 @@ const handleInserts = (embed, swiper) => {
     const insert = currentInsertSlide.querySelector(".insert-wrapper");
     const viewUrlItems = [...insert.querySelectorAll("[data-view-url]")];
     const viewUrls = viewUrlItems.map((item) => item.dataset.viewUrl);
-    viewUrls.map((url) => addPixel(url));
-    sendDataLayer("view");
+    // viewUrls.map((url) => addPixel(url));
+    // sendDataLayer("view");
   };
 
   const handleInsertClick = async () => {
@@ -153,12 +160,16 @@ const handleInserts = (embed, swiper) => {
 
   const toggleInsert = (direction) => {
     const active = isInsertActive();
+    const hasSecondInsert = currentInsertSlide.querySelector(
+      ".page-wrapper:not(.page-wrapper--insert) .insert-wrapper"
+    );
 
     if (active) {
       if (direction === "prev") {
         hideInsert();
-        handleInsertZoom();
-        handleInsertPagination();
+      } else if (hasSecondInsert) {
+        showInsert();
+        handleInsertView();
       } else {
         swp.allowSlideNext = true;
         swp.allowSlidePrev = true;
@@ -170,10 +181,11 @@ const handleInserts = (embed, swiper) => {
       swp.slidePrev();
     } else {
       showInsert();
-      handleInsertZoom();
       handleInsertView();
-      handleInsertPagination();
     }
+
+    handleInsertZoom();
+    handleInsertPagination();
   };
 
   const insertPrevBtnHandler = () => toggleInsert("prev");
@@ -216,14 +228,13 @@ const handleInserts = (embed, swiper) => {
     initialTouch = e.pageX;
   };
 
-  swp.on("slideChangeTransitionEnd", () => {
+  const callInsert = () => {
     const insert = embed.querySelector(".swiper-slide-active .insert-wrapper");
 
     if (insert) {
       swp.allowSlideNext = false;
       swp.allowSlidePrev = false;
       currentInsertSlide = insert.closest(".swiper-slide");
-      currentInsertPageWrapper = insert.closest(".page-wrapper");
       prevBtn.addEventListener("click", insertPrevBtnHandler);
       nextBtn.addEventListener("click", insertNextBtnHandler);
       currentInsertSlide.addEventListener("wheel", insertWheelHandler);
@@ -238,13 +249,18 @@ const handleInserts = (embed, swiper) => {
       currentInsertSlide.removeEventListener("pointerdown", insertPointerDownHandler);
       currentInsertSlide.removeEventListener("pointerup", insertPointerUpHandler);
       currentInsertSlide = null;
-      currentInsertPageWrapper = null;
     }
 
     setLeafletInsertsPosition();
     handleInsertZoom();
     handleInsertView();
     handleInsertPagination();
+  };
+
+  callInsert();
+
+  swp.on("slideChangeTransitionEnd", () => {
+    callInsert();
   });
 };
 
