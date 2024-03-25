@@ -1,4 +1,3 @@
-    <?php wp_footer(); ?>
     <?php
     $args = array(
         'post_type' => 'post',
@@ -83,5 +82,6 @@
                 <div class="turl" data-turl="<?php echo get_stylesheet_directory_uri();?>"></div>
             </section>
         </footer>
+        <?php wp_footer(); ?>
     </body>
 </html>

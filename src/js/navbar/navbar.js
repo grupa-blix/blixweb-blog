@@ -78,6 +78,11 @@ const closeSubmenu = (item) => {
   navbarOverlay.classList.remove("visible");
 };
 
+const handleFirstScroll = () => {
+  document.body.classList.add("scrolled");
+  window.removeEventListener("scroll", handleFirstScroll);
+};
+
 window.addEventListener("DOMContentLoaded", () => {
   burgerBtn.addEventListener("click", () => {
     toggleMobileMenuClasses();
@@ -126,3 +131,5 @@ window.addEventListener("resize", () => {
     removeDesktopSubmenuClasses();
   }
 });
+
+window.addEventListener("scroll", handleFirstScroll);
