@@ -129,11 +129,11 @@ const handleInserts = (embed, swiper) => {
     const insert = currentInsertSlide.querySelector(".insert-wrapper");
     const viewUrlItems = [...insert.querySelectorAll("[data-view-url]")];
     const viewUrls = viewUrlItems.map((item) => item.dataset.viewUrl);
-    // viewUrls.map((url) => addPixel(url));
-    // sendDataLayer("view");
+    viewUrls.map((url) => addPixel(url));
+    sendDataLayer("view");
   };
 
-  const handleInsertClick = async () => {
+  const handleInsertClick = async (e) => {
     if (!currentInsertSlide) return;
 
     const active = isInsertActive();
@@ -218,7 +218,7 @@ const handleInserts = (embed, swiper) => {
       const direction = initialTouch < e.pageX ? "prev" : "next";
       toggleInsert(direction);
     } else {
-      handleInsertClick();
+      handleInsertClick(e);
     }
 
     initialTouch = null;
