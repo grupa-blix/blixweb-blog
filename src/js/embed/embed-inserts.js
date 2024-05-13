@@ -113,7 +113,7 @@ const handleInserts = (embed, swiper) => {
       brandId,
       brandName,
       action,
-      placement: "blog_page",
+      placement: "blog",
     });
 
     dataLayer.push(function () {

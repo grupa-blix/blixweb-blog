@@ -16,6 +16,7 @@
         return $k->menu_item_parent == 0;
     });
     ?>
+        <?php if(!is_404()) include 'partials/app-promo.php'; ?>
         <footer class="footer">
             <?php
             $header = "Gazetki dla Ciebie w Blix";

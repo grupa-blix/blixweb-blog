@@ -1,6 +1,6 @@
 <?php
 
-$version = "7.1.41";
+$version = "7.1.46";
 
 function deregister_styles()
 {
@@ -520,3 +520,23 @@ function change_canonical($url) {
     return $url;
 }
 add_filter( 'wpseo_canonical', 'change_canonical' );
+
+function get_device_os() {
+    $user_agent = $_SERVER['HTTP_USER_AGENT']??null;
+
+    switch (true) {
+        case strpos($user_agent, 'Android') !== false:
+            $os = 'Android';
+            break;
+        case strpos($user_agent, 'iPhone') !== false || strpos($user_agent, 'iPad') !== false || strpos($user_agent, 'iPod') !== false:
+            $os = 'iOS';
+            break;
+        case strpos($user_agent, 'Macintosh') !== false:
+            $os = 'macOS';
+            break;
+        default:
+            $os = 'Unknown';
+    }
+
+    return $os;
+}

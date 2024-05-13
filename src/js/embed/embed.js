@@ -1,13 +1,18 @@
 import Swiper from "swiper";
 import { Navigation, Zoom, Mousewheel, Manipulation } from "swiper/modules";
-import { isDesktop, getLeafletUrl } from "../utils";
+import { isDesktop, getLeafletUrl, detectSwipe, handleScrollSwipe, isAppleDevice } from "../utils";
 import dayjs from "dayjs";
 import { addAdultOverlayClickHandlers, isUserAdult } from "../adult-content/adult-content";
 import { initPills, getTrackScrolled } from "../pills/pills";
 import infoIcon from "../../img/info.svg";
 import leafletPlaceholder from "../../img/embed-placeholder.png";
 import handleInserts from "./embed-inserts";
-import { sendLeafletEnterEvent, handleLastPageView, addLastPageItemsClickHandlers } from "./embed-analytics";
+import {
+  sendLeafletEnterEvent,
+  handleLastPageView,
+  addLastPageItemsClickHandlers,
+  handlePageView,
+} from "./embed-analytics";
 
 const options = {
   modules: [Navigation, Zoom, Mousewheel, Manipulation],
@@ -205,6 +210,14 @@ const generateAdditionalLeaflets = (lastPageData) => `
     </div>
   `;
 
+const checkIfAppPromoUrl = (clickUrl) => {
+  if (clickUrl.includes("utm_campaign%3Dblixapppromo") && isAppleDevice()) {
+    return "https://blix.app.link/WKcXWBDG0W?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=adinsert";
+  }
+
+  return clickUrl;
+};
+
 const generateAdInsert = (inserts, pageIndex) => {
   if (!inserts) return "";
 
@@ -212,7 +225,9 @@ const generateAdInsert = (inserts, pageIndex) => {
 
   if (insert && insert.type === 1) {
     const { click_url: clickUrl, src, click_urls: clickUrls, view_urls: viewUrls } = insert;
-    return `<div class="insert-wrapper" data-click-url="${clickUrl}">
+    const newClickUrl = checkIfAppPromoUrl(clickUrl);
+
+    return `<div class="insert-wrapper" data-click-url="${newClickUrl}">
       <img src="${src}" class="insert-img" draggable="false">
       ${viewUrls.map((url) => `<div class="d-none" data-view-url="${url}"></div>`)}
       ${clickUrls.map((url) => `<div class="d-none" data-click-url="${url}"></div>`)}
@@ -673,14 +688,20 @@ const handleEmptyState = (embed, leaflet, isBrandLeaflet, searchPhrase) => {
 
 const initEmbed = async (embed) => {
   const swiperContainer = embed.querySelector(".swiper");
-  const swiper = new Swiper(swiperContainer, options);
   const zoomInBtn = embed.querySelector(".swiper__zoom-in-btn");
   const zoomOutBtn = embed.querySelector(".swiper__zoom-out-btn");
+  const prevBtn = embed.querySelector(".swiper-button-prev");
+  const nextBtn = embed.querySelector(".swiper-button-next");
   const { brandSlug, leafletId, searchPhrase } = embed.dataset;
   const isBrandLeaflet = brandSlug;
   const isRecipeEmbed = !brandSlug && !searchPhrase;
   let currentLeafletId;
   let wasLastPageViewed = false;
+  let swiperTouchDiff;
+
+  if (isBrandLeaflet) options.loop = false;
+
+  const swiper = new Swiper(swiperContainer, options);
 
   await handleRecipeEmbed(embed, swiper);
 
@@ -740,6 +761,18 @@ const initEmbed = async (embed) => {
     }
   });
 
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (swiper.enabled) detectSwipe("button", "backward");
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      if (swiper.enabled) detectSwipe("button", "forward");
+    });
+  }
+
   swiper.on("zoomChange", () => {
     setTimeout(() => {
       udpateCoversOnZoom(embed, swiper);
@@ -747,13 +780,25 @@ const initEmbed = async (embed) => {
   });
 
   swiper.on("slideChangeTransitionEnd", () => {
+    const currentTouchDiff = swiper.touches.diff;
     loadAdjacentPages(embed);
     updateNavigation(embed, swiper);
+    handlePageView(embed);
 
     currentLeafletId = setLeafletId(embed, currentLeafletId);
     if (!wasLastPageViewed) {
       wasLastPageViewed = handleLastPageView(embed);
     }
+
+    if (currentTouchDiff !== 0 && currentTouchDiff !== swiperTouchDiff) {
+      swiperTouchDiff = currentTouchDiff;
+      const direction = swiper.swipeDirection === "prev" ? "backward" : "forward";
+      detectSwipe("swipe", direction);
+    }
+  });
+
+  swiper.on("scroll", () => {
+    handleScrollSwipe(swiper);
   });
 
   swiper.on("afterInit", () => {
@@ -761,6 +806,7 @@ const initEmbed = async (embed) => {
     updateNavigation(embed, swiper);
     addLastPageItemsClickHandlers(embed);
     currentLeafletId = setLeafletId(embed, currentLeafletId);
+    handlePageView(embed);
 
     setTimeout(() => {
       handleInserts(embed, swiper);

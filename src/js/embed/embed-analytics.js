@@ -18,6 +18,14 @@ const sendLeafletEnterEvent = (leaflet) => {
     state: isArchival === "true" ? "archived" : "current",
   });
 
+  clevertap.event.push("leaflet_enter", {
+    brand_id: brandId,
+    brand_name: brandName,
+    leaflet_id: leafletId,
+    leaflet_name: leafletName,
+    url: window.location.href,
+  });
+
   clearDataLayer();
 };
 
@@ -67,4 +75,26 @@ const handleLastPageView = (embed) => {
   return false;
 };
 
-export { sendLeafletEnterEvent, handleLastPageView, addLastPageItemsClickHandlers };
+const handlePageView = (embed) => {
+  const leaflet = embed.querySelector(".swiper-slide-active .page-wrapper");
+
+  if (leaflet) {
+    const { leafletId, leafletName, brandId, brandName } = leaflet.dataset;
+
+    dataLayer.push({
+      event: "LEAFLET_EMBED_PAGEVIEW",
+      leafletId: leafletId.toString(),
+      leafletName,
+      brandId: brandId.toString(),
+      brandName,
+      placement: "blog",
+    });
+
+    clearDataLayer();
+    return true;
+  }
+
+  return false;
+};
+
+export { sendLeafletEnterEvent, handleLastPageView, addLastPageItemsClickHandlers, handlePageView };
