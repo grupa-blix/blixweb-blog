@@ -8,7 +8,7 @@ $visible = ($variation == "bottomsheet_zero" || $variation == "bottomsheet_mini"
 $storeURL = "https://play.google.com/store/apps/details?id=com.gazetki.gazetki&referrer=utm_source%3Dblixweb%26utm_campaign%3Dblixapppromo%26utm_medium=" . $variation;
 
 if (get_device_os() == 'iOS') {
-    $storeURL = "https://blix.app.link/WKcXWBDG0W?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=" . $variation;
+    $storeURL = "https://apps.apple.com/app/apple-store/id1012288672?pt=1693141&ct=" . $variation . "&mt=8?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=" . $variation;
 } ?>
 
 <?php if ($mobile_device && !$displayed && !$from_campaign): ?>

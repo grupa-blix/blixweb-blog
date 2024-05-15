@@ -49,10 +49,10 @@
                     <div class="footer__apps">
                         <h4>Pobierz aplikację Blix na swój telefon!</h4>
                         <div class="footer__apps-badges">
-                            <a href="https://play.google.com/store/apps/details?id=com.gazetki.gazetki" rel=”nofollow” >
+                            <a href="https://play.google.com/store/apps/details?id=com.gazetki.gazetki&referrer=utm_source%3Dblixweb%26utm_campaign%3Dblixapppromo%26utm_medium%3Dfooter" rel=”nofollow” >
                                 <img src="https://static.blix.pl/blix/blix-googleplay.png" alt="Google Play" width="169" height="50" loading="lazy">
                             </a>
-                            <a href="https://blix.app.link/WKcXWBDG0W" rel=”nofollow” >
+                            <a href="https://apps.apple.com/app/apple-store/id1012288672?pt=1693141&ct=footer&mt=8?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=footer" rel=”nofollow” >
                                 <img src="https://static.blix.pl/blix/blix-appstore.png" alt="Aplikacja Blix iOS - App Store" width="150" height="50" loading="lazy">
                             </a>
                             <a href="https://appgallery.cloud.huawei.com/marketshare/app/C100525553?locale=pl_PL" rel=”nofollow” >

@@ -212,7 +212,7 @@ const generateAdditionalLeaflets = (lastPageData) => `
 
 const checkIfAppPromoUrl = (clickUrl) => {
   if (clickUrl.includes("utm_campaign%3Dblixapppromo") && isAppleDevice()) {
-    return "https://blix.app.link/WKcXWBDG0W?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=adinsert";
+    return "https://apps.apple.com/app/apple-store/id1012288672?pt=1693141&ct=adinsert&mt=8?utm_source=blixweb&utm_campaign=blixapppromo&utm_medium=adinsert";
   }
 
   return clickUrl;
